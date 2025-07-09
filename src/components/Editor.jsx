@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useCallback, useState } from 'react'
 import * as monaco from 'monaco-editor'
 import AIChatDialog from './AIChatDialog'
 import { aiService } from '../services/aiService'
+import { parseAndApplyPatch } from '../services/aiService'
 import './Editor.css'
 
 const Editor = ({ value, onChange, productData = null }) => {
@@ -77,124 +78,10 @@ const Editor = ({ value, onChange, productData = null }) => {
         productData,
         // onChunk 回调 - 处理流式数据
         (chunk) => {
-          console.log('=== 收到流式数据块 ===')
-          console.log('chunk:', chunk)
-          console.log('chunk.content:', chunk.content)
-          console.log('chunk.fullContent:', chunk.fullContent)
-          console.log('chunk.isCodeBlock:', chunk.isCodeBlock)
-          console.log('chunk.codeContent:', chunk.codeContent)
           
           setStreamingMessage(chunk)
           
-          // 实时应用每个数据块到编辑器（不等待完整代码块）
-          if (chunk.content && chunk.content.trim()) {
-            console.log('=== 实时应用数据块到编辑器 ===')
-            console.log('当前数据块内容:', chunk.content)
-            
-            // 检查是否包含代码块标记
-            if (chunk.content.includes('```')) {
-              console.log('检测到代码块标记，开始代码模式')
-              setIsStreamingCode(true)
-            }
-            
-            // 尝试从完整内容中提取代码
-            const extractedCode = extractCodeFromContent(chunk.fullContent)
-            if (extractedCode) {
-              console.log('提取到代码内容，实时更新:', extractedCode.substring(0, 50) + '...')
-              setStreamingProgress(extractedCode.length)
-              
-              // 立即应用代码到编辑器
-              console.log('调用 onChange:', extractedCode.substring(0, 30) + '...')
-              onChange(extractedCode)
-              
-              // 如果编辑器存在，直接更新内容
-              if (monacoEditorRef.current && !showDiff) {
-                console.log('直接更新 Monaco 编辑器')
-                isUpdatingRef.current = true
-                const position = monacoEditorRef.current.getPosition()
-                const scrollTop = monacoEditorRef.current.getScrollTop()
-                const scrollLeft = monacoEditorRef.current.getScrollLeft()
-                
-                monacoEditorRef.current.setValue(extractedCode)
-                
-                // 恢复光标位置和滚动位置
-                monacoEditorRef.current.setPosition(position)
-                monacoEditorRef.current.setScrollTop(scrollTop)
-                monacoEditorRef.current.setScrollLeft(scrollLeft)
-                
-                isUpdatingRef.current = false
-                console.log('Monaco 编辑器更新完成')
-              } else {
-                console.log('Monaco 编辑器不存在或处于 diff 模式')
-              }
-            } else {
-              // 如果没有提取到代码，检查是否整个内容都是代码
-              const trimmedContent = chunk.fullContent.trim()
-              if (trimmedContent.includes('{{') || trimmedContent.includes('{%') || trimmedContent.includes('<')) {
-                console.log('检测到可能的代码内容，实时更新:', trimmedContent.substring(0, 50) + '...')
-                setStreamingProgress(trimmedContent.length)
-                setIsStreamingCode(true)
-                
-                // 立即应用内容到编辑器
-                onChange(trimmedContent)
-                
-                // 如果编辑器存在，直接更新内容
-                if (monacoEditorRef.current && !showDiff) {
-                  isUpdatingRef.current = true
-                  const position = monacoEditorRef.current.getPosition()
-                  const scrollTop = monacoEditorRef.current.getScrollTop()
-                  const scrollLeft = monacoEditorRef.current.getScrollLeft()
-                  
-                  monacoEditorRef.current.setValue(trimmedContent)
-                  
-                  // 恢复光标位置和滚动位置
-                  monacoEditorRef.current.setPosition(position)
-                  monacoEditorRef.current.setScrollTop(scrollTop)
-                  monacoEditorRef.current.setScrollLeft(scrollLeft)
-                  
-                  isUpdatingRef.current = false
-                }
-              } else {
-                // 如果内容看起来像代码，也尝试应用（更激进的策略）
-                const possibleCode = chunk.fullContent.trim()
-                if (possibleCode.length > 10 && (
-                  possibleCode.includes('div') || 
-                  possibleCode.includes('h1') || 
-                  possibleCode.includes('h2') || 
-                  possibleCode.includes('p') || 
-                  possibleCode.includes('span') ||
-                  possibleCode.includes('class') ||
-                  possibleCode.includes('style')
-                )) {
-                  console.log('检测到可能的HTML代码，实时更新:', possibleCode.substring(0, 50) + '...')
-                  setStreamingProgress(possibleCode.length)
-                  setIsStreamingCode(true)
-                  
-                  // 立即应用内容到编辑器
-                  onChange(possibleCode)
-                  
-                  // 如果编辑器存在，直接更新内容
-                  if (monacoEditorRef.current && !showDiff) {
-                    isUpdatingRef.current = true
-                    const position = monacoEditorRef.current.getPosition()
-                    const scrollTop = monacoEditorRef.current.getScrollTop()
-                    const scrollLeft = monacoEditorRef.current.getScrollLeft()
-                    
-                    monacoEditorRef.current.setValue(possibleCode)
-                    
-                    // 恢复光标位置和滚动位置
-                    monacoEditorRef.current.setPosition(position)
-                    monacoEditorRef.current.setScrollTop(scrollTop)
-                    monacoEditorRef.current.setScrollLeft(scrollLeft)
-                    
-                    isUpdatingRef.current = false
-                  }
-                }
-              }
-            }
-          }
-          
-          // 更新聊天消息中的流式内容
+          // 只更新聊天消息中的流式内容，不直接应用代码
           setChatMessages(prev => {
             const newMessages = [...prev]
             const lastMessage = newMessages[newMessages.length - 1]
@@ -202,7 +89,7 @@ const Editor = ({ value, onChange, productData = null }) => {
               lastMessage.content = chunk.fullContent
               
               // 检测是否包含代码块标记
-              if (chunk.content.includes('```')) {
+              if (chunk.content && chunk.content.includes('```')) {
                 console.log('检测到代码块标记:', chunk.content)
                 // 开始或结束代码块
                 if (!lastMessage.isInCodeBlock) {
@@ -228,28 +115,6 @@ const Editor = ({ value, onChange, productData = null }) => {
                   // 更新流式进度
                   setStreamingProgress(currentCode.length)
                   
-                  console.log('代码块内更新，当前代码长度:', currentCode.length)
-                  
-                  // 立即应用代码到编辑器（不使用防抖，实现真正的实时更新）
-                  console.log('立即更新代码到编辑器:', currentCode.substring(0, 50) + '...')
-                  onChange(currentCode)
-                  
-                  // 如果编辑器存在，直接更新内容
-                  if (monacoEditorRef.current && !showDiff) {
-                    isUpdatingRef.current = true
-                    const position = monacoEditorRef.current.getPosition()
-                    const scrollTop = monacoEditorRef.current.getScrollTop()
-                    const scrollLeft = monacoEditorRef.current.getScrollLeft()
-                    
-                    monacoEditorRef.current.setValue(currentCode)
-                    
-                    // 恢复光标位置和滚动位置
-                    monacoEditorRef.current.setPosition(position)
-                    monacoEditorRef.current.setScrollTop(scrollTop)
-                    monacoEditorRef.current.setScrollLeft(scrollLeft)
-                    
-                    isUpdatingRef.current = false
-                  }
                 }
               } else {
                 // 不在代码块内，检查是否应该开始代码块
@@ -257,31 +122,8 @@ const Editor = ({ value, onChange, productData = null }) => {
                   console.log('在完整内容中检测到代码块，开始代码模式')
                   lastMessage.isInCodeBlock = true
                   lastMessage.type = 'code'
+                  lastMessage.content = ''
                   setIsStreamingCode(true)
-                }
-                
-                // 即使不在代码块内，也尝试提取可能的代码内容
-                const possibleCode = extractCodeFromContent(chunk.fullContent)
-                if (possibleCode && possibleCode.length > 5) {
-                  console.log('检测到可能的代码内容，实时更新:', possibleCode.substring(0, 50) + '...')
-                  onChange(possibleCode)
-                  
-                  // 如果编辑器存在，直接更新内容
-                  if (monacoEditorRef.current && !showDiff) {
-                    isUpdatingRef.current = true
-                    const position = monacoEditorRef.current.getPosition()
-                    const scrollTop = monacoEditorRef.current.getScrollTop()
-                    const scrollLeft = monacoEditorRef.current.getScrollLeft()
-                    
-                    monacoEditorRef.current.setValue(possibleCode)
-                    
-                    // 恢复光标位置和滚动位置
-                    monacoEditorRef.current.setPosition(position)
-                    monacoEditorRef.current.setScrollTop(scrollTop)
-                    monacoEditorRef.current.setScrollLeft(scrollLeft)
-                    
-                    isUpdatingRef.current = false
-                  }
                 }
               }
             }
@@ -304,41 +146,56 @@ const Editor = ({ value, onChange, productData = null }) => {
             return newMessages
           })
           
-          // 如果AI返回的是代码，显示diff视图让用户确认
-          if (finalResponse.type === 'code') {
-            // 显示diff视图，让用户查看差异并决定是否接受
-            setDiffData({
-              original: originalCode || value, // 使用保存的原始代码作为对比
-              modified: finalResponse.content
-            })
-            setShowDiff(true)
-            console.log('AI生成代码完成，显示diff视图供用户确认')
+          // 使用patch解析功能处理AI响应
+          try {
+            let processedCode = null
             
-            // 添加一个提示消息
-            setChatMessages(prev => [...prev, {
-              role: 'assistant',
-              content: '代码已生成完成！正在显示差异对比视图，您可以查看修改内容并决定是否应用。',
-              type: 'text',
-              isSystemMessage: true
-            }])
-          } else {
-            // 如果不是代码，但内容看起来像代码，也显示diff视图
-            const possibleCode = finalResponse.content.trim()
-            if (possibleCode.includes('{{') || possibleCode.includes('{%') || possibleCode.includes('<')) {
+            if (finalResponse.type === 'patch') {
+              // 如果AI返回的是patch类型，直接使用
+              processedCode = finalResponse.content
+              console.log('AI返回patch类型，直接使用处理后的代码')
+            } else if (finalResponse.type === 'code') {
+              // 如果AI返回的是代码，直接使用（不需要解析为patch）
+              console.log('AI返回代码类型，直接使用代码')
+              processedCode = finalResponse.content
+            } else {
+              // 如果是文本类型，检查是否包含代码
+              const possibleCode = finalResponse.content.trim()
+              if (possibleCode.includes('{{') || possibleCode.includes('{%') || possibleCode.includes('<')) {
+                console.log('检测到可能的代码内容，直接使用')
+                processedCode = possibleCode
+              }
+            }
+            
+            // 如果有处理后的代码，显示diff视图让用户确认
+            if (processedCode) {
               setDiffData({
-                original: originalCode || value,
-                modified: possibleCode
+                original: originalCode || value, // 使用保存的原始代码作为对比
+                modified: processedCode
               })
               setShowDiff(true)
-              console.log('检测到可能的代码内容，显示diff视图')
+              console.log('显示diff视图供用户确认')
               
+              // 添加一个提示消息
               setChatMessages(prev => [...prev, {
                 role: 'assistant',
-                content: '检测到代码内容！正在显示差异对比视图，您可以查看修改内容并决定是否应用。',
+                content: '代码已生成完成！正在显示差异对比视图，您可以查看修改内容并决定是否应用。',
                 type: 'text',
                 isSystemMessage: true
               }])
+            } else {
+              // 如果没有代码内容，只显示文本消息
+              console.log('AI响应不包含代码内容')
             }
+            
+          } catch (error) {
+            console.error('处理AI响应时出错:', error)
+            // 添加错误消息
+            setChatMessages(prev => [...prev, {
+              role: 'assistant',
+              content: `处理响应时出错: ${error.message}`,
+              type: 'text'
+            }])
           }
           
           setStreamingMessage(null)
