@@ -1,0 +1,216 @@
+.app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  background: #fff;
+  border-bottom: 1px solid #e1e5e9;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.app-header h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.template-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.template-selector label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #555;
+}
+
+.template-selector select {
+  padding: 6px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  background: white;
+  color: #333;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.template-selector select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+}
+
+.view-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.view-controls button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.view-controls button:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.view-controls button.active {
+  background: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+.app-main {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.editor-container,
+.preview-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.editor-container.full,
+.preview-container.full {
+  width: 100%;
+}
+
+.editor-container.split{
+  width: 30%;
+}
+.preview-container.split {
+  width: 70%;
+}
+
+.preview-container {
+  border-left: 1px solid #e1e5e9;
+}
+
+/* 编辑器标签页样式 */
+.editor-tabs {
+  display: flex;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e1e5e9;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b7280;
+  transition: all 0.2s;
+}
+
+.tab-btn:hover {
+  background: #f1f5f9;
+  color: #374151;
+}
+
+.tab-btn.active {
+  color: #3b82f6;
+  border-bottom-color: #3b82f6;
+  background: white;
+}
+
+.editor-content {
+  flex: 1;
+  overflow: hidden;
+}
+
+.publish-view {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  padding: 20px;
+  background: #f8f9fa;
+}
+
+.error {
+  color: #dc2626;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  padding: 1rem;
+  border-radius: 6px;
+  margin: 1rem;
+}
+
+@media (max-width: 768px) {
+  .app-header {
+    padding: 1rem;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .header-controls {
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+  }
+  
+  .template-selector {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .template-selector select {
+    min-width: 200px;
+  }
+  
+  .view-controls {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .view-controls button {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+  }
+  
+  .editor-container.split {
+    width: 100%;
+    height: 50%;
+  }
+  
+  .preview-container.split {
+    width: 100%;
+    height: 50%;
+  }
+  
+  .publish-view {
+    padding: 15px;
+  }
+  
+  .tab-btn {
+    font-size: 12px;
+    padding: 10px 12px;
+  }
+} 
