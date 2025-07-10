@@ -41,14 +41,6 @@ export class Api {
   }
 }
 
-// 角色定义
-export const Role = [
-  {
-    role: 'system',
-    content: '你是一个专业的 Shopify Liquid 模板开发助手。请只返回有效的 Liquid 代码，不要包含任何解释文字、注释或其他内容。'
-  }
-]
-
 // 消息类型
 export class Message {
   constructor(role, content) {
@@ -87,16 +79,10 @@ export class LLMService {
     const modelToUse = model || API_CONFIG.llm.model
     const request = {
       model: modelToUse,
-      messages: [...Role, ...messages],
+      messages: [ ...messages],
       temperature: 0.7,
       stream: stream
     }
-
-    console.log('发送请求到LLM:', {
-      model: modelToUse,
-      messageCount: messages.length,
-      stream: stream
-    })
 
     return this.chatCompletion(request)
   }
@@ -105,15 +91,10 @@ export class LLMService {
     const modelToUse = model || API_CONFIG.llm.model
     const request = {
       model: modelToUse,
-      messages: [...Role, ...messages],
+      messages: [ ...messages],
       temperature: 0.7,
       stream: true
     }
-
-    console.log('发送流式请求到LLM:', {
-      model: modelToUse,
-      messageCount: messages.length
-    })
 
     const url = `${this.api.baseURL}/chat/completions`
     
@@ -158,6 +139,7 @@ export class LLMService {
                 onChunk({
                   done: false,
                   content: parsed.choices[0].delta?.content || '',
+                  reasoning_content: parsed.choices[0].delta?.reasoning_content || '',
                   choice: parsed.choices[0]
                 })
               }

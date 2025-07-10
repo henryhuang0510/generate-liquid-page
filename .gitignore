@@ -1,0 +1,32 @@
+# Node
+node_modules/
+
+# Vite/Build
+/dist/
+/.vite/
+
+# Test coverage
+/coverage/
+
+# Env
+.env
+.env.*
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Mac系统文件
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+
+# Jest
+/jest-coverage/
+
+# 其他
+*.local 

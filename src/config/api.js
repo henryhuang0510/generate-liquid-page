@@ -6,7 +6,8 @@ export const API_CONFIG = {
   llm: {
     apiHost: import.meta.env.VITE_LLM_API_HOST || 'https://api.deepseek.com',
     apiKey: import.meta.env.VITE_LLM_API_KEY || 'your-api-key-here',
-    model: 'doubao-seed-1-6-250615'
+    model: 'deepseek-v3-250324'
+    // model: 'doubao-seed-1-6-250615'
   },
   
   // 其他服务配置

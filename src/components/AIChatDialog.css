@@ -403,6 +403,226 @@
   }
   
   .message-content {
-    max-width: calc(100% - 40px);
+    max-width: calc(100vw - 120px);
   }
+}
+
+/* Markdown 样式 */
+.markdown-code-block {
+  background: #2d2d2d;
+  border-radius: 6px;
+  padding: 12px;
+  margin: 8px 0;
+  overflow-x: auto;
+  border: 1px solid #444;
+}
+
+.markdown-code-block code {
+  background: none;
+  padding: 0;
+  color: #e6e6e6;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.markdown-inline-code {
+  background: #2d2d2d;
+  color: #e6e6e6;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 13px;
+  border: 1px solid #444;
+}
+
+.markdown-table-wrapper {
+  overflow-x: auto;
+  margin: 12px 0;
+}
+
+.markdown-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #2d2d2d;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #444;
+}
+
+.markdown-table th,
+.markdown-table td {
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid #444;
+}
+
+.markdown-table th {
+  background: #333;
+  color: #fff;
+  font-weight: 600;
+}
+
+.markdown-table td {
+  color: #e6e6e6;
+}
+
+.markdown-table tr:last-child td {
+  border-bottom: none;
+}
+
+.markdown-list {
+  margin: 8px 0;
+  padding-left: 20px;
+  color: #e6e6e6;
+}
+
+.markdown-list li {
+  margin-bottom: 4px;
+  line-height: 1.5;
+}
+
+.markdown-link {
+  color: #4a9eff;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.markdown-link:hover {
+  border-bottom-color: #4a9eff;
+}
+
+.markdown-blockquote {
+  border-left: 4px solid #4a9eff;
+  margin: 12px 0;
+  padding: 8px 16px;
+  background: #252525;
+  border-radius: 0 6px 6px 0;
+  color: #ccc;
+  font-style: italic;
+}
+
+/* 消息文本中的markdown样式 */
+.message-text h1,
+.message-text h2,
+.message-text h3,
+.message-text h4,
+.message-text h5,
+.message-text h6 {
+  color: #fff;
+  margin: 16px 0 8px 0;
+  font-weight: 600;
+}
+
+.message-text h1 { font-size: 24px; }
+.message-text h2 { font-size: 20px; }
+.message-text h3 { font-size: 18px; }
+.message-text h4 { font-size: 16px; }
+.message-text h5 { font-size: 14px; }
+.message-text h6 { font-size: 12px; }
+
+.message-text p {
+  margin: 8px 0;
+  line-height: 1.6;
+  color: #e6e6e6;
+}
+
+.message-text strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+.message-text em {
+  color: #ccc;
+  font-style: italic;
+}
+
+.message-text hr {
+  border: none;
+  border-top: 1px solid #444;
+  margin: 16px 0;
+}
+
+/* 流式显示时的光标样式 */
+.message.streaming .markdown-code-block .streaming-cursor,
+.message.streaming .markdown-inline-code .streaming-cursor {
+  animation: blink 1s infinite;
+  color: #4a9eff;
+  font-weight: bold;
+}
+
+/* 推理内容样式 */
+.reasoning-content {
+  background: #1a1a1a;
+  border: 1px solid #444;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+.reasoning-header {
+  background: #2d2d2d;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid #444;
+}
+
+.reasoning-icon {
+  font-size: 14px;
+}
+
+.reasoning-label {
+  color: #ccc;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.reasoning-text {
+  padding: 12px;
+  color: #e6e6e6;
+  font-size: 13px;
+  line-height: 1.5;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  background: #1a1a1a;
+}
+
+/* 主要内容样式 */
+.main-content {
+  background: #252525;
+  border: 1px solid #333;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.main-content-header {
+  background: #333;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid #444;
+}
+
+.main-content-icon {
+  font-size: 14px;
+}
+
+.main-content-label {
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* 流式推理内容的光标样式 */
+.message.streaming .reasoning-text .streaming-cursor {
+  animation: blink 1s infinite;
+  color: #ff9800;
+  font-weight: bold;
 } 

@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useCallback, useState } from 'react'
 import * as monaco from 'monaco-editor'
 import AIChatDialog from './AIChatDialog'
 import { aiService } from '../services/aiService'
-import { parseAndApplyPatch } from '../services/aiService'
 import './Editor.css'
 
 const Editor = ({ value, onChange, productData = null }) => {
@@ -86,44 +85,55 @@ const Editor = ({ value, onChange, productData = null }) => {
             const newMessages = [...prev]
             const lastMessage = newMessages[newMessages.length - 1]
             if (lastMessage && lastMessage.isStreaming) {
-              lastMessage.content = chunk.fullContent
+              // 处理reasoning_content
+              if (chunk.reasoning_content) {
+                if (!lastMessage.reasoning_content) {
+                  lastMessage.reasoning_content = ''
+                }
+                lastMessage.reasoning_content += chunk.reasoning_content
+              }
               
-              // 检测是否包含代码块标记
-              if (chunk.content && chunk.content.includes('```')) {
-                console.log('检测到代码块标记:', chunk.content)
-                // 开始或结束代码块
-                if (!lastMessage.isInCodeBlock) {
-                  lastMessage.isInCodeBlock = true
-                  lastMessage.type = 'code'
-                  lastMessage.content = ''
-                  setIsStreamingCode(true)
-                  console.log('开始检测到代码块，准备实时更新')
-                } else {
-                  // 代码块结束，提取完整代码
-                  const extractedCode = extractCodeFromContent(chunk.fullContent)
-                  if (extractedCode) {
-                    lastMessage.content = extractedCode
-                    console.log('代码块完成，最终代码长度:', extractedCode.length)
+              // 处理content
+              if (chunk.content) {
+                lastMessage.content = chunk.fullContent
+                
+                // 检测是否包含代码块标记
+                if (chunk.content.includes('```')) {
+                  console.log('检测到代码块标记:', chunk.content)
+                  // 开始或结束代码块
+                  if (!lastMessage.isInCodeBlock) {
+                    lastMessage.isInCodeBlock = true
+                    lastMessage.type = 'code'
+                    lastMessage.content = ''
+                    setIsStreamingCode(true)
+                    console.log('开始检测到代码块，准备实时更新')
+                  } else {
+                    // 代码块结束，提取完整代码
+                    const extractedCode = extractCodeFromContent(chunk.fullContent)
+                    if (extractedCode) {
+                      lastMessage.content = extractedCode
+                      console.log('代码块完成，最终代码长度:', extractedCode.length)
+                    }
                   }
-                }
-              } else if (lastMessage.isInCodeBlock) {
-                // 在代码块内部，实时更新代码内容
-                const currentCode = extractCodeFromContent(chunk.fullContent)
-                if (currentCode) {
-                  lastMessage.content = currentCode
-                  
-                  // 更新流式进度
-                  setStreamingProgress(currentCode.length)
-                  
-                }
-              } else {
-                // 不在代码块内，检查是否应该开始代码块
-                if (chunk.fullContent.includes('```') && !lastMessage.isInCodeBlock) {
-                  console.log('在完整内容中检测到代码块，开始代码模式')
-                  lastMessage.isInCodeBlock = true
-                  lastMessage.type = 'code'
-                  lastMessage.content = ''
-                  setIsStreamingCode(true)
+                } else if (lastMessage.isInCodeBlock) {
+                  // 在代码块内部，实时更新代码内容
+                  const currentCode = extractCodeFromContent(chunk.fullContent)
+                  if (currentCode) {
+                    lastMessage.content = currentCode
+                    
+                    // 更新流式进度
+                    setStreamingProgress(currentCode.length)
+                    
+                  }
+                } else {
+                  // 不在代码块内，检查是否应该开始代码块
+                  if (chunk.fullContent.includes('```') && !lastMessage.isInCodeBlock) {
+                    console.log('在完整内容中检测到代码块，开始代码模式')
+                    lastMessage.isInCodeBlock = true
+                    lastMessage.type = 'code'
+                    lastMessage.content = ''
+                    setIsStreamingCode(true)
+                  }
                 }
               }
             }
@@ -134,17 +144,17 @@ const Editor = ({ value, onChange, productData = null }) => {
         (finalResponse) => {
           console.log('AI流式响应完成:', finalResponse)
           
-          // 更新最终消息
-          setChatMessages(prev => {
-            const newMessages = [...prev]
-            const lastMessage = newMessages[newMessages.length - 1]
-            if (lastMessage && lastMessage.isStreaming) {
-              lastMessage.content = finalResponse.content
-              lastMessage.type = finalResponse.type
-              lastMessage.isStreaming = false
-            }
-            return newMessages
-          })
+          // // 更新最终消息
+          // setChatMessages(prev => {
+          //   const newMessages = [...prev]
+          //   const lastMessage = newMessages[newMessages.length - 1]
+          //   if (lastMessage && lastMessage.isStreaming) {
+          //     lastMessage.content = finalResponse.content
+          //     lastMessage.type = finalResponse.type
+          //     lastMessage.isStreaming = false
+          //   }
+          //   return newMessages
+          // })
           
           // 使用patch解析功能处理AI响应
           try {
@@ -298,7 +308,111 @@ const Editor = ({ value, onChange, productData = null }) => {
         setStreamingProgress(0)
         console.log('测试流式更新完成')
       }
-    }, 200) // 每200ms更新一次
+    }, 200)
+  }
+
+  // 测试包含reasoning_content的流式响应
+  const handleTestReasoningStreaming = () => {
+    console.log('开始测试包含推理内容的流式响应...')
+    
+    // 添加用户消息
+    const userMessage = {
+      role: 'user',
+      content: '请帮我优化这个Liquid模板'
+    }
+    setChatMessages([userMessage])
+    
+    // 创建流式AI响应消息
+    const streamingResponse = {
+      role: 'assistant',
+      content: '',
+      reasoning_content: '',
+      type: 'text',
+      isStreaming: true
+    }
+    setChatMessages(prev => [...prev, streamingResponse])
+    
+    // 模拟流式推理内容
+    const reasoningParts = [
+      '用户输入了"请帮我优化这个Liquid模板"',
+      '，这看起来',
+      '是一个',
+      'Liquid模板优化请求',
+      '。我需要分析当前的模板代码',
+      '并提供改进建议。'
+    ]
+    
+    // 模拟流式内容
+    const contentParts = [
+      '我来帮你优化这个Liquid模板。',
+      '\n\n## 优化建议\n\n',
+      '1. **性能优化**\n',
+      '2. **代码结构优化**\n',
+      '3. **用户体验优化**\n\n',
+      '```liquid\n',
+      '<div class="product-card">\n',
+      '  <h2>{{ product.title }}</h2>\n',
+      '  <p class="price">{{ product.price | money }}</p>\n',
+      '  <div class="description">\n',
+      '    {{ product.description }}\n',
+      '  </div>\n',
+      '  {% if product.available %}\n',
+      '    <button class="buy-btn">购买</button>\n',
+      '  {% endif %}\n',
+      '</div>\n',
+      '```'
+    ]
+    
+    let reasoningIndex = 0
+    let contentIndex = 0
+    
+    const reasoningInterval = setInterval(() => {
+      if (reasoningIndex < reasoningParts.length) {
+        setChatMessages(prev => {
+          const newMessages = [...prev]
+          const lastMessage = newMessages[newMessages.length - 1]
+          if (lastMessage && lastMessage.isStreaming) {
+            if (!lastMessage.reasoning_content) {
+              lastMessage.reasoning_content = ''
+            }
+            lastMessage.reasoning_content += reasoningParts[reasoningIndex]
+          }
+          return newMessages
+        })
+        reasoningIndex++
+      } else {
+        clearInterval(reasoningInterval)
+      }
+    }, 300)
+    
+    const contentInterval = setInterval(() => {
+      if (contentIndex < contentParts.length) {
+        setChatMessages(prev => {
+          const newMessages = [...prev]
+          const lastMessage = newMessages[newMessages.length - 1]
+          if (lastMessage && lastMessage.isStreaming) {
+            if (!lastMessage.content) {
+              lastMessage.content = ''
+            }
+            lastMessage.content += contentParts[contentIndex]
+          }
+          return newMessages
+        })
+        contentIndex++
+      } else {
+        clearInterval(contentInterval)
+        // 完成流式响应
+        setChatMessages(prev => {
+          const newMessages = [...prev]
+          const lastMessage = newMessages[newMessages.length - 1]
+          if (lastMessage && lastMessage.isStreaming) {
+            lastMessage.isStreaming = false
+          }
+          return newMessages
+        })
+        console.log('测试推理流式响应完成')
+      }
+    }, 500)
   }
 
   // 停止流式代码更新
@@ -398,7 +512,6 @@ const Editor = ({ value, onChange, productData = null }) => {
 
   // Diff编辑器初始化
   useEffect(() => {
-    console.log('Diff编辑器useEffect触发:', { showDiff, hasDiffData: !!diffData, hasEditorRef: !!editorRef.current })
     
     if (showDiff && diffData && editorRef.current) {
       console.log('开始创建diff编辑器...')
@@ -766,6 +879,17 @@ const Editor = ({ value, onChange, productData = null }) => {
                   <path d="M8 1L15 8L8 15M1 8H15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
                 测试流式
+              </button>
+              <button 
+                className="reasoning-test-btn"
+                onClick={handleTestReasoningStreaming}
+                title="测试推理流式响应"
+              >
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M8 1C4.13 1 1 4.13 1 8s3.13 7 7 7 7-3.13 7-7-3.13-7-7-7z" stroke="currentColor" strokeWidth="2"/>
+                  <path d="M8 4v4M8 12h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
+                测试推理
               </button>
               <button 
                 className="ai-assistant-btn"
