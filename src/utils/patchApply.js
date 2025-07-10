@@ -24,14 +24,14 @@ export function parseAndApplyPatch(patchText, originalCode) {
     // 兼容两种格式：@@ ... @@ 和 @@ -199,11 +199,11 @@
     const hunkBlocks = patchText.split(/@@[^@]*@@\n/).slice(1).map(block => {
         // 前后空行去掉，防止干扰
-      const lines = block.trim().split('\n');
+      const lines = block.trimEnd().split('\n');
       return lines.map(line => {
         if (line.trim().startsWith('+')) {
-            return {type: 'insert', content: line.replace('+', '')}
+            return {type: 'insert', content: line.replace('+', ' ')}
         } else if (line.trim().startsWith('-')) {
-            return {type: 'remove', content: line.replace('-', '')}
+            return {type: 'remove', content: line.replace('-', ' ')}
         } else {
-            return {type: 'context', content: line}
+            return {type: 'context', content: line.startsWith(' ') ? line.slice(1) : line}
         }
       });
     });
@@ -56,7 +56,8 @@ export function parseAndApplyPatch(patchText, originalCode) {
             newBlock.push(line.content);
         }
       }
-  
+      
+      // TODO: 替换这里还需要优化，可能context的长度 和匹配的行数不一致
       workingLines.splice(matchIndex, context.length, ...newBlock);
     }
     console.log("================================", workingLines.join('\n'))
@@ -70,289 +71,156 @@ export function parseAndApplyPatch(patchText, originalCode) {
   function findBestMatchIndex(lines, context) {
       const maxOffset = lines.length - context.length;
       console.log(`开始匹配，原始:`,lines, `上下文:`, context, `maxOffset: ${maxOffset}`)
-    for (let i = 0; i <= maxOffset; i++) {
-      let match = true;
-      let findMatchStart = false;
-      for (let j = 0; j < context.length; j++) {
-        const targetLine = lines[i + j].trim();
-        const expectedLine = context[j].trim();
-        if (targetLine !== expectedLine) {
-            if(findMatchStart){
-                console.log(`origin line: “${targetLine}”, context line: “${expectedLine}”`)
-                console.log(`从第${i}行开始匹配，第${j}行不匹配`)
-                findMatchStart = false;
+      
+      let bestMatchIndex = -1;
+      let bestMatchScore = 0;
+      
+      for (let i = 0; i <= maxOffset; i++) {
+        let matchScore = 0;
+        let consecutiveMatches = 0;
+        let totalMatches = 0;
+        let findStart = false;
+        
+        for (let j = 0; j < context.length; j++) {
+          const targetLine = lines[i + j].trim();
+          const expectedLine = context[j].trim();
+          
+          if (targetLine === expectedLine) {
+            findStart = true;
+            consecutiveMatches++;
+            totalMatches++;
+            // console.log(`origin line: "${targetLine}", context line: "${expectedLine}"`)
+            // console.log(`从第${i}行开始匹配，第${j}行匹配，连续匹配: ${consecutiveMatches}`)
+          } else {
+            if (findStart) {
+            //   console.log(`origin line: "${targetLine}", context line: "${expectedLine}"`)
+            //   console.log(`从第${i}行开始匹配，第${j}行不匹配`)
+              consecutiveMatches = 0;
             }
-            match = false;
-            break;
+          }
         }
-        findMatchStart = true;
-        console.log(`origin line: “${targetLine}”, context line: “${expectedLine}”`)
-        console.log(`从第${i}行开始匹配，第${j}行匹配`)
+        
+        // 计算匹配分数：总匹配数 + 连续匹配的奖励分数
+        matchScore = totalMatches + (consecutiveMatches * 0.5);
+        
+        // 如果找到更好的匹配，更新最佳匹配
+        if (matchScore > bestMatchScore) {
+          bestMatchScore = matchScore;
+          bestMatchIndex = i;
+          console.log(`找到更好的匹配，索引: ${i}, 分数: ${matchScore}`);
+          if(totalMatches === context.length) {
+            console.log(`完全匹配，索引: ${i}, 分数: ${matchScore}`);
+            return i;
+          }
+        }
       }
-      if (match) return i;
-    }
-    return -1;
+      
+      // 只有当匹配分数达到一定阈值时才返回匹配结果
+      const minMatchThreshold = context.length * 0.7; // 至少70%的匹配
+      if (bestMatchScore >= minMatchThreshold) {
+        console.log(`模糊匹配索引: ${bestMatchIndex}, 分数: ${bestMatchScore}`);
+        return bestMatchIndex;
+      }
+      
+      console.log(`未找到足够好的匹配，最佳分数: ${bestMatchScore}, 阈值: ${minMatchThreshold}`);
+      return -1;
   }
   
 
 // test
-const testArray = [{
-    name: '基础测试',
-    originalCode: `
-    <div class="container">
-        <h1>Hello</h1>
-    </div>
-    `,
-    patchText: 
-    `@@ ... @@
-    <div class="container">
-    -    <h1>Hello</h1>
-    +    <h1>Hello World</h1>
-    </div>
-    `,
-}, {
-    name: '测试新增',
-    originalCode: `
-    <div class="container">
-        <h1>Hello</h1>
-    </div>
-    `,
-    patchText: 
-    `@@ ... @@
-    <div class="container">
-         <h1>Hello</h1>
-    +    <h1>World</h1>
-    +    <h1>World2</h1>
-    +    <h1>World3</h1>
-    +    <h1>World4</h1>
-    +    <h1>World5</h1>
-    </div>
-    `
-}, {
-    name: '测试缩进不一致',
-    originalCode: `
-    <div class="container">
-        <h1>Hello</h1>
-    </div>
-    `,
-    patchText: 
-    `@@ ... @@
-        <div class="container">
-    -<h1>Hello</h1>
-    + <h1>World</h1>
-    +  <h1>World2</h1>
-    +<h1>World3</h1>`
-}, {
-    name: '测试缩进不一致',
-    originalCode: `
-    <div class="container">
-        <h1>Hello</h1>
-    </div>
-    `,
-    patchText: 
-    `@@ ... @@
-        <div class="container">
-    -<h1>Hello</h1>
-    + <h1>World</h1>
-    +  <h1>World2</h1>
-    +<h1>World3</h1>`
-}, {
-    name: '测试多次修改',
-    originalCode: `
-    <div class="container1">
-        <h1>Hello</h1>
-    </div>
-    <div class="container2">
-        <h1>Hello</h1>
-    </div>
-    <div class="container3">
-        <h1>Hello</h1>
-    </div>
-    <div class="container4">
-        <h1>Hello</h1>
-    </div>
-    `,
-    patchText: 
-    `@@ ... @@
-    <div class="container2">
-    -    <h1>Hello</h1>
-    +    <h1>World</h1>
-    </div>
-    <div class="container3">
-        <h1>Hello</h1>
-    +    <h1>World</h1>
-    </div>`
-}, {
+const testArray = [
+// {
+//     name: '基础测试',
+//     originalCode: `
+//     <div class="container">
+//         <h1>Hello</h1>
+//     </div>
+//     `,
+//     patchText: 
+//     `@@ ... @@
+//     <div class="container">
+//     -    <h1>Hello</h1>
+//     +    <h1>Hello World</h1>
+//     </div>
+//     `,
+// }, 
+// {
+//     name: '测试新增',
+//     originalCode: `
+//     <div class="container">
+//         <h1>Hello</h1>
+//     </div>
+//     `,
+//     patchText: 
+//     `@@ ... @@
+//     <div class="container">
+//          <h1>Hello</h1>
+//     +    <h1>World</h1>
+//     +    <h1>World2</h1>
+//     +    <h1>World3</h1>
+//     +    <h1>World4</h1>
+//     +    <h1>World5</h1>
+//     </div>
+//     `
+// }, {
+//     name: '测试缩进不一致',
+//     originalCode: `
+//     <div class="container">
+//         <h1>Hello</h1>
+//     </div>
+//     `,
+//     patchText: 
+//     `@@ ... @@
+//         <div class="container">
+//     -<h1>Hello</h1>
+//     + <h1>World</h1>
+//     +  <h1>World2</h1>
+//     +<h1>World3</h1>`
+// }, {
+//     name: '测试缩进不一致',
+//     originalCode: `
+//     <div class="container">
+//         <h1>Hello</h1>
+//     </div>
+//     `,
+//     patchText: 
+//     `@@ ... @@
+//         <div class="container">
+//     -<h1>Hello</h1>
+//     + <h1>World</h1>
+//     +  <h1>World2</h1>
+//     +<h1>World3</h1>`
+// }, {
+//     name: '测试多次修改',
+//     originalCode: `
+//     <div class="container1">
+//         <h1>Hello</h1>
+//     </div>
+//     <div class="container2">
+//         <h1>Hello</h1>
+//     </div>
+//     <div class="container3">
+//         <h1>Hello</h1>
+//     </div>
+//     <div class="container4">
+//         <h1>Hello</h1>
+//     </div>
+//     `,
+//     patchText: 
+//     `@@ ... @@
+//     <div class="container2">
+//     -    <h1>Hello</h1>
+//     +    <h1>World</h1>
+//     </div>
+//     <div class="container3">
+//         <h1>Hello</h1>
+//     +    <h1>World</h1>
+//     </div>`
+// }, 
+{
     name: '测试多个patch',
     originalCode: 
-`<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ product.title }} - {{ shop.name }}</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
-    <style>
-        /* 重置样式 */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #fff;
-        }
-
-        /* 布局样式 */
-        .slr-container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 1rem;
-        }
-
-        .slr-product-layout {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2rem;
-            padding: 2rem 0;
-        }
-
-        .slr-product-gallery {
-            width: 100%;
-        }
-
-        .slr-product-info {
-            width: 100%;
-        }
-
-        @media (min-width: 1024px) {
-            .slr-product-gallery {
-                width: calc(50% - 1rem);
-            }
-            .slr-product-info {
-                width: calc(50% - 1rem);
-            }
-        }
-
-        /* 图片样式 */
-        .slr-main-image-container {
-            position: relative;
-            aspect-ratio: 1;
-            overflow: hidden;
-            margin-bottom: 1rem;
-        }
-
-        .slr-main-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            cursor: zoom-in;
-        }
-
-        .slr-thumbnail-container {
-            position: relative;
-            flex-shrink: 0;
-        }
-
-        .slr-thumbnail-grid {
-            display: flex;
-            gap: 1rem;
-            overflow-x: auto;
-            padding-bottom: 1rem;
-        }
-
-        .slr-thumbnail-btn {
-            width: 6rem;
-            height: 6rem;
-            overflow: hidden;
-            border: 2px solid transparent;
-            background: #fff;
-            cursor: pointer;
-            transition: all 0.15s ease;
-        }
-
-        .slr-thumbnail-btn.locked {
-            border-color: #222222 !important;
-        }
-
-        .slr-thumbnail-btn:hover {
-            border-color: #222222;
-        }
-
-        .slr-thumbnail-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* 悬停预览样式 */
-        .slr-thumbnail-container:hover .slr-hover-preview {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .slr-hover-preview {
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            margin-bottom: 0.5rem;
-            width: 12rem;
-            height: 12rem;
-            overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s;
-        }
-
-        /* 产品信息样式 */
-        .slr-product-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-
-        .slr-price-container {
-            display: flex;
-            align-items: baseline;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .slr-current-price {
-            font-size: 1.875rem;
-            font-weight: 700;
-            color: #222222;
-        }
-
-        .slr-compare-price {
-            font-size: 1.125rem;
-            color: #9ca3af;
-            text-decoration: line-through;
-        }
-
-        /* 选项样式 */
-        .slr-option-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .slr-option-label {
-            font-size: 0.875rem;
-            font-weight: 500;
-            margin-bottom: 0.75rem;
-            display: block;
-        }
-
-        .slr-option-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-        }
-
-        .slr-option-radio {
+`       .slr-option-radio {
             display: none;
         }
 
@@ -636,6 +504,7 @@ const testArray = [{
                 background: #fff;
                 color: #000;
                 border: 2px solid #e5e7eb;
+-               border-radius: 8px;
                 padding: 0.5rem 1rem;
                 font-size: 0.875rem;
                 transition: all 0.15s ease;
@@ -653,6 +522,7 @@ const testArray = [{
                 width: 8rem;
                 height: 2.5rem;
                 border: 2px solid #e5e7eb;
+-               border-radius: 8px;
             }
 
 @@ ... @@
@@ -660,17 +530,19 @@ const testArray = [{
                 flex: 1;
                 height: 3rem;
                 font-weight: 500;
+-               border-radius: 8px;
                 border: none;
                 cursor: pointer;
                 transition: all 0.15s ease;
                 font-size: 1rem;
             }`
-}]
+}
+]
 
-// testArray.forEach(test => {
-//     const result = parseAndApplyPatch(test.patchText, test.originalCode);
-//     console.log(`${test.name}
-//         原始代码: ${test.originalCode}
-//         补丁代码: ${test.patchText}
-//         结果: ${result}`)
-// });
+testArray.forEach(test => {
+    const result = parseAndApplyPatch(test.patchText, test.originalCode);
+    console.log(`${test.name}
+        原始代码: ${test.originalCode}
+        补丁代码: ${test.patchText}
+        结果: ${result}`)
+});
