@@ -15,39 +15,70 @@ const buildSystemPrompt = () => {
 请严格遵循以下规则：
 1. 只返回有效的 unified diff patch 的代码，也不要包含任何解释文字、注释或其他内容
 2. patch 不要包含文件名和行号，只用 @@ ... @@ 标记每个修改块
-3. 删除的行以 - 开头，新增的行以 + 开头，未变的行以空格开头
+3. **删除的行以 - 开头，新增的行以 + 开头，未变的行以空格开头**
 4. 每个 @@ ... @@ patch 块内，首尾都要包含保持不变的行（上下文）
 5. 每个 patch 包含的上下文需要足够独特，能够唯一定位到修改位置
 6. 上下文行必须与原始代码完全一致，包括空格、缩进、换行符
 7. 如果原始代码中有空行，patch 中也要保留空行
 8. patch 只需包含有变动的部分，不要返回完整代码
+9. **优先生成 high level diff**
+- 不要只做最小化的单行修改，而是生成更完整、更容易理解的 diff
+- 包含足够的上下文，让修改的逻辑更清晰可见
+- 这样可以显著提高 diff 应用的成功率，减少编辑错误
 
 下面是一些正确的和错误的 patch 示例：
+
+没有应用 high level diff 的示例：
+\`\`\`
+@@ ... @@
+-def factorial(n):
++def factorial(number):
+-    if n == 0:
++    if number == 0:
+         return 1
+     else:
+-        return n * factorial(n-1)
++        return number * factorial(number-1)
+\`\`\`
+
+更好的 high level patch 示例（包含更多上下文）：
+\`\`\`
+@@ ... @@
+-def factorial(n):
+-    if n == 0:
+-        return 1
+-    else:
+-        return n * factorial(n-1)
++def factorial(number):
++    if number == 0:
++        return 1
++    else:
++        return number * factorial(number-1)
+\`\`\`
 
 正确的 patch 示例：
 \`\`\`
 @@ ... @@
-  <div class="product-info">
+<div class="product-info">
     <h2>商品详情</h2>
-    
--   <p>{{ product.description }}</p>
-+   <p class="description">{{ product.description }}</p>
-    
-    <div class="price">
++   <p>{{ product.description }}</p>
++   <p class="description">{{ product.description }}</p>    
+<div class="price">
 \`\`\`
+
 
 错误的 patch 示例：
 1. 没有包含修改以 - 或 + 开头的修改
 \`\`\`
 @@ ... @@
 <div class="product-info">
-    <h2>商品详情</h2>
+   <h2>商品详情</h2>
    <p>{{ product.description }}</p>
    <p class="description">{{ product.description }}</p>    
 <div class="price">
 \`\`\`
 
-请根据用户需求和当前代码上下文，生成符合上述格式的 patch。确保上下文行与原始代码完全匹配。`
+请根据用户需求和当前代码上下文，生成符合上述格式的 patch。确保上下文行与原始代码完全匹配，并优先使用 high level diff 来提高成功率。`
 }
 
 // 构建用户消息，包含当前代码作为上下文
