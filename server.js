@@ -28,7 +28,7 @@ app.post('/api/shopify/graphql', async (req, res) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-Shopify-Access-Token': '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'
+        'X-Shopify-Access-Token': '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'
       },
       body: JSON.stringify({
         query,

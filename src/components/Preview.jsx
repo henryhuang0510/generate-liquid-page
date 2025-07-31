@@ -1,8 +1,9 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import './Preview.css'
 
 const Preview = ({ html }) => {
   const iframeRef = useRef(null)
+  const [deviceMode, setDeviceMode] = useState('desktop') // 'desktop', 'tablet', 'mobile'
 
   useEffect(() => {
     if (!html || !iframeRef.current) return
@@ -46,18 +47,60 @@ const Preview = ({ html }) => {
     }
   }, [html])
 
+  const handleDeviceChange = (device) => {
+    setDeviceMode(device)
+  }
+
   return (
     <div className="preview-wrapper">
       <div className="preview-header">
         <span>实时预览</span>
+        <div className="device-controls">
+          <button 
+            className={`device-btn ${deviceMode === 'desktop' ? 'active' : ''}`}
+            onClick={() => handleDeviceChange('desktop')}
+            title="桌面端预览"
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <rect x="2" y="3" width="12" height="9" rx="1" stroke="currentColor" strokeWidth="1.5"/>
+              <path d="M4 12h8" stroke="currentColor" strokeWidth="1.5"/>
+              <path d="M6 15h4" stroke="currentColor" strokeWidth="1.5"/>
+            </svg>
+            桌面端
+          </button>
+          <button 
+            className={`device-btn ${deviceMode === 'tablet' ? 'active' : ''}`}
+            onClick={() => handleDeviceChange('tablet')}
+            title="平板端预览"
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <rect x="3" y="2" width="10" height="12" rx="1" stroke="currentColor" strokeWidth="1.5"/>
+              <circle cx="8" cy="14" r="1" fill="currentColor"/>
+            </svg>
+            平板端
+          </button>
+          <button 
+            className={`device-btn ${deviceMode === 'mobile' ? 'active' : ''}`}
+            onClick={() => handleDeviceChange('mobile')}
+            title="移动端预览"
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <rect x="4" y="2" width="8" height="12" rx="1" stroke="currentColor" strokeWidth="1.5"/>
+              <circle cx="8" cy="14" r="1" fill="currentColor"/>
+            </svg>
+            移动端
+          </button>
+        </div>
       </div>
-      <div className="preview-content">
-        <iframe
-          ref={iframeRef}
-          title="预览"
-          className="preview-iframe"
-          sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
-        />
+      <div className={`preview-content preview-${deviceMode}`}>
+        <div className="device-frame">
+          <iframe
+            ref={iframeRef}
+            title="预览"
+            className="preview-iframe"
+            sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
+          />
+        </div>
       </div>
     </div>
   )

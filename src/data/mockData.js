@@ -505,6 +505,6 @@ export const mockData = {
   },
   shop: {
     currency: "USD",
-    money_format: "{{ amount }}",
+    money_format: "${{ amount }}",
   }
 }
