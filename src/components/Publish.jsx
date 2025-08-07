@@ -24,6 +24,7 @@ const Publish = ({ liquidCode, onPublishSuccess, onPublishError, productData = n
   // 当主题信息加载后，自动填充主题ID
   useEffect(() => {
     if (currentTheme && !themeId) {
+      console.log("当前主题id",currentTheme)
       setThemeId(currentTheme.id)
     }
   }, [currentTheme, themeId])

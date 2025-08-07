@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<style>
+            /* 全局重置 */
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+                    sans-serif;
+                color: #111827;
+                background-color: #ffffff;
+            }
+
+            /* 布局容器 */
+            .slr-section-container {
+                padding: 2rem 1rem;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 3rem;
+            }
+            .slr-section-container-left {
+                width: 100%;
+            }
+            .slr-container-left-product img {
+                width: 100%;
+                height: auto;
+            }
+
+            .slr-section-container-right {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+                color: #4d9e76;
+            }
+            .slr-container-right-title {
+                width: 100%;
+                margin-top: 1.5rem;
+                word-break: break-word;
+                font-family: "YourHeadingFont", sans-serif;
+                font-size: 2rem;
+                font-weight: bold;
+                text-align: left;
+            }
+            .slr-container-right-price {
+                width: 100%;
+                font-family: "YourPriceFont", sans-serif;
+                font-size: 1.5rem;
+                font-weight: bold;
+                margin-bottom: 1rem;
+            }
+
+            .slr-container-right-preview {
+                width: 100%;
+                overflow-x: auto;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 1rem;
+                cursor: pointer;
+            }
+            .slr-container-right-description {
+                width: 100%;
+                font-family: "YourDescriptionFont", sans-serif;
+                font-size: 1rem;
+                line-height: 1.5;
+                text-align: left;
+            }
+            .slr-container-right-more {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                cursor: pointer;
+            }
+
+            .slr-container-right-buttons {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                margin: 1rem 0;
+            }
+            .slr-container-right-buttons .slr-button-add {
+                width: 100%;
+                padding: 0.8rem;
+                color: #4d9e76;
+                border: 2px solid #4d9e76;
+                font-size: 1rem;
+                font-weight: bold;
+                cursor: pointer;
+                border-radius: 2rem;
+            }
+            .slr-container-right-buttons .slr-button-add:hover {
+                background-color: #4d9e76;
+                color: #ffffff;
+            }
+
+            .slr-container-right-buttons .slr-button-buy {
+                width: 100%;
+                padding: 0.8rem;
+                background-color: #4d9e76;
+                color: #ffffff;
+                border: none;
+                font-size: 1rem;
+                font-weight: bold;
+                cursor: pointer;
+                border-radius: 2rem;
+            }
+
+            .slr-container-right-variants .slr-container-right-variants-list {
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-start;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            .slr-container-right-variants-list button {
+                border-radius: 0.8rem;
+                padding: 0.35rem;
+                cursor: pointer;
+                background-color: transparent;
+                color: #4d9e76;
+                font-size: 0.9rem;
+                border: none;
+            }
+            .slr-container-right-variants-list .active {
+                border: 2px solid #4d9e76;
+            }
+            .slr-container-right-variants-info {
+                margin: 1.25rem 0.5rem;
+            }
+
+            .slr-container-right-promise {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-evenly;
+                gap: 0.5rem;
+            }
+            .slr-container-right-promise .slr-container-right-promise-item {
+                width: 80px;
+                height: 100px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+            .slr-container-right-promise-item .slr-container-right-promise-icon {
+                border: 2px solid #333;
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                color: #0c221a;
+                background-color: rgba(185, 225, 202, 1);
+            }
+            .slr-container-right-promise-item .slr-container-right-promise-text {
+                text-align: center;
+            }
+
+            .slr-section-container-feature {
+                position: relative;
+                color: #ffffff;
+                margin-top: 100px;
+                padding: 45px 0;
+                background-color: #8b635c;
+            }
+            .feature-mask {
+                width: 100%;
+                height: 200px;
+                position: absolute;
+                top: -130px;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: #ffffff;
+                z-index: -1;
+            }
+
+            .shape-divider {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                border: none;
+            }
+            .shape-divider .shape-divider-stroke {
+                stroke: rgb(0, 0, 0);
+                stroke-width: 0;
+            }
+            .feature-text {
+                width: 80%;
+                margin: auto;
+                font-size: 4rem;
+                font-weight: 700;
+                letter-spacing: -0.05em;
+            }
+
+            @media screen and (max-width: 768px) {
+                .slr-section-container {
+                    grid-template-columns: 1fr;
+                    gap: 0;
+                }
+                .slr-section-container .slr-container-left-preview {
+                    padding: 1rem 0;
+                }
+                .slr-container-right-title {
+                    font-size: 1.5rem;
+                }
+                .slr-container-right-price {
+                    font-size: 1.2rem;
+                }
+
+                .slr-container-right-description {
+                    font-size: 0.9rem;
+                }
+                .feature-text {
+                    font-size: 2rem;
+                }
+                .feature-mask {
+                    top: -108px;
+                }
+            }
+        </style>
+	</head>
+	<body>
+		<section class="slr-section-container">
+			<div class="slr-section-container-left">
+				<svg
+					width="0"
+					height="0"
+					viewBox="0 0 200 200"
+					role="presentation"
+					aria-hidden="true"
+					focusable="false"
+				>
+					<defs>
+						<clipPath
+							id="clip-template--19410527092950__main"
+							clipPathUnits="objectBoundingBox"
+						>
+							<path
+								clip-rule="evenodd"
+								transform="scale(0.005,0.005)"
+								d="M194.825 103.388C193.919 102.391 192.825 101.582 191.604 101.005C190.382 100.429 189.059 100.098 187.709 100.031C190.434 99.8878 192.992 98.681 194.825 96.6734C195.816 95.5778 196.553 94.2802 196.986 92.8717C197.475 91.3901 197.618 89.8172 197.403 88.2727C197.238 86.7703 196.752 85.3202 195.978 84.0195C195.203 82.7187 194.157 81.5973 192.911 80.7305C190.642 79.2292 187.868 78.6783 185.193 79.1975C186.484 78.8097 187.686 78.1727 188.73 77.3231C189.774 76.4735 190.638 75.4278 191.275 74.246C191.989 72.9492 192.396 71.5072 192.463 70.0303C192.582 68.4637 192.339 66.8908 191.753 65.4314C191.221 64.0219 190.396 62.7394 189.333 61.6671C188.269 60.5948 186.99 59.7568 185.579 59.2075C183.009 58.2781 180.174 58.3938 177.691 59.5294C178.851 58.8497 179.865 57.9484 180.673 56.8775C181.481 55.8066 182.068 54.5874 182.399 53.2902C182.761 51.818 182.801 50.2857 182.516 48.7968C182.231 47.3079 181.628 45.8971 180.747 44.6595C179.859 43.3762 178.707 42.2946 177.367 41.4863C176.108 40.7328 174.704 40.2522 173.245 40.0759C171.9 39.9261 170.538 40.0412 169.237 40.4148C167.937 40.7883 166.723 41.4129 165.666 42.2528C167.615 40.3521 168.726 37.7608 168.753 35.0478C168.771 33.5711 168.455 32.1094 167.827 30.7708C166.875 28.6829 165.288 26.9443 163.288 25.8001C161.289 24.656 158.978 24.164 156.682 24.3936C153.995 24.7447 151.555 26.1325 149.89 28.2567C151.3 25.9622 151.744 23.2086 151.125 20.5918C150.791 19.1549 150.131 17.8126 149.195 16.6674C147.775 14.8602 145.817 13.5437 143.6 12.9052C141.383 12.2667 139.02 12.3387 136.846 13.1109C134.347 14.071 132.325 15.9636 131.212 18.3843C132.008 15.8384 131.758 13.0833 130.517 10.7194C129.806 9.37793 128.811 8.20437 127.602 7.27854C126.393 6.35272 124.997 5.69633 123.509 5.35401C121.993 4.98533 120.416 4.93313 118.878 5.20071C117.437 5.48491 116.067 6.05307 114.85 6.87165C112.695 8.37427 111.204 10.6403 110.682 13.2028C110.79 10.5969 109.883 8.04968 108.15 6.08984C107.137 4.96071 105.894 4.05717 104.504 3.4385C103.114 2.81983 101.608 2.5 100.085 2.5C98.5615 2.5 97.0555 2.81983 95.6655 3.4385C94.2755 4.05717 93.0329 4.96071 92.0193 6.08984C90.3082 8.02086 89.398 10.5244 89.4723 13.0955C88.8759 10.565 87.3301 8.35555 85.1501 6.91764C83.933 6.09906 82.5631 5.5309 81.1212 5.2467C79.5827 4.99114 78.0083 5.04325 76.4904 5.39999C75.0061 5.75608 73.6162 6.42496 72.415 7.36128C71.2139 8.29759 70.2295 9.47946 69.5286 10.8267C68.3571 13.0644 68.0708 15.6564 68.7259 18.093C67.5806 15.8284 65.627 14.0686 63.246 13.1569C61.0725 12.3846 58.7092 12.3127 56.4922 12.9512C54.2751 13.5897 52.3172 14.9062 50.897 16.7134C49.9614 17.8586 49.3015 19.2009 48.9675 20.6378C48.3856 23.058 48.7208 25.6062 49.9091 27.7968H49.8165C48.1669 25.9103 45.8753 24.6933 43.3795 24.3783C41.0757 24.1362 38.7536 24.6224 36.7442 25.7674C34.7348 26.9124 33.1404 28.658 32.1882 30.7554C31.5603 32.094 31.2437 33.5558 31.262 35.0324C31.2787 37.4848 32.1889 39.8482 33.8245 41.6856L33.7318 41.7929C31.6914 40.4013 29.2144 39.7864 26.7546 40.0606C25.2966 40.2486 23.8934 40.734 22.6332 41.4863C21.2857 42.2906 20.1276 43.3727 19.2372 44.6595C18.3623 45.894 17.7636 47.3002 17.4814 48.7836C17.1991 50.2669 17.2399 51.7931 17.6009 53.2595C18.1908 55.6129 19.6158 57.6759 21.6144 59.0695C21.5829 59.1121 21.557 59.1585 21.5372 59.2075C19.2398 58.3716 16.7184 58.3716 14.4211 59.2075C13.0099 59.7568 11.7308 60.5948 10.6671 61.6671C9.60331 62.7394 8.7786 64.0219 8.24654 65.4314C7.6619 66.8911 7.4191 68.4637 7.53647 70.0303C7.60593 71.502 8.01244 72.9385 8.72506 74.2307C9.86846 76.3344 11.7291 77.9649 13.9734 78.8296V78.9982C11.5562 78.7467 9.12755 79.3551 7.11969 80.7151C5.87831 81.5788 4.83683 82.6956 4.06485 83.991C3.29288 85.2864 2.80818 86.7304 2.64316 88.2267C2.42989 89.7713 2.5724 91.3438 3.05994 92.8257C3.46707 94.2488 4.18964 95.5635 5.17471 96.6734C6.78372 98.4498 8.96832 99.6105 11.3492 99.954V100.123C8.97163 100.466 6.78851 101.62 5.17471 103.388C4.18394 104.484 3.44636 105.781 3.01364 107.19C2.52503 108.671 2.3825 110.244 2.59686 111.789C2.75947 113.292 3.24454 114.742 4.0194 116.043C4.79426 117.344 5.8409 118.465 7.08882 119.331C8.79515 120.485 10.813 121.099 12.8774 121.094C13.263 121.117 13.6496 121.117 14.0351 121.094C14.0647 121.135 14.1013 121.172 14.1432 121.201C11.8392 122.037 9.91572 123.67 8.72506 125.8C8.01018 127.097 7.6036 128.539 7.53647 130.016C7.41636 131.582 7.65927 133.156 8.24654 134.615C8.80568 136.067 9.6625 137.387 10.7627 138.493C11.8137 139.515 13.0639 140.313 14.4365 140.839C15.5608 141.261 16.7539 141.474 17.956 141.467C19.2431 141.465 20.5193 141.232 21.7224 140.777V140.869C19.6455 142.263 18.161 144.371 17.5546 146.786C17.1922 148.259 17.1521 149.791 17.4371 151.28C17.722 152.769 18.3253 154.18 19.2063 155.417C20.1006 156.691 21.2518 157.766 22.5868 158.575C23.8514 159.315 25.2531 159.795 26.7083 159.985C27.0939 160.008 27.4805 160.008 27.8661 159.985C30.0371 159.973 32.1509 159.292 33.9171 158.038C32.1738 159.902 31.1987 162.347 31.1849 164.891C31.1666 166.368 31.4831 167.829 32.111 169.168C32.739 170.587 33.6776 171.849 34.8587 172.862C35.9897 173.871 37.3222 174.631 38.7692 175.093C40.2161 175.556 41.7451 175.71 43.256 175.545C45.8619 175.208 48.2406 173.898 49.9091 171.881C48.5915 174.132 48.1937 176.798 48.7977 179.332C49.1346 180.772 49.7941 182.119 50.7272 183.271C51.6795 184.495 52.8917 185.494 54.2775 186.199C55.8443 187.033 57.594 187.47 59.3715 187.472C60.6364 187.476 61.8915 187.252 63.0762 186.812C65.584 185.852 67.6125 183.953 68.7259 181.524C67.9202 184.067 68.1645 186.824 69.4051 189.189C70.1177 190.531 71.1121 191.706 72.321 192.634C73.53 193.563 74.9255 194.222 76.4132 194.569C77.3158 194.766 78.2367 194.869 79.1608 194.876C79.7927 194.883 80.4236 194.826 81.0441 194.707C82.5074 194.466 83.9051 193.929 85.1501 193.128C86.2587 192.355 87.2028 191.371 87.9285 190.235C88.6543 189.099 89.1474 187.832 89.3797 186.506C89.2817 187.843 89.4523 189.186 89.8816 190.457C90.3109 191.728 90.9903 192.902 91.8803 193.91C92.894 195.039 94.1366 195.943 95.5266 196.561C96.9166 197.18 98.4226 197.5 99.9458 197.5C101.469 197.5 102.975 197.18 104.365 196.561C105.755 195.943 106.998 195.039 108.011 193.91C108.907 192.899 109.591 191.721 110.023 190.444C110.455 189.168 110.627 187.818 110.527 186.475C110.758 187.804 111.25 189.074 111.976 190.213C112.702 191.352 113.647 192.338 114.757 193.113C115.971 193.936 117.342 194.505 118.786 194.784C119.401 194.902 120.027 194.959 120.654 194.953C121.594 194.947 122.531 194.839 123.448 194.631C124.928 194.287 126.318 193.631 127.521 192.708C128.725 191.785 129.715 190.616 130.425 189.281C131.669 186.872 131.902 184.072 131.073 181.493C131.617 182.723 132.4 183.835 133.377 184.763C134.355 185.692 135.507 186.42 136.769 186.904C137.953 187.348 139.208 187.576 140.474 187.579C142.139 187.557 143.779 187.168 145.274 186.439C146.77 185.71 148.083 184.659 149.118 183.363C150.048 182.214 150.707 180.873 151.048 179.439C151.656 176.818 151.201 174.065 149.782 171.774C150.609 172.841 151.641 173.736 152.817 174.407C153.993 175.077 155.29 175.511 156.636 175.683C157.037 175.706 157.439 175.706 157.84 175.683C159.94 175.661 161.99 175.043 163.748 173.902C165.507 172.761 166.9 171.145 167.765 169.245C168.391 167.911 168.708 166.454 168.691 164.983C168.677 163.642 168.398 162.317 167.868 161.083C167.338 159.849 166.569 158.732 165.604 157.793C167.432 159.22 169.685 160.002 172.01 160.016C172.396 160.039 172.782 160.039 173.168 160.016C174.623 159.826 176.025 159.346 177.289 158.606C178.634 157.791 179.791 156.705 180.685 155.417C181.561 154.183 182.16 152.777 182.443 151.293C182.725 149.81 182.684 148.283 182.322 146.817C181.993 145.507 181.403 144.275 180.586 143.196C179.77 142.116 178.743 141.21 177.567 140.532C178.949 141.157 180.448 141.486 181.967 141.498C183.174 141.504 184.372 141.291 185.501 140.869C186.87 140.335 188.118 139.538 189.175 138.524C190.262 137.416 191.112 136.102 191.676 134.661C192.26 133.201 192.502 131.628 192.386 130.062C192.319 128.585 191.912 127.143 191.197 125.846C190.555 124.652 189.677 123.598 188.616 122.748C187.556 121.897 186.334 121.267 185.023 120.894C185.67 121.009 186.326 121.07 186.983 121.078C189.053 121.084 191.075 120.47 192.787 119.315C194.027 118.45 195.068 117.333 195.84 116.038C196.611 114.743 197.097 113.3 197.264 111.804C197.474 110.259 197.332 108.687 196.847 107.205C196.463 105.801 195.773 104.498 194.825 103.388Z"
+								fill="black"
+							></path>
+						</clipPath>
+						<path
+							id="outline-template--19410527092950__main"
+							vector-effect="non-scaling-stroke"
+							d="M194.825 103.388C193.919 102.391 192.825 101.582 191.604 101.005C190.382 100.429 189.059 100.098 187.709 100.031C190.434 99.8878 192.992 98.681 194.825 96.6734C195.816 95.5778 196.553 94.2802 196.986 92.8717C197.475 91.3901 197.618 89.8172 197.403 88.2727C197.238 86.7703 196.752 85.3202 195.978 84.0195C195.203 82.7187 194.157 81.5973 192.911 80.7305C190.642 79.2292 187.868 78.6783 185.193 79.1975C186.484 78.8097 187.686 78.1727 188.73 77.3231C189.774 76.4735 190.638 75.4278 191.275 74.246C191.989 72.9492 192.396 71.5072 192.463 70.0303C192.582 68.4637 192.339 66.8908 191.753 65.4314C191.221 64.0219 190.396 62.7394 189.333 61.6671C188.269 60.5948 186.99 59.7568 185.579 59.2075C183.009 58.2781 180.174 58.3938 177.691 59.5294C178.851 58.8497 179.865 57.9484 180.673 56.8775C181.481 55.8066 182.068 54.5874 182.399 53.2902C182.761 51.818 182.801 50.2857 182.516 48.7968C182.231 47.3079 181.628 45.8971 180.747 44.6595C179.859 43.3762 178.707 42.2946 177.367 41.4863C176.108 40.7328 174.704 40.2522 173.245 40.0759C171.9 39.9261 170.538 40.0412 169.237 40.4148C167.937 40.7883 166.723 41.4129 165.666 42.2528C167.615 40.3521 168.726 37.7608 168.753 35.0478C168.771 33.5711 168.455 32.1094 167.827 30.7708C166.875 28.6829 165.288 26.9443 163.288 25.8001C161.289 24.656 158.978 24.164 156.682 24.3936C153.995 24.7447 151.555 26.1325 149.89 28.2567C151.3 25.9622 151.744 23.2086 151.125 20.5918C150.791 19.1549 150.131 17.8126 149.195 16.6674C147.775 14.8602 145.817 13.5437 143.6 12.9052C141.383 12.2667 139.02 12.3387 136.846 13.1109C134.347 14.071 132.325 15.9636 131.212 18.3843C132.008 15.8384 131.758 13.0833 130.517 10.7194C129.806 9.37793 128.811 8.20437 127.602 7.27854C126.393 6.35272 124.997 5.69633 123.509 5.35401C121.993 4.98533 120.416 4.93313 118.878 5.20071C117.437 5.48491 116.067 6.05307 114.85 6.87165C112.695 8.37427 111.204 10.6403 110.682 13.2028C110.79 10.5969 109.883 8.04968 108.15 6.08984C107.137 4.96071 105.894 4.05717 104.504 3.4385C103.114 2.81983 101.608 2.5 100.085 2.5C98.5615 2.5 97.0555 2.81983 95.6655 3.4385C94.2755 4.05717 93.0329 4.96071 92.0193 6.08984C90.3082 8.02086 89.398 10.5244 89.4723 13.0955C88.8759 10.565 87.3301 8.35555 85.1501 6.91764C83.933 6.09906 82.5631 5.5309 81.1212 5.2467C79.5827 4.99114 78.0083 5.04325 76.4904 5.39999C75.0061 5.75608 73.6162 6.42496 72.415 7.36128C71.2139 8.29759 70.2295 9.47946 69.5286 10.8267C68.3571 13.0644 68.0708 15.6564 68.7259 18.093C67.5806 15.8284 65.627 14.0686 63.246 13.1569C61.0725 12.3846 58.7092 12.3127 56.4922 12.9512C54.2751 13.5897 52.3172 14.9062 50.897 16.7134C49.9614 17.8586 49.3015 19.2009 48.9675 20.6378C48.3856 23.058 48.7208 25.6062 49.9091 27.7968H49.8165C48.1669 25.9103 45.8753 24.6933 43.3795 24.3783C41.0757 24.1362 38.7536 24.6224 36.7442 25.7674C34.7348 26.9124 33.1404 28.658 32.1882 30.7554C31.5603 32.094 31.2437 33.5558 31.262 35.0324C31.2787 37.4848 32.1889 39.8482 33.8245 41.6856L33.7318 41.7929C31.6914 40.4013 29.2144 39.7864 26.7546 40.0606C25.2966 40.2486 23.8934 40.734 22.6332 41.4863C21.2857 42.2906 20.1276 43.3727 19.2372 44.6595C18.3623 45.894 17.7636 47.3002 17.4814 48.7836C17.1991 50.2669 17.2399 51.7931 17.6009 53.2595C18.1908 55.6129 19.6158 57.6759 21.6144 59.0695C21.5829 59.1121 21.557 59.1585 21.5372 59.2075C19.2398 58.3716 16.7184 58.3716 14.4211 59.2075C13.0099 59.7568 11.7308 60.5948 10.6671 61.6671C9.60331 62.7394 8.7786 64.0219 8.24654 65.4314C7.6619 66.8911 7.4191 68.4637 7.53647 70.0303C7.60593 71.502 8.01244 72.9385 8.72506 74.2307C9.86846 76.3344 11.7291 77.9649 13.9734 78.8296V78.9982C11.5562 78.7467 9.12755 79.3551 7.11969 80.7151C5.87831 81.5788 4.83683 82.6956 4.06485 83.991C3.29288 85.2864 2.80818 86.7304 2.64316 88.2267C2.42989 89.7713 2.5724 91.3438 3.05994 92.8257C3.46707 94.2488 4.18964 95.5635 5.17471 96.6734C6.78372 98.4498 8.96832 99.6105 11.3492 99.954V100.123C8.97163 100.466 6.78851 101.62 5.17471 103.388C4.18394 104.484 3.44636 105.781 3.01364 107.19C2.52503 108.671 2.3825 110.244 2.59686 111.789C2.75947 113.292 3.24454 114.742 4.0194 116.043C4.79426 117.344 5.8409 118.465 7.08882 119.331C8.79515 120.485 10.813 121.099 12.8774 121.094C13.263 121.117 13.6496 121.117 14.0351 121.094C14.0647 121.135 14.1013 121.172 14.1432 121.201C11.8392 122.037 9.91572 123.67 8.72506 125.8C8.01018 127.097 7.6036 128.539 7.53647 130.016C7.41636 131.582 7.65927 133.156 8.24654 134.615C8.80568 136.067 9.6625 137.387 10.7627 138.493C11.8137 139.515 13.0639 140.313 14.4365 140.839C15.5608 141.261 16.7539 141.474 17.956 141.467C19.2431 141.465 20.5193 141.232 21.7224 140.777V140.869C19.6455 142.263 18.161 144.371 17.5546 146.786C17.1922 148.259 17.1521 149.791 17.4371 151.28C17.722 152.769 18.3253 154.18 19.2063 155.417C20.1006 156.691 21.2518 157.766 22.5868 158.575C23.8514 159.315 25.2531 159.795 26.7083 159.985C27.0939 160.008 27.4805 160.008 27.8661 159.985C30.0371 159.973 32.1509 159.292 33.9171 158.038C32.1738 159.902 31.1987 162.347 31.1849 164.891C31.1666 166.368 31.4831 167.829 32.111 169.168C32.739 170.587 33.6776 171.849 34.8587 172.862C35.9897 173.871 37.3222 174.631 38.7692 175.093C40.2161 175.556 41.7451 175.71 43.256 175.545C45.8619 175.208 48.2406 173.898 49.9091 171.881C48.5915 174.132 48.1937 176.798 48.7977 179.332C49.1346 180.772 49.7941 182.119 50.7272 183.271C51.6795 184.495 52.8917 185.494 54.2775 186.199C55.8443 187.033 57.594 187.47 59.3715 187.472C60.6364 187.476 61.8915 187.252 63.0762 186.812C65.584 185.852 67.6125 183.953 68.7259 181.524C67.9202 184.067 68.1645 186.824 69.4051 189.189C70.1177 190.531 71.1121 191.706 72.321 192.634C73.53 193.563 74.9255 194.222 76.4132 194.569C77.3158 194.766 78.2367 194.869 79.1608 194.876C79.7927 194.883 80.4236 194.826 81.0441 194.707C82.5074 194.466 83.9051 193.929 85.1501 193.128C86.2587 192.355 87.2028 191.371 87.9285 190.235C88.6543 189.099 89.1474 187.832 89.3797 186.506C89.2817 187.843 89.4523 189.186 89.8816 190.457C90.3109 191.728 90.9903 192.902 91.8803 193.91C92.894 195.039 94.1366 195.943 95.5266 196.561C96.9166 197.18 98.4226 197.5 99.9458 197.5C101.469 197.5 102.975 197.18 104.365 196.561C105.755 195.943 106.998 195.039 108.011 193.91C108.907 192.899 109.591 191.721 110.023 190.444C110.455 189.168 110.627 187.818 110.527 186.475C110.758 187.804 111.25 189.074 111.976 190.213C112.702 191.352 113.647 192.338 114.757 193.113C115.971 193.936 117.342 194.505 118.786 194.784C119.401 194.902 120.027 194.959 120.654 194.953C121.594 194.947 122.531 194.839 123.448 194.631C124.928 194.287 126.318 193.631 127.521 192.708C128.725 191.785 129.715 190.616 130.425 189.281C131.669 186.872 131.902 184.072 131.073 181.493C131.617 182.723 132.4 183.835 133.377 184.763C134.355 185.692 135.507 186.42 136.769 186.904C137.953 187.348 139.208 187.576 140.474 187.579C142.139 187.557 143.779 187.168 145.274 186.439C146.77 185.71 148.083 184.659 149.118 183.363C150.048 182.214 150.707 180.873 151.048 179.439C151.656 176.818 151.201 174.065 149.782 171.774C150.609 172.841 151.641 173.736 152.817 174.407C153.993 175.077 155.29 175.511 156.636 175.683C157.037 175.706 157.439 175.706 157.84 175.683C159.94 175.661 161.99 175.043 163.748 173.902C165.507 172.761 166.9 171.145 167.765 169.245C168.391 167.911 168.708 166.454 168.691 164.983C168.677 163.642 168.398 162.317 167.868 161.083C167.338 159.849 166.569 158.732 165.604 157.793C167.432 159.22 169.685 160.002 172.01 160.016C172.396 160.039 172.782 160.039 173.168 160.016C174.623 159.826 176.025 159.346 177.289 158.606C178.634 157.791 179.791 156.705 180.685 155.417C181.561 154.183 182.16 152.777 182.443 151.293C182.725 149.81 182.684 148.283 182.322 146.817C181.993 145.507 181.403 144.275 180.586 143.196C179.77 142.116 178.743 141.21 177.567 140.532C178.949 141.157 180.448 141.486 181.967 141.498C183.174 141.504 184.372 141.291 185.501 140.869C186.87 140.335 188.118 139.538 189.175 138.524C190.262 137.416 191.112 136.102 191.676 134.661C192.26 133.201 192.502 131.628 192.386 130.062C192.319 128.585 191.912 127.143 191.197 125.846C190.555 124.652 189.677 123.598 188.616 122.748C187.556 121.897 186.334 121.267 185.023 120.894C185.67 121.009 186.326 121.07 186.983 121.078C189.053 121.084 191.075 120.47 192.787 119.315C194.027 118.45 195.068 117.333 195.84 116.038C196.611 114.743 197.097 113.3 197.264 111.804C197.474 110.259 197.332 108.687 196.847 107.205C196.463 105.801 195.773 104.498 194.825 103.388Z"
+						></path>
+					</defs>
+				</svg>
+				<div class="slr-container-left-product">
+					<div
+						class="media__shape-wrapper"
+						style="clip-path: url(#clip-template--19410527092950__main)"
+					>
+						<!-- 产品图 -->
+						<img
+                        id="product-featured-image"
+							src="{{product.featured_image | img_url: '1200x'}}"
+							alt="Royal Blue Silver Collar"
+							srcset="
+								{{product.featured_image | img_url: '352x'}}   352w,
+								{{product.featured_image | img_url: '832x'}}   832w,
+								{{product.featured_image | img_url: '1200x'}} 1200w,
+							"
+							loading="lazy"
+							width="1200"
+							height="1200"
+							class="clip-path-media w-full h-full object-cover"
+							sizes="(min-width: 990px) calc((100vw / 12) * 6), 100vw"
+							onerror='this.style.color="currentColor"'
+							onload='this.style.color="currentColor"'
+							style="color: currentcolor"
+						/>
+					</div>
+				</div>
+			</div>
+			<div class="slr-section-container-right">
+				<div class="slr-container-right-title">
+					<h1>{{product.title}}</h1>
+				</div>
+				<div class="slr-container-right-price">
+				    {% assign current_variant = product.selected_or_first_available_variant %}
+                    {% if current_variant.compare_at_price > current_variant.price %}
+                    <span class="slr-current-price" id="slr-current-price">{{ current_variant.price | money }}</span>
+                    <span class="slr-compare-price" id="slr-compare-price">{{ current_variant.compare_at_price | money }}</span>
+                    {% else %}
+                    <span class="slr-current-price" id="slr-current-price">{{ current_variant.price | money }}</span>
+                    {% endif %}
+				</div>
+				<!-- 图片预览区 -->
+				<div class="slr-container-right-preview">
+                    {% for image in product.images %}
+                        <div
+                            class="slr-container-preview-imgs"
+                            style="clip-path: url(#clip-template--19410527092950__main)"
+                        >
+                            <img
+                                id="preview-image-item"
+                                src="{{image | img_url: '120x'}}"
+                                alt="Royal Blue Silver Collar"
+                                srcset="
+                                    {{image | img_url: '352x'}}   352w,
+                                    {{image | img_url: '832x'}}   832w,
+                                    {{image | img_url: '1200x'}} 1200w,
+                                "
+                                width="120"
+                                height="120"
+                                loading="eager"
+                                class="clip-path-media w-full h-full object-cover"
+                                sizes="calc(calc((100vw / 12) * 6) / 5)"
+                                onerror='this.style.color="currentColor"'
+                                onload='this.style.color="currentColor"'
+                                style="color: currentcolor"
+                            />
+                        </div>
+                    {% endfor %}
+				</div>
+				<div class="slr-container-right-description">
+					{{product.description | strip_html | truncatewords: 50, '...' }}
+				</div>
+
+				<div class="slr-container-right-more">Read more</div>
+
+				<div class="slr-container-right-buttons">
+					<button class="slr-button-add">Add to Cart- ${{product.price}}</button>
+					<button class="slr-button-buy" id="slr-buy-now-btn">Buy it now</button>
+				</div>
+
+				<div class="slr-container-right-variants">
+			        <div class="slr-container-right-variants-list">
+                        <button class="active" data-type="sizing">Sizing</button>
+                        <button data-type="shipping">Shipping</button>
+                        <button data-type="wholesale">Wholesale</button>
+                    </div>
+                    <div class="slr-container-right-variants-info" id="variant-info">
+                        One size fits all.
+                    </div>
+				</div>
+
+				<div class="slr-container-right-promise">
+					<div class="slr-container-right-promise-item">
+						<span class="slr-container-right-promise-icon">
+							<svg
+								class="theme-icon"
+								width="100%"
+								height="100%"
+								viewBox="0 0 48 48"
+								fill="none"
+								xmlns="http://www.w3.org/2000/svg"
+								aria-hidden="true"
+								focusable="false"
+							>
+								<path
+									stroke="currentColor"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="1"
+									d="M18.783 35.087a3.26 3.26 0 1 0 0-6.522 3.26 3.26 0 0 0 0 6.522Zm14.347 0a3.26 3.26 0 1 0 0-6.522 3.26 3.26 0 0 0 0 6.522Z"
+								></path>
+								<path
+									stroke="currentColor"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="1"
+									d="M19.435 25.956V14.217a1.304 1.304 0 0 1 1.304-1.304h16.957A1.304 1.304 0 0 1 39 14.217v16.957h-2.61m-14.346 0h5.217m-14.348 1.304h-2.609A1.304 1.304 0 0 1 9 31.174v-7.826a5.217 5.217 0 0 1 5.217-5.218h5.218M9 29.87h4.565"
+								></path>
+								<path
+									stroke="currentColor"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="1"
+									d="M9 24h5.217a1.304 1.304 0 0 0 1.305-1.304V18.13"
+								></path>
+							</svg>
+						</span>
+						<div class="slr-container-right-promise-text">Free shipping</div>
+					</div>
+					<div class="slr-container-right-promise-item">
+						<span class="slr-container-right-promise-icon">
+							<svg
+								class="theme-icon"
+								width="100%"
+								height="100%"
+								viewBox="0 0 48 48"
+								fill="none"
+								xmlns="http://www.w3.org/2000/svg"
+								aria-hidden="true"
+								focusable="false"
+							>
+								<path
+									stroke="currentColor"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="1"
+									d="M9 28.778 12.113 24l4.78 3.113"
+								></path>
+								<path
+									stroke="currentColor"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="1"
+									d="M25.557 10.557A13.444 13.444 0 1 1 12.113 24"
+								></path>
+							</svg>
+						</span>
+						<div class="slr-container-right-promise-text">30 day returns</div>
+					</div>
+					<div class="slr-container-right-promise-item">
+						<span class="slr-container-right-promise-icon">
+							<svg
+								class="theme-icon"
+								width="100%"
+								height="100%"
+								viewBox="0 0 48 48"
+								fill="none"
+								xmlns="http://www.w3.org/2000/svg"
+								aria-hidden="true"
+								focusable="false"
+							>
+								<path
+									stroke="currentColor"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="1"
+									d="M24 36.093 12.068 23.805a6.9 6.9 0 0 1-1.323-8.044v0a7.108 7.108 0 0 1 11.307-1.81L24 15.726l1.948-1.777a7.112 7.112 0 0 1 11.308 1.81v0a6.902 6.902 0 0 1-1.324 8.045L24 36.093Z"
+								></path>
+							</svg>
+						</span>
+						<div class="slr-container-right-promise-text">Made with Love</div>
+					</div>
+					<div class="slr-container-right-promise-item">
+						<span class="slr-container-right-promise-icon">
+							<svg
+								class="theme-icon"
+								width="100%"
+								height="100%"
+								viewBox="0 0 48 48"
+								fill="none"
+								xmlns="http://www.w3.org/2000/svg"
+								aria-hidden="true"
+								focusable="false"
+							>
+								<path
+									stroke="currentColor"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="1"
+									d="M38 23.944a14.047 14.047 0 0 1-14.039 14.053 14.196 14.196 0 0 1-13.96-14.305 13.69 13.69 0 0 1 13.397-13.676c.202-.009.404-.013.608-.013A13.917 13.917 0 0 1 38 23.943v0Z"
+								></path>
+								<path
+									stroke="currentColor"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="1"
+									d="M23.398 10.015c-7.305 7.913-7.305 18.237 0 27.976m1.217-27.976c7.304 7.913 7.304 18.233 0 27.972M12.296 16.083H35.59m-25.586 7.304H38m-26.192 7.304h24.47"
+								></path>
+							</svg>
+						</span>
+						<div class="slr-container-right-promise-text">Eco-Friendly</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section class="slr-section-container-feature">
+			<div class="feature-text">
+				Our versatile dog collar combines timeless style with ultimate comfort, crafted from
+				top-grade nylon webbing in a variety of vibrant colors. Designed for strength and
+				elegance, it’s the perfect accessory for any outing.
+			</div>
+			<div class="feature-mask">
+				<svg
+					class="shape-divider"
+					data-color-scheme="scheme1"
+					width="100%"
+					height="100%"
+					viewBox="0 0 1200.0 84.0"
+					fill="none"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<path
+						d="M600 39.1293C800 84.6351 1000 84.6351 1200 39.1294V84.0001H0L3.48561e-06 39.1293C200 -6.37645 400 -6.37643 600 39.1293Z"
+						fill="#8b635c"
+					></path>
+					<path
+						class="shape-divider-stroke"
+						vector-effect="non-scaling-stroke"
+						d="M1201 39.1294C1001 84.6351 801 84.6351 601 39.1293C401 -6.37643 201 -6.37645 1 39.1293"
+						stroke="black"
+					></path>
+				</svg>
+			</div>
+		</section>
+        <script>
+            const previewImageItems = document.querySelectorAll('#preview-image-item');
+            const productFeaturedImage = document.getElementById('product-featured-image');
+            const buttons = document.querySelectorAll('.slr-container-right-variants-list button');
+            const infoBox = document.getElementById('variant-info');
+            previewImageItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const newSrc = item.src.replace(/(\d+)x/, '1200x');
+                    const newSrcSet = `
+                        ${item.src.replace(/(\d+)x/, '352x')}   352w,
+                        ${item.src.replace(/(\d+)x/, '832x')}   832w,
+                        ${item.src.replace(/(\d+)x/, '1200x')} 1200w,
+                    `;
+                    productFeaturedImage.src = newSrc;
+                    productFeaturedImage.srcset = newSrcSet;
+                });
+            });
+
+
+            const contentMap = {
+                sizing: 'One size fits all.',
+                shipping: 'Dispatches within 24-48 hours.',
+                wholesale: 'Wholesale options available for bulk orders. Contact us for details.'
+            };
+
+            buttons.forEach(button => {
+                button.addEventListener('click', () => {
+                    buttons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    const type = button.getAttribute('data-type');
+                    infoBox.textContent = contentMap[type];
+                });
+            });
+
+
+			// 立即购买功能
+			document.getElementById('slr-buy-now-btn').addEventListener('click', function() {
+				const variantId = getCurrentVariantId();
+
+				fetch('/cart/add.js', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ id: variantId})
+				})
+						.then(function() {
+							window.location.href = '/checkout';
+						})
+						.catch(function(error) {
+							console.error('立即购买失败:', error);
+						});
+			});
+
+		</script>
+	</body>
+</html>
