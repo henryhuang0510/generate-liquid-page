@@ -46,7 +46,7 @@ function App() {
 	const loadData = () => {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const module = await import(templateType.data);
+				const module = await import(/* @vite-ignore */ templateType.data);
 				const data = module.mockData;
 				setProductData(data);
 				resolve(data);
