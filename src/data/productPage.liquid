@@ -854,7 +854,7 @@
                     });
                 });
                 
-                return matchedVariant ? matchedVariant.id : {{ product.selected_or_first_available_variant.id }};
+                return matchedVariant ? matchedVariant.id : "{{ product.selected_or_first_available_variant.id }}";
             }
             
             // 获取当前数量
