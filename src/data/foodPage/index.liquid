@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            html body {
+                width: 100%;
+                color: #242424;
+            }
+
+            .slr-main {
+                width: 100%;
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 2rem;
+                padding: 1.5rem;
+            }
+            .slr-main-left {
+                width: 100%;
+            }
+            .slr-main-left-image img {
+                width: 100%;
+                height: auto;
+                border-radius: 0.5rem;
+                box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+            }
+
+            .slr-main-left-preview {
+                width: 100%;
+                max-width: 500px;
+                display: flex;
+                flex-direction: row;
+                overflow-x: auto;
+                gap: 1rem;
+                margin-top: 2rem;
+                padding: 1rem;
+            }
+
+            .slr-main-left-preview img {
+                width: 64px;
+                height: 64px;
+                object-fit: cover;
+                border-radius: 0.5rem;
+                flex-shrink: 0;
+                cursor: pointer;
+            }
+
+            .slr-main-left-preview img:hover {
+                border: 2px solid #242424;
+            }
+            .slr-main-left-preview img.active {
+                border: 2px solid #242424;
+            }
+
+            .slr-main-right {
+                width: 100%;
+            }
+
+            .slr-main-right .slr-main-right-rating {
+                display: flex;
+                flex-direction: row;
+                gap: 1rem;
+            }
+
+            .slr-main-right-rating-stars {
+                display: flex;
+                flex-direction: row;
+                justify-content: start;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .slr-main-right-title {
+                font-size: 2rem;
+                font-weight: bold;
+                margin-top: 0.5rem;
+            }
+
+            .slr-main-right-price {
+                color: #333;
+                margin-top: 0.5rem;
+                padding-bottom: 1.5rem;
+                border-bottom: 1px solid #ccc;
+            }
+            .slr-main-right-status {
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 0.5rem;
+                margin-top: 1rem;
+            }
+            .slr-main-right-status .circle {
+                width: 0.5rem;
+                height: 0.5rem;
+                border-radius: 50%;
+                background-color: #28a745;
+                display: inline-block;
+            }
+
+            .slr-main-right-diliver {
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 0.5rem;
+                margin-top: 1rem;
+                color: rgba(36 36 36 / 1);
+            }
+
+            .slr-main-right-tag {
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 0.5rem;
+                margin-top: 1rem;
+                color: rgba(36 36 36 / 1);
+                padding-bottom: 1.5rem;
+                border-bottom: 1px solid #ccc;
+            }
+
+            .slr-main-right-size {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                margin-top: 1rem;
+            }
+
+            .slr-main-right-size .slr-main-right-size-title {
+                font-size: 1.2rem;
+            }
+
+            .slr-main-right-size .slr-main-right-size-options {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .slr-main-right-size .slr-main-right-size-options button {
+                padding: 0.5rem 1rem;
+                background-color: #f8f9fa;
+                border: none;
+                border-radius: 0.25rem;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+
+            .slr-main-right-size .slr-main-right-size-options button:hover {
+                background-color: #242424;
+                color: white;
+            }
+
+            .slr-main-right-size .slr-main-right-size-options button.active {
+                background-color: #242424;
+                color: white;
+            }
+
+            .slr-main-right-quality {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                margin-top: 1rem;
+            }
+            .slr-main-right-quality .slr-main-right-quality-title {
+                font-size: 1.2rem;
+            }
+
+            .slr-main-right-quality .slr-main-right-quality-controls {
+                width: 8rem;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.5rem;
+                border: 1px solid #ccc;
+                border-radius: 0.25rem;
+            }
+            .slr-main-right-quality .slr-main-right-quality-controls button {
+                padding: 0.5rem 1rem;
+                background-color: #f8f9fa;
+                border: none;
+                border-radius: 0.25rem;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+
+            .slr-main-right-quality .slr-main-right-quality-controls button:hover {
+                background-color: #242424;
+                color: white;
+            }
+
+            .slr-main-right-checkbox {
+                margin-top: 1rem;
+                color: rgba(36 36 36 / 1);
+                display: flex;
+                flex-direction: row;
+                align-items: baseline;
+                gap: 0.2rem;
+            }
+
+            .slr-main-right-buttons {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+                margin-top: 1rem;
+            }
+            .slr-main-right-buttons button {
+                padding: 0.75rem 1.5rem;
+                background-color: #242424;
+                color: white;
+                border: none;
+                border-radius: 0.25rem;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                text-transform: uppercase;
+            }
+
+            .slr-main-right-expander {
+                width: 100%;
+                color: #242424;
+                border-top: 1px solid #ccc;
+                margin-top: 2rem;
+            }
+
+            .slr-main-right-expander .slr-main-right-expander-item {
+                width: 100%;
+                border-bottom: 1px solid #ccc;
+            }
+
+            .slr-main-right-expander .item-summary {
+                width: 100%;
+                list-style: none;
+                cursor: pointer;
+                padding: 1rem 0;
+                position: relative;
+                text-transform: uppercase;
+            }
+
+            .slr-main-right-expander .item-summary::marker {
+                content: "";
+            }
+
+            .slr-main-right-expander .item-summary::after {
+                content: ">";
+                position: absolute;
+                right: 16px;
+                transition: transform 0.2s ease;
+            }
+
+            .slr-main-right-expander .item-summary[open] .item-summary::after {
+                transform: rotate(90deg);
+            }
+
+            .slr-main-right-expander .item-content {
+                padding: 0 16px 16px;
+                line-height: 1.5;
+                color: #444;
+            }
+
+            .slr-social-sharing {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                margin-top: 1rem;
+            }
+
+            .slr-social-sharing-title {
+                font-size: 1.2rem;
+                color: #242424;
+            }
+
+            .slr-social-sharing-links {
+                display: flex;
+                flex-direction: row;
+                gap: 2rem;
+            }
+
+            .slr-social-sharing-links a {
+                cursor: pointer;
+                color: #242424;
+                text-indent: none;
+            }
+
+            .slr-recommand {
+                margin: 1rem 0;
+            }
+
+            .slr-recommand-overlay {
+                position: relative;
+                width: 100%;
+                height: 400px;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                justify-content: center;
+                align-items: center;
+                background-image: url(https://eight-nourish-demo.myshopify.com/cdn/shop/files/Image_with_text_13a8599a-1da3-4dba-bed6-5853b1be9a5b.png?v=1695310848&width=2000);
+                background-repeat: no-repeat;
+                background-position: center center;
+            }
+
+            .slr-recommand-overlay-box {
+                width: 400px;
+                height: 230px;
+                background-color: #fff;
+                position: absolute;
+                left: 4rem;
+                bottom: 4rem;
+                border-radius: 5px;
+                padding: 2rem;
+            }
+
+            .slr-recommand-overlay-box-title {
+                font-size: 1.5rem;
+                font-weight: bold;
+                margin-bottom: 1rem;
+            }
+
+            .slr-descrption {
+                width: 100%;
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                justify-content: center;
+                align-items: center;
+                padding: 2rem;
+                gap: 1rem;
+            }
+            .slr-descrption img {
+                width: 100%;
+            }
+
+            .slr-descrption-info {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                padding: 0 1rem;
+                gap: 1rem;
+            }
+
+            .slr-descrption-info-mark {
+                text-transform: uppercase;
+            }
+
+            .slr-descrption-info-title {
+                font-size: 1.5rem;
+                font-size: bold;
+            }
+
+            .slr-comment {
+                width: 100%;
+                background-color: #f8f8f8;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 4rem;
+                padding: 2rem;
+            }
+            .slr-comment-title {
+                font-size: 1.5rem;
+                font-size: bold;
+            }
+
+            .slr-comment-list {
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                gap: 2rem;
+            }
+
+            .slr-comment-list-item {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .slr-comment-list-item .slr-item-avatar {
+                width: 200px;
+                height: 200px;
+            }
+
+            .slr-tip {
+                width: 100%;
+                margin-bottom: 2rem;
+            }
+
+            @media screen and (max-width: 768px) {
+                .slr-main {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 1rem;
+                }
+
+                .slr-recommand .slr-recommand-overlay-box {
+                    width: 90%;
+                    left: 1rem;
+                    top: 4rem;
+                    margin: auto;
+                    height: 300px;
+                }
+
+                .slr-descrption {
+                    grid-template-columns: 1fr;
+                    grid-template-rows: repeat(3, minmax(0, 1fr));
+                }
+
+                .slr-comment .slr-comment-list {
+                    flex-direction: column;
+                }
+            }
+
+        </style>
+	</head>
+	<body>
+		<div class="slr-main">
+			<div class="slr-main-left">
+				<div class="slr-main-left-image">
+					<img
+                    id="slr-image"
+				    src="{{product.featured_image | img_url: '720x'}}"
+					/>
+				</div>
+                <div class="slr-main-left-preview" id="slr-preview">
+                    {% for image in product.images %}
+                        <img src="{{ image | img_url: '1420x' }}" alt="{{ image.alt | escape }}" />
+                    {% endfor %}
+                </div>
+			</div>
+			<div class="slr-main-right">
+				<div class="slr-main-right-rating">
+					<span
+						class="slr-main-right-rating-stars"
+						role="img"
+						aria-label="Reviews rating - 4.7 out of 5.0 stars"
+					>
+						<svg
+							viewBox="0 0 20 20"
+							fill="none"
+							xmlns="http://www.w3.org/2000/svg"
+							width="16"
+							height="16"
+						>
+							<path
+								d="M7.15583 6.86345L9.32083 2.50345C9.38385 2.37727 9.48078 2.27114 9.60074 2.19696C9.7207 2.12279 9.85896 2.0835 10 2.0835C10.141 2.0835 10.2793 2.12279 10.3993 2.19696C10.5192 2.27114 10.6161 2.37727 10.6792 2.50345L12.8442 6.86345L17.6842 7.56678C17.8238 7.58614 17.9551 7.64436 18.0632 7.73479C18.1713 7.82522 18.2518 7.94423 18.2955 8.07822C18.3392 8.21221 18.3444 8.35579 18.3104 8.49257C18.2764 8.62936 18.2047 8.75383 18.1033 8.85178L14.6017 12.2434L15.4283 17.0351C15.5342 17.6501 14.8842 18.1184 14.3283 17.8284L10 15.5651L5.67083 17.8284C5.11583 18.1193 4.46583 17.6501 4.57166 17.0343L5.39833 12.2426L1.89666 8.85095C1.79582 8.75293 1.7245 8.62858 1.6908 8.49204C1.65711 8.3555 1.66239 8.21225 1.70606 8.07857C1.74972 7.94489 1.83001 7.82613 1.9378 7.73581C2.0456 7.64548 2.17657 7.58721 2.31583 7.56762L7.15583 6.86345Z"
+								fill="rgba(230 136 25 / 1.0)"
+								stroke="rgba(230 136 25 / 1.0)"
+								stroke-width="1.5"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							></path>
+						</svg>
+
+						<svg
+							viewBox="0 0 20 20"
+							fill="none"
+							xmlns="http://www.w3.org/2000/svg"
+							width="16"
+							height="16"
+						>
+							<path
+								d="M7.15583 6.86345L9.32083 2.50345C9.38385 2.37727 9.48078 2.27114 9.60074 2.19696C9.7207 2.12279 9.85896 2.0835 10 2.0835C10.141 2.0835 10.2793 2.12279 10.3993 2.19696C10.5192 2.27114 10.6161 2.37727 10.6792 2.50345L12.8442 6.86345L17.6842 7.56678C17.8238 7.58614 17.9551 7.64436 18.0632 7.73479C18.1713 7.82522 18.2518 7.94423 18.2955 8.07822C18.3392 8.21221 18.3444 8.35579 18.3104 8.49257C18.2764 8.62936 18.2047 8.75383 18.1033 8.85178L14.6017 12.2434L15.4283 17.0351C15.5342 17.6501 14.8842 18.1184 14.3283 17.8284L10 15.5651L5.67083 17.8284C5.11583 18.1193 4.46583 17.6501 4.57166 17.0343L5.39833 12.2426L1.89666 8.85095C1.79582 8.75293 1.7245 8.62858 1.6908 8.49204C1.65711 8.3555 1.66239 8.21225 1.70606 8.07857C1.74972 7.94489 1.83001 7.82613 1.9378 7.73581C2.0456 7.64548 2.17657 7.58721 2.31583 7.56762L7.15583 6.86345Z"
+								fill="rgba(230 136 25 / 1.0)"
+								stroke="rgba(230 136 25 / 1.0)"
+								stroke-width="1.5"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							></path>
+						</svg>
+
+						<svg
+							viewBox="0 0 20 20"
+							fill="none"
+							xmlns="http://www.w3.org/2000/svg"
+							width="16"
+							height="16"
+						>
+							<path
+								d="M7.15583 6.86345L9.32083 2.50345C9.38385 2.37727 9.48078 2.27114 9.60074 2.19696C9.7207 2.12279 9.85896 2.0835 10 2.0835C10.141 2.0835 10.2793 2.12279 10.3993 2.19696C10.5192 2.27114 10.6161 2.37727 10.6792 2.50345L12.8442 6.86345L17.6842 7.56678C17.8238 7.58614 17.9551 7.64436 18.0632 7.73479C18.1713 7.82522 18.2518 7.94423 18.2955 8.07822C18.3392 8.21221 18.3444 8.35579 18.3104 8.49257C18.2764 8.62936 18.2047 8.75383 18.1033 8.85178L14.6017 12.2434L15.4283 17.0351C15.5342 17.6501 14.8842 18.1184 14.3283 17.8284L10 15.5651L5.67083 17.8284C5.11583 18.1193 4.46583 17.6501 4.57166 17.0343L5.39833 12.2426L1.89666 8.85095C1.79582 8.75293 1.7245 8.62858 1.6908 8.49204C1.65711 8.3555 1.66239 8.21225 1.70606 8.07857C1.74972 7.94489 1.83001 7.82613 1.9378 7.73581C2.0456 7.64548 2.17657 7.58721 2.31583 7.56762L7.15583 6.86345Z"
+								fill="rgba(230 136 25 / 1.0)"
+								stroke="rgba(230 136 25 / 1.0)"
+								stroke-width="1.5"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							></path>
+						</svg>
+
+						<svg
+							viewBox="0 0 20 20"
+							fill="none"
+							xmlns="http://www.w3.org/2000/svg"
+							width="16"
+							height="16"
+						>
+							<path
+								d="M7.15583 6.86345L9.32083 2.50345C9.38385 2.37727 9.48078 2.27114 9.60074 2.19696C9.7207 2.12279 9.85896 2.0835 10 2.0835C10.141 2.0835 10.2793 2.12279 10.3993 2.19696C10.5192 2.27114 10.6161 2.37727 10.6792 2.50345L12.8442 6.86345L17.6842 7.56678C17.8238 7.58614 17.9551 7.64436 18.0632 7.73479C18.1713 7.82522 18.2518 7.94423 18.2955 8.07822C18.3392 8.21221 18.3444 8.35579 18.3104 8.49257C18.2764 8.62936 18.2047 8.75383 18.1033 8.85178L14.6017 12.2434L15.4283 17.0351C15.5342 17.6501 14.8842 18.1184 14.3283 17.8284L10 15.5651L5.67083 17.8284C5.11583 18.1193 4.46583 17.6501 4.57166 17.0343L5.39833 12.2426L1.89666 8.85095C1.79582 8.75293 1.7245 8.62858 1.6908 8.49204C1.65711 8.3555 1.66239 8.21225 1.70606 8.07857C1.74972 7.94489 1.83001 7.82613 1.9378 7.73581C2.0456 7.64548 2.17657 7.58721 2.31583 7.56762L7.15583 6.86345Z"
+								fill="rgba(230 136 25 / 1.0)"
+								stroke="rgba(230 136 25 / 1.0)"
+								stroke-width="1.5"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							></path>
+						</svg>
+
+						<svg
+							viewBox="0 0 20 20"
+							fill="none"
+							xmlns="http://www.w3.org/2000/svg"
+							width="16"
+							height="16"
+						>
+							<g
+								clip-path="url(#clip0_8401_22423--template--17483806244934__product-form)"
+							>
+								<g
+									clip-path="url(#clip1_8401_22423--template--17483806244934__product-form)"
+								>
+									<path
+										d="M7.15584 6.86345L9.32084 2.50345C9.38386 2.37727 9.48079 2.27114 9.60075 2.19696C9.72071 2.12279 9.85896 2.0835 10 2.0835C10.141 2.0835 10.2793 2.12279 10.3993 2.19696C10.5192 2.27114 10.6161 2.37727 10.6792 2.50345L12.8442 6.86345L17.6842 7.56678C17.8238 7.58614 17.9551 7.64436 18.0632 7.73479C18.1713 7.82522 18.2518 7.94423 18.2955 8.07822C18.3392 8.21221 18.3444 8.35579 18.3104 8.49257C18.2764 8.62936 18.2047 8.75383 18.1033 8.85178L14.6017 12.2434L15.4283 17.0351C15.5342 17.6501 14.8842 18.1184 14.3283 17.8284L10 15.5651L5.67084 17.8284C5.11584 18.1193 4.46584 17.6501 4.57167 17.0343L5.39834 12.2426L1.89667 8.85095C1.79583 8.75293 1.7245 8.62858 1.69081 8.49204C1.65711 8.3555 1.6624 8.21225 1.70606 8.07857C1.74973 7.94489 1.83002 7.82613 1.93781 7.73581C2.04561 7.64548 2.17658 7.58721 2.31584 7.56762L7.15584 6.86345Z"
+										fill="none"
+									></path>
+									<path
+										d="M7.15584 6.86345L9.32084 2.50345C9.38386 2.37727 9.48079 2.27114 9.60075 2.19696C9.72071 2.12279 9.85896 2.0835 10 2.0835C10.141 2.0835 10.2793 2.12279 10.3993 2.19696C10.5192 2.27114 10.6161 2.37727 10.6792 2.50345L12.8442 6.86345L17.6842 7.56678C17.8238 7.58614 17.9551 7.64436 18.0632 7.73479C18.1713 7.82522 18.2518 7.94423 18.2955 8.07822C18.3392 8.21221 18.3444 8.35579 18.3104 8.49257C18.2764 8.62936 18.2047 8.75383 18.1033 8.85178L14.6017 12.2434L15.4283 17.0351C15.5342 17.6501 14.8842 18.1184 14.3283 17.8284L10 15.5651L5.67084 17.8284C5.11584 18.1193 4.46584 17.6501 4.57167 17.0343L5.39834 12.2426L1.89667 8.85095C1.79583 8.75293 1.7245 8.62858 1.69081 8.49204C1.65711 8.3555 1.6624 8.21225 1.70606 8.07857C1.74973 7.94489 1.83002 7.82613 1.93781 7.73581C2.04561 7.64548 2.17658 7.58721 2.31584 7.56762L7.15584 6.86345Z"
+										fill="rgba(230 136 25 / 1.0)"
+										fill-opacity="0.25"
+									></path>
+									<path
+										d="M7.15584 6.86345L9.32084 2.50345C9.38386 2.37727 9.48079 2.27114 9.60075 2.19696C9.72071 2.12279 9.85896 2.0835 10 2.0835C10.141 2.0835 10.2793 2.12279 10.3993 2.19696C10.5192 2.27114 10.6161 2.37727 10.6792 2.50345L12.8442 6.86345L17.6842 7.56678C17.8238 7.58614 17.9551 7.64436 18.0632 7.73479C18.1713 7.82522 18.2518 7.94423 18.2955 8.07822C18.3392 8.21221 18.3444 8.35579 18.3104 8.49257C18.2764 8.62936 18.2047 8.75383 18.1033 8.85178L14.6017 12.2434L15.4283 17.0351C15.5342 17.6501 14.8842 18.1184 14.3283 17.8284L10 15.5651L5.67084 17.8284C5.11584 18.1193 4.46584 17.6501 4.57167 17.0343L5.39834 12.2426L1.89667 8.85095C1.79583 8.75293 1.7245 8.62858 1.69081 8.49204C1.65711 8.3555 1.6624 8.21225 1.70606 8.07857C1.74973 7.94489 1.83002 7.82613 1.93781 7.73581C2.04561 7.64548 2.17658 7.58721 2.31584 7.56762L7.15584 6.86345Z"
+										stroke="none"
+										stroke-width="1.5"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+									></path>
+									<path
+										d="M7.15584 6.86345L9.32084 2.50345C9.38386 2.37727 9.48079 2.27114 9.60075 2.19696C9.72071 2.12279 9.85896 2.0835 10 2.0835C10.141 2.0835 10.2793 2.12279 10.3993 2.19696C10.5192 2.27114 10.6161 2.37727 10.6792 2.50345L12.8442 6.86345L17.6842 7.56678C17.8238 7.58614 17.9551 7.64436 18.0632 7.73479C18.1713 7.82522 18.2518 7.94423 18.2955 8.07822C18.3392 8.21221 18.3444 8.35579 18.3104 8.49257C18.2764 8.62936 18.2047 8.75383 18.1033 8.85178L14.6017 12.2434L15.4283 17.0351C15.5342 17.6501 14.8842 18.1184 14.3283 17.8284L10 15.5651L5.67084 17.8284C5.11584 18.1193 4.46584 17.6501 4.57167 17.0343L5.39834 12.2426L1.89667 8.85095C1.79583 8.75293 1.7245 8.62858 1.69081 8.49204C1.65711 8.3555 1.6624 8.21225 1.70606 8.07857C1.74973 7.94489 1.83002 7.82613 1.93781 7.73581C2.04561 7.64548 2.17658 7.58721 2.31584 7.56762L7.15584 6.86345Z"
+										stroke="rgba(230 136 25 / 1.0)"
+										stroke-opacity="0.5"
+										stroke-width="1.5"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+									></path>
+								</g>
+								<g
+									clip-path="url(#clip2_8401_22423--template--17483806244934__product-form)"
+								>
+									<path
+										d="M7.15584 6.86345L9.32084 2.50345C9.38386 2.37727 9.48079 2.27114 9.60075 2.19696C9.72071 2.12279 9.85896 2.0835 10 2.0835C10.141 2.0835 10.2793 2.12279 10.3993 2.19696C10.5192 2.27114 10.6161 2.37727 10.6792 2.50345L12.8442 6.86345L17.6842 7.56678C17.8238 7.58614 17.9551 7.64436 18.0632 7.73479C18.1713 7.82522 18.2518 7.94423 18.2955 8.07822C18.3392 8.21221 18.3444 8.35579 18.3104 8.49257C18.2764 8.62936 18.2047 8.75383 18.1033 8.85178L14.6017 12.2434L15.4283 17.0351C15.5342 17.6501 14.8842 18.1184 14.3283 17.8284L10 15.5651L5.67084 17.8284C5.11584 18.1193 4.46584 17.6501 4.57167 17.0343L5.39834 12.2426L1.89667 8.85095C1.79583 8.75293 1.7245 8.62858 1.69081 8.49204C1.65711 8.3555 1.6624 8.21225 1.70606 8.07857C1.74973 7.94489 1.83002 7.82613 1.93781 7.73581C2.04561 7.64548 2.17658 7.58721 2.31584 7.56762L7.15584 6.86345Z"
+										fill="rgba(230 136 25 / 1.0)"
+										stroke="rgba(230 136 25 / 1.0)"
+										stroke-width="1.5"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+									></path>
+								</g>
+							</g>
+							<defs>
+								<clipPath
+									id="clip0_8401_22423--template--17483806244934__product-form"
+								>
+									<rect width="20" height="20" fill="none"></rect>
+								</clipPath>
+								<clipPath
+									id="clip1_8401_22423--template--17483806244934__product-form"
+								>
+									<rect
+										width="10"
+										height="20"
+										fill="none"
+										transform="translate(10)"
+									></rect>
+								</clipPath>
+								<clipPath
+									id="clip2_8401_22423--template--17483806244934__product-form"
+								>
+									<rect width="10" height="20" fill="none"></rect>
+								</clipPath>
+							</defs>
+						</svg>
+					</span>
+					<span>(4.7)</span>
+				</div>
+				<div class="slr-main-right-title">{{product.title}}</div>
+				<div class="slr-main-right-price">{{product.price| money_with_currency}}</div>
+				<div class="slr-main-right-status">
+					<span class="circle"></span>
+					<span>Ready to ship</span>
+				</div>
+				<div class="slr-main-right-diliver">
+					<svg
+						viewBox="0 0 20 20"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+						width="16"
+						height="16"
+					>
+						<path
+							d="M5.83268 15.8333C6.27471 15.8333 6.69863 15.6577 7.01119 15.3452C7.32375 15.0326 7.49935 14.6087 7.49935 14.1667C7.49935 13.7246 7.32375 13.3007 7.01119 12.9882C6.69863 12.6756 6.27471 12.5 5.83268 12.5C5.39065 12.5 4.96673 12.6756 4.65417 12.9882C4.34161 13.3007 4.16602 13.7246 4.16602 14.1667C4.16602 14.6087 4.34161 15.0326 4.65417 15.3452C4.96673 15.6577 5.39065 15.8333 5.83268 15.8333ZM14.166 15.8333C14.608 15.8333 15.032 15.6577 15.3445 15.3452C15.6571 15.0326 15.8327 14.6087 15.8327 14.1667C15.8327 13.7246 15.6571 13.3007 15.3445 12.9882C15.032 12.6756 14.608 12.5 14.166 12.5C13.724 12.5 13.3001 12.6756 12.9875 12.9882C12.6749 13.3007 12.4993 13.7246 12.4993 14.1667C12.4993 14.6087 12.6749 15.0326 12.9875 15.3452C13.3001 15.6577 13.724 15.8333 14.166 15.8333Z"
+							stroke="currentColor"
+							stroke-width="1.5"
+							stroke-miterlimit="1.5"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						></path>
+						<path
+							d="M11.666 14.1667V5.5C11.666 5.36739 11.6133 5.24021 11.5196 5.14645C11.4258 5.05268 11.2986 5 11.166 5H2.16602C2.03341 5 1.90623 5.05268 1.81246 5.14645C1.71869 5.24021 1.66602 5.36739 1.66602 5.5V13.6667C1.66602 13.7323 1.67895 13.7973 1.70408 13.858C1.7292 13.9187 1.76603 13.9738 1.81246 14.0202C1.85889 14.0666 1.91401 14.1035 1.97467 14.1286C2.03534 14.1537 2.10035 14.1667 2.16602 14.1667H3.87435M11.666 14.1667H7.54102M11.666 14.1667H12.4993M11.666 7.5H16.341C16.4377 7.50002 16.5322 7.52806 16.6133 7.58071C16.6943 7.63336 16.7584 7.70837 16.7977 7.79667L18.2893 11.1533C18.3178 11.2171 18.3325 11.286 18.3327 11.3558V13.6667C18.3327 13.7323 18.3197 13.7973 18.2946 13.858C18.2695 13.9187 18.2327 13.9738 18.1862 14.0202C18.1398 14.0666 18.0847 14.1035 18.024 14.1286C17.9634 14.1537 17.8983 14.1667 17.8327 14.1667H16.2493"
+							stroke="currentColor"
+							stroke-width="1.5"
+							stroke-linecap="round"
+						></path>
+					</svg>
+					<span>Worldwide shipping available</span>
+				</div>
+				<div class="slr-main-right-tag">
+					<svg
+						viewBox="0 0 20 20"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+						width="16"
+						height="16"
+					>
+						<path
+							d="M7.864 18.4498L1.50004 12.0859C1.40627 11.9921 1.35359 11.8649 1.35359 11.7323C1.35359 11.5997 1.40627 11.4725 1.50004 11.3787L9.20691 3.67187C9.32476 3.55402 9.49447 3.50217 9.65887 3.53458L14.9622 4.59524C15.059 4.61457 15.148 4.66216 15.2178 4.73201C15.2877 4.80185 15.3353 4.89082 15.3546 4.98768L16.4153 10.291C16.4314 10.3718 16.4273 10.4553 16.4034 10.5342C16.3794 10.613 16.3363 10.6848 16.278 10.7429L8.5711 18.4498C8.52468 18.4962 8.46956 18.5331 8.40889 18.5582C8.34823 18.5833 8.28321 18.5963 8.21755 18.5963C8.15189 18.5963 8.08687 18.5833 8.02621 18.5582C7.96555 18.5331 7.91043 18.4962 7.864 18.4498Z"
+							stroke="currentColor"
+							stroke-width="1.5"
+						></path>
+						<circle
+							cx="12.084"
+							cy="7.91663"
+							r="1.125"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="1.5"
+						></circle>
+					</svg>
+					<span>Buy 5 and get 2 free!</span>
+				</div>
+				<div class="slr-main-right-size">
+					<div class="slr-main-right-size-title">SIZE</div>
+					<div class="slr-main-right-size-options" id="slr-size-options">
+                     {% for size in product.options_with_values[0].values %}
+                         <button class="{% if forloop.first %}active{% endif %}">{{ size }}</button>
+                     {% endfor %}
+					</div>
+				</div>
+
+				<div class="slr-main-right-quality">
+					<div class="slr-main-right-quality-title">Quantity</div>
+					<div class="slr-main-right-quality-controls">
+						<button class="slr-main-right-quality-controls-minus">-</button>
+						<span class="slr-main-right-quality-controls-value">1</span>
+						<button class="slr-main-right-quality-controls-plus">+</button>
+					</div>
+				</div>
+
+				<div class="slr-main-right-checkbox">
+					<input
+						type="checkbox"
+						id="checkbox-1"
+						class="slr-main-right-checkbox-input"
+						checked
+					/>
+					<label for="checkbox-1" class="slr-main-right-checkbox-label"></label>
+						I understand this product needs to be frozen immediately or consumed within
+						24hrs of delivery *</label
+					>
+				</div>
+
+                <div class="slr-main-right-buttons">
+                    <button class="slr-main-right-buttons-add-to-cart">
+                        Add to cart
+                    </button>
+                    <button class="slr-main-right-buttons-buy-now">
+                        Buy now
+                    </button>
+                </div>
+
+                <div class="slr-main-right-expander">
+                    <details class="slr-main-right-expander-item">
+						<summary class="item-summary">Description</summary>
+						<div class="item-content">
+							<p>
+								Cozy and sustainable clothing for all kiddos. Style your little one
+								in fun clothing that is easy to wear, durable and timeless. This
+								item has been thoughtfully made with high-quality materials. All
+								products in this store are for demo purposes only. They have been
+								generously provided by The Sunday Collective.
+							</p>
+						</div>
+					</details>
+                      <details class="slr-main-right-expander-item">
+						<summary class="item-summary"> Ingredients</summary>
+						<div class="item-content">
+							<p>
+								Cozy and sustainable clothing for all kiddos. Style your little one
+								in fun clothing that is easy to wear, durable and timeless. This
+								item has been thoughtfully made with high-quality materials. All
+								products in this store are for demo purposes only. They have been
+								generously provided by The Sunday Collective.
+							</p>
+						</div>
+					</details>
+                      <details class="slr-main-right-expander-item">
+						<summary class="item-summary">Storage</summary>
+						<div class="item-content">
+							<p>
+								Cozy and sustainable clothing for all kiddos. Style your little one
+								in fun clothing that is easy to wear, durable and timeless. This
+								item has been thoughtfully made with high-quality materials. All
+								products in this store are for demo purposes only. They have been
+								generously provided by The Sunday Collective.
+							</p>
+						</div>
+					</details>
+                      <details class="slr-main-right-expander-item">
+						<summary class="item-summary">Shipping</summary>
+						<div class="item-content">
+							<p>
+								Cozy and sustainable clothing for all kiddos. Style your little one
+								in fun clothing that is easy to wear, durable and timeless. This
+								item has been thoughtfully made with high-quality materials. All
+								products in this store are for demo purposes only. They have been
+								generously provided by The Sunday Collective.
+							</p>
+						</div>
+					</details>
+                </div>
+                <div id="sharing" class="slr-social-sharing">
+                    <div class="slr-social-sharing-title">Share</div>
+                    <div class="slr-social-sharing-links">
+                        <a  href="//www.facebook.com/sharer.php?u=https://eight-nourish-demo.myshopify.com/products/beet-berry?variant=40613734088774" target="_blank" rel="noopener" aria-label="Share on Facebook">
+                            <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20"><path d="M14.1667 1.66663H11.6667C10.5616 1.66663 9.50179 2.10561 8.72039 2.88701C7.93899 3.66842 7.5 4.72822 7.5 5.83329V8.33329H5V11.6666H7.5V18.3333H10.8333V11.6666H13.3333L14.1667 8.33329H10.8333V5.83329C10.8333 5.61228 10.9211 5.40032 11.0774 5.24404C11.2337 5.08776 11.4457 4.99996 11.6667 4.99996H14.1667V1.66663Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        
+                        </a>
+            
+                
+                        <a  href="//x.com/share?url=https://eight-nourish-demo.myshopify.com/products/beet-berry?variant=40613734088774&amp;text=Beet &amp; Berry - 500ml" target="_blank" rel="noopener" aria-label="Share on X">
+                            <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20"><path d="M3.65032 2.63428C5.01668 2.63428 6.04467 2.63428 7.41103 2.63428L17.6721 17.4303H13.8046L3.65032 2.63428Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3.65032 2.63428C5.01668 2.63428 6.04467 2.63428 7.41103 2.63428L17.6721 17.4303H13.8046L3.65032 2.63428Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><line x1="9.54668" y1="11.2286" x2="4.20871" y2="17.4337" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></line><path d="M16.9252 2.49992L11.6155 8.6981" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>      
+                        
+                        </a>
+                        
+                        <a  href="//pinterest.com/pin/create/button/?url=https://eight-nourish-demo.myshopify.com/products/beet-berry?variant=40613734088774&amp;media=
+                            
+                            //eight-nourish-demo.myshopify.com/cdn/shop/files/12_queenstown-big-front.jpg?v=1686843617&amp;width=1200
+                            
+                        &amp;description=Beet &amp; Berry" target="_blank" rel="noopener" aria-label="Share on Pinterest">
+                            <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20"><path d="M6.6663 12.0833C4.1663 8.33329 7.88463 5.41663 10.4163 5.41663C12.948 5.41663 14.9996 6.79496 14.9996 9.99996C14.9996 12.5316 13.333 14.1666 11.6663 14.1666C9.99963 14.1666 9.1663 12.5 9.58297 9.99996M9.99963 8.33329L7.49963 17.9166" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M9.99935 18.3333C14.6018 18.3333 18.3327 14.6025 18.3327 9.99996C18.3327 5.39746 14.6018 1.66663 9.99935 1.66663C5.39685 1.66663 1.66602 5.39746 1.66602 9.99996C1.66602 14.6025 5.39685 18.3333 9.99935 18.3333Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        
+                        </a>
+                    </div>
+                </div>
+			</div>
+		</div>
+
+        <div class="slr-recommand">
+            <div class="slr-recommand-overlay">
+                 <div class="slr-recommand-overlay-box">
+                    <div class="slr-recommand-overlay-box-title">
+                        Made in North Carolina
+                    </div>
+                    <div class="slr-recommand-overlay-box-description">
+                        Our story started in 2001. Our global health brand was born when we brought the phenomenal tastes of Queensland, Australia back home to a small town on the east coast, with an even smaller kitchen!
+                    </div>
+                 </div>
+            </div>
+        </div>
+
+        <div class="slr-descrption">
+            <div class="slr-descrption-info">
+                <p class="slr-descrption-info-mark">REVITALIZING BREAK</p>
+                <h2 class="slr-descrption-info-title">Elevate your lunchtime routine</h2>
+                <p>
+                    Whether you're looking for a quick and convenient snack or a light yet fulfilling lunch option, our Super Detox smoothies offer the perfect balance of flavors and detoxifying ingredients
+                </p>
+            </div>
+            <img src="https://eight-nourish-demo.myshopify.com/cdn/shop/files/pinks-4.png?v=1692358460&width=550" alt="" srcset="">
+            <img src="https://eight-nourish-demo.myshopify.com/cdn/shop/files/pinks-3.png?v=1692358460&width=550" alt="" srcset="">
+        </div>
+
+        <div class="slr-comment">
+            <h2 class="slr-comment-title">Hear it from them</h2>
+            <div class="slr-comment-list">
+                <div class="slr-comment-list-item">
+                    <img class="slr-item-avatar" src="https://eight-nourish-demo.myshopify.com/cdn/shop/files/Review.png?v=1753106674&width=391">
+                    </img>
+                    <div class="slr-item-rating">
+                        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20" aria-hidden="true"><path d="M7.15583 6.86345L9.32083 2.50345C9.38385 2.37727 9.48078 2.27114 9.60074 2.19696C9.7207 2.12279 9.85896 2.0835 10 2.0835C10.141 2.0835 10.2793 2.12279 10.3993 2.19696C10.5192 2.27114 10.6161 2.37727 10.6792 2.50345L12.8442 6.86345L17.6842 7.56678C17.8238 7.58614 17.9551 7.64436 18.0632 7.73479C18.1713 7.82522 18.2518 7.94423 18.2955 8.07822C18.3392 8.21221 18.3444 8.35579 18.3104 8.49257C18.2764 8.62936 18.2047 8.75383 18.1033 8.85178L14.6017 12.2434L15.4283 17.0351C15.5342 17.6501 14.8842 18.1184 14.3283 17.8284L10 15.5651L5.67083 17.8284C5.11583 18.1193 4.46583 17.6501 4.57166 17.0343L5.39833 12.2426L1.89666 8.85095C1.79582 8.75293 1.7245 8.62858 1.6908 8.49204C1.65711 8.3555 1.66239 8.21225 1.70606 8.07857C1.74972 7.94489 1.83001 7.82613 1.9378 7.73581C2.0456 7.64548 2.17657 7.58721 2.31583 7.56762L7.15583 6.86345Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    
+                        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20" aria-hidden="true"><path d="M7.15583 6.86345L9.32083 2.50345C9.38385 2.37727 9.48078 2.27114 9.60074 2.19696C9.7207 2.12279 9.85896 2.0835 10 2.0835C10.141 2.0835 10.2793 2.12279 10.3993 2.19696C10.5192 2.27114 10.6161 2.37727 10.6792 2.50345L12.8442 6.86345L17.6842 7.56678C17.8238 7.58614 17.9551 7.64436 18.0632 7.73479C18.1713 7.82522 18.2518 7.94423 18.2955 8.07822C18.3392 8.21221 18.3444 8.35579 18.3104 8.49257C18.2764 8.62936 18.2047 8.75383 18.1033 8.85178L14.6017 12.2434L15.4283 17.0351C15.5342 17.6501 14.8842 18.1184 14.3283 17.8284L10 15.5651L5.67083 17.8284C5.11583 18.1193 4.46583 17.6501 4.57166 17.0343L5.39833 12.2426L1.89666 8.85095C1.79582 8.75293 1.7245 8.62858 1.6908 8.49204C1.65711 8.3555 1.66239 8.21225 1.70606 8.07857C1.74972 7.94489 1.83001 7.82613 1.9378 7.73581C2.0456 7.64548 2.17657 7.58721 2.31583 7.56762L7.15583 6.86345Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    
+                        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20" aria-hidden="true"><path d="M7.15583 6.86345L9.32083 2.50345C9.38385 2.37727 9.48078 2.27114 9.60074 2.19696C9.7207 2.12279 9.85896 2.0835 10 2.0835C10.141 2.0835 10.2793 2.12279 10.3993 2.19696C10.5192 2.27114 10.6161 2.37727 10.6792 2.50345L12.8442 6.86345L17.6842 7.56678C17.8238 7.58614 17.9551 7.64436 18.0632 7.73479C18.1713 7.82522 18.2518 7.94423 18.2955 8.07822C18.3392 8.21221 18.3444 8.35579 18.3104 8.49257C18.2764 8.62936 18.2047 8.75383 18.1033 8.85178L14.6017 12.2434L15.4283 17.0351C15.5342 17.6501 14.8842 18.1184 14.3283 17.8284L10 15.5651L5.67083 17.8284C5.11583 18.1193 4.46583 17.6501 4.57166 17.0343L5.39833 12.2426L1.89666 8.85095C1.79582 8.75293 1.7245 8.62858 1.6908 8.49204C1.65711 8.3555 1.66239 8.21225 1.70606 8.07857C1.74972 7.94489 1.83001 7.82613 1.9378 7.73581C2.0456 7.64548 2.17657 7.58721 2.31583 7.56762L7.15583 6.86345Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    
+                        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20" aria-hidden="true"><path d="M7.15583 6.86345L9.32083 2.50345C9.38385 2.37727 9.48078 2.27114 9.60074 2.19696C9.7207 2.12279 9.85896 2.0835 10 2.0835C10.141 2.0835 10.2793 2.12279 10.3993 2.19696C10.5192 2.27114 10.6161 2.37727 10.6792 2.50345L12.8442 6.86345L17.6842 7.56678C17.8238 7.58614 17.9551 7.64436 18.0632 7.73479C18.1713 7.82522 18.2518 7.94423 18.2955 8.07822C18.3392 8.21221 18.3444 8.35579 18.3104 8.49257C18.2764 8.62936 18.2047 8.75383 18.1033 8.85178L14.6017 12.2434L15.4283 17.0351C15.5342 17.6501 14.8842 18.1184 14.3283 17.8284L10 15.5651L5.67083 17.8284C5.11583 18.1193 4.46583 17.6501 4.57166 17.0343L5.39833 12.2426L1.89666 8.85095C1.79582 8.75293 1.7245 8.62858 1.6908 8.49204C1.65711 8.3555 1.66239 8.21225 1.70606 8.07857C1.74972 7.94489 1.83001 7.82613 1.9378 7.73581C2.0456 7.64548 2.17657 7.58721 2.31583 7.56762L7.15583 6.86345Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+
+                        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20" aria-hidden="true"><path d="M7.15583 6.86345L9.32083 2.50345C9.38385 2.37727 9.48078 2.27114 9.60074 2.19696C9.7207 2.12279 9.85896 2.0835 10 2.0835C10.141 2.0835 10.2793 2.12279 10.3993 2.19696C10.5192 2.27114 10.6161 2.37727 10.6792 2.50345L12.8442 6.86345L17.6842 7.56678C17.8238 7.58614 17.9551 7.64436 18.0632 7.73479C18.1713 7.82522 18.2518 7.94423 18.2955 8.07822C18.3392 8.21221 18.3444 8.35579 18.3104 8.49257C18.2764 8.62936 18.2047 8.75383 18.1033 8.85178L14.6017 12.2434L15.4283 17.0351C15.5342 17.6501 14.8842 18.1184 14.3283 17.8284L10 15.5651L5.67083 17.8284C5.11583 18.1193 4.46583 17.6501 4.57166 17.0343L5.39833 12.2426L1.89666 8.85095C1.79582 8.75293 1.7245 8.62858 1.6908 8.49204C1.65711 8.3555 1.66239 8.21225 1.70606 8.07857C1.74972 7.94489 1.83001 7.82613 1.9378 7.73581C2.0456 7.64548 2.17657 7.58721 2.31583 7.56762L7.15583 6.86345Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        </div>
+                    <div class="slr-item-comment">"I absolutely love these smoothies! They are the perfect way to start my day with a burst of energy."</div>
+                    <div class="slr-item-author">Helen Smith</div>
+                </div>
+
+                <div class="slr-comment-list-item">
+                    <img class="slr-item-avatar" src="https://eight-nourish-demo.myshopify.com/cdn/shop/files/Review-1.png?v=1753106532&width=397">
+                    </img>
+                    <div class="slr-item-rating">
+                        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20" aria-hidden="true"><path d="M7.15583 6.86345L9.32083 2.50345C9.38385 2.37727 9.48078 2.27114 9.60074 2.19696C9.7207 2.12279 9.85896 2.0835 10 2.0835C10.141 2.0835 10.2793 2.12279 10.3993 2.19696C10.5192 2.27114 10.6161 2.37727 10.6792 2.50345L12.8442 6.86345L17.6842 7.56678C17.8238 7.58614 17.9551 7.64436 18.0632 7.73479C18.1713 7.82522 18.2518 7.94423 18.2955 8.07822C18.3392 8.21221 18.3444 8.35579 18.3104 8.49257C18.2764 8.62936 18.2047 8.75383 18.1033 8.85178L14.6017 12.2434L15.4283 17.0351C15.5342 17.6501 14.8842 18.1184 14.3283 17.8284L10 15.5651L5.67083 17.8284C5.11583 18.1193 4.46583 17.6501 4.57166 17.0343L5.39833 12.2426L1.89666 8.85095C1.79582 8.75293 1.7245 8.62858 1.6908 8.49204C1.65711 8.3555 1.66239 8.21225 1.70606 8.07857C1.74972 7.94489 1.83001 7.82613 1.9378 7.73581C2.0456 7.64548 2.17657 7.58721 2.31583 7.56762L7.15583 6.86345Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    
+                        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20" aria-hidden="true"><path d="M7.15583 6.86345L9.32083 2.50345C9.38385 2.37727 9.48078 2.27114 9.60074 2.19696C9.7207 2.12279 9.85896 2.0835 10 2.0835C10.141 2.0835 10.2793 2.12279 10.3993 2.19696C10.5192 2.27114 10.6161 2.37727 10.6792 2.50345L12.8442 6.86345L17.6842 7.56678C17.8238 7.58614 17.9551 7.64436 18.0632 7.73479C18.1713 7.82522 18.2518 7.94423 18.2955 8.07822C18.3392 8.21221 18.3444 8.35579 18.3104 8.49257C18.2764 8.62936 18.2047 8.75383 18.1033 8.85178L14.6017 12.2434L15.4283 17.0351C15.5342 17.6501 14.8842 18.1184 14.3283 17.8284L10 15.5651L5.67083 17.8284C5.11583 18.1193 4.46583 17.6501 4.57166 17.0343L5.39833 12.2426L1.89666 8.85095C1.79582 8.75293 1.7245 8.62858 1.6908 8.49204C1.65711 8.3555 1.66239 8.21225 1.70606 8.07857C1.74972 7.94489 1.83001 7.82613 1.9378 7.73581C2.0456 7.64548 2.17657 7.58721 2.31583 7.56762L7.15583 6.86345Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    
+                        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20" aria-hidden="true"><path d="M7.15583 6.86345L9.32083 2.50345C9.38385 2.37727 9.48078 2.27114 9.60074 2.19696C9.7207 2.12279 9.85896 2.0835 10 2.0835C10.141 2.0835 10.2793 2.12279 10.3993 2.19696C10.5192 2.27114 10.6161 2.37727 10.6792 2.50345L12.8442 6.86345L17.6842 7.56678C17.8238 7.58614 17.9551 7.64436 18.0632 7.73479C18.1713 7.82522 18.2518 7.94423 18.2955 8.07822C18.3392 8.21221 18.3444 8.35579 18.3104 8.49257C18.2764 8.62936 18.2047 8.75383 18.1033 8.85178L14.6017 12.2434L15.4283 17.0351C15.5342 17.6501 14.8842 18.1184 14.3283 17.8284L10 15.5651L5.67083 17.8284C5.11583 18.1193 4.46583 17.6501 4.57166 17.0343L5.39833 12.2426L1.89666 8.85095C1.79582 8.75293 1.7245 8.62858 1.6908 8.49204C1.65711 8.3555 1.66239 8.21225 1.70606 8.07857C1.74972 7.94489 1.83001 7.82613 1.9378 7.73581C2.0456 7.64548 2.17657 7.58721 2.31583 7.56762L7.15583 6.86345Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    
+                        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20" aria-hidden="true"><path d="M7.15583 6.86345L9.32083 2.50345C9.38385 2.37727 9.48078 2.27114 9.60074 2.19696C9.7207 2.12279 9.85896 2.0835 10 2.0835C10.141 2.0835 10.2793 2.12279 10.3993 2.19696C10.5192 2.27114 10.6161 2.37727 10.6792 2.50345L12.8442 6.86345L17.6842 7.56678C17.8238 7.58614 17.9551 7.64436 18.0632 7.73479C18.1713 7.82522 18.2518 7.94423 18.2955 8.07822C18.3392 8.21221 18.3444 8.35579 18.3104 8.49257C18.2764 8.62936 18.2047 8.75383 18.1033 8.85178L14.6017 12.2434L15.4283 17.0351C15.5342 17.6501 14.8842 18.1184 14.3283 17.8284L10 15.5651L5.67083 17.8284C5.11583 18.1193 4.46583 17.6501 4.57166 17.0343L5.39833 12.2426L1.89666 8.85095C1.79582 8.75293 1.7245 8.62858 1.6908 8.49204C1.65711 8.3555 1.66239 8.21225 1.70606 8.07857C1.74972 7.94489 1.83001 7.82613 1.9378 7.73581C2.0456 7.64548 2.17657 7.58721 2.31583 7.56762L7.15583 6.86345Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+
+                        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20" aria-hidden="true"><path d="M7.15583 6.86345L9.32083 2.50345C9.38385 2.37727 9.48078 2.27114 9.60074 2.19696C9.7207 2.12279 9.85896 2.0835 10 2.0835C10.141 2.0835 10.2793 2.12279 10.3993 2.19696C10.5192 2.27114 10.6161 2.37727 10.6792 2.50345L12.8442 6.86345L17.6842 7.56678C17.8238 7.58614 17.9551 7.64436 18.0632 7.73479C18.1713 7.82522 18.2518 7.94423 18.2955 8.07822C18.3392 8.21221 18.3444 8.35579 18.3104 8.49257C18.2764 8.62936 18.2047 8.75383 18.1033 8.85178L14.6017 12.2434L15.4283 17.0351C15.5342 17.6501 14.8842 18.1184 14.3283 17.8284L10 15.5651L5.67083 17.8284C5.11583 18.1193 4.46583 17.6501 4.57166 17.0343L5.39833 12.2426L1.89666 8.85095C1.79582 8.75293 1.7245 8.62858 1.6908 8.49204C1.65711 8.3555 1.66239 8.21225 1.70606 8.07857C1.74972 7.94489 1.83001 7.82613 1.9378 7.73581C2.0456 7.64548 2.17657 7.58721 2.31583 7.56762L7.15583 6.86345Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        </div>
+                    <div class="slr-item-comment">"Refreshingly tropical, but not too over-sweet."</div>
+                    <div class="slr-item-author">John Locke</div>
+                </div>
+
+                <div class="slr-comment-list-item">
+                    <img class="slr-item-avatar" src="https://eight-nourish-demo.myshopify.com/cdn/shop/files/review-3.png?v=1753106747&width=393">
+                    </img>
+                    <div class="slr-item-rating">
+                        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20" aria-hidden="true"><path d="M7.15583 6.86345L9.32083 2.50345C9.38385 2.37727 9.48078 2.27114 9.60074 2.19696C9.7207 2.12279 9.85896 2.0835 10 2.0835C10.141 2.0835 10.2793 2.12279 10.3993 2.19696C10.5192 2.27114 10.6161 2.37727 10.6792 2.50345L12.8442 6.86345L17.6842 7.56678C17.8238 7.58614 17.9551 7.64436 18.0632 7.73479C18.1713 7.82522 18.2518 7.94423 18.2955 8.07822C18.3392 8.21221 18.3444 8.35579 18.3104 8.49257C18.2764 8.62936 18.2047 8.75383 18.1033 8.85178L14.6017 12.2434L15.4283 17.0351C15.5342 17.6501 14.8842 18.1184 14.3283 17.8284L10 15.5651L5.67083 17.8284C5.11583 18.1193 4.46583 17.6501 4.57166 17.0343L5.39833 12.2426L1.89666 8.85095C1.79582 8.75293 1.7245 8.62858 1.6908 8.49204C1.65711 8.3555 1.66239 8.21225 1.70606 8.07857C1.74972 7.94489 1.83001 7.82613 1.9378 7.73581C2.0456 7.64548 2.17657 7.58721 2.31583 7.56762L7.15583 6.86345Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    
+                        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20" aria-hidden="true"><path d="M7.15583 6.86345L9.32083 2.50345C9.38385 2.37727 9.48078 2.27114 9.60074 2.19696C9.7207 2.12279 9.85896 2.0835 10 2.0835C10.141 2.0835 10.2793 2.12279 10.3993 2.19696C10.5192 2.27114 10.6161 2.37727 10.6792 2.50345L12.8442 6.86345L17.6842 7.56678C17.8238 7.58614 17.9551 7.64436 18.0632 7.73479C18.1713 7.82522 18.2518 7.94423 18.2955 8.07822C18.3392 8.21221 18.3444 8.35579 18.3104 8.49257C18.2764 8.62936 18.2047 8.75383 18.1033 8.85178L14.6017 12.2434L15.4283 17.0351C15.5342 17.6501 14.8842 18.1184 14.3283 17.8284L10 15.5651L5.67083 17.8284C5.11583 18.1193 4.46583 17.6501 4.57166 17.0343L5.39833 12.2426L1.89666 8.85095C1.79582 8.75293 1.7245 8.62858 1.6908 8.49204C1.65711 8.3555 1.66239 8.21225 1.70606 8.07857C1.74972 7.94489 1.83001 7.82613 1.9378 7.73581C2.0456 7.64548 2.17657 7.58721 2.31583 7.56762L7.15583 6.86345Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    
+                        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20" aria-hidden="true"><path d="M7.15583 6.86345L9.32083 2.50345C9.38385 2.37727 9.48078 2.27114 9.60074 2.19696C9.7207 2.12279 9.85896 2.0835 10 2.0835C10.141 2.0835 10.2793 2.12279 10.3993 2.19696C10.5192 2.27114 10.6161 2.37727 10.6792 2.50345L12.8442 6.86345L17.6842 7.56678C17.8238 7.58614 17.9551 7.64436 18.0632 7.73479C18.1713 7.82522 18.2518 7.94423 18.2955 8.07822C18.3392 8.21221 18.3444 8.35579 18.3104 8.49257C18.2764 8.62936 18.2047 8.75383 18.1033 8.85178L14.6017 12.2434L15.4283 17.0351C15.5342 17.6501 14.8842 18.1184 14.3283 17.8284L10 15.5651L5.67083 17.8284C5.11583 18.1193 4.46583 17.6501 4.57166 17.0343L5.39833 12.2426L1.89666 8.85095C1.79582 8.75293 1.7245 8.62858 1.6908 8.49204C1.65711 8.3555 1.66239 8.21225 1.70606 8.07857C1.74972 7.94489 1.83001 7.82613 1.9378 7.73581C2.0456 7.64548 2.17657 7.58721 2.31583 7.56762L7.15583 6.86345Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    
+                        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20" aria-hidden="true"><path d="M7.15583 6.86345L9.32083 2.50345C9.38385 2.37727 9.48078 2.27114 9.60074 2.19696C9.7207 2.12279 9.85896 2.0835 10 2.0835C10.141 2.0835 10.2793 2.12279 10.3993 2.19696C10.5192 2.27114 10.6161 2.37727 10.6792 2.50345L12.8442 6.86345L17.6842 7.56678C17.8238 7.58614 17.9551 7.64436 18.0632 7.73479C18.1713 7.82522 18.2518 7.94423 18.2955 8.07822C18.3392 8.21221 18.3444 8.35579 18.3104 8.49257C18.2764 8.62936 18.2047 8.75383 18.1033 8.85178L14.6017 12.2434L15.4283 17.0351C15.5342 17.6501 14.8842 18.1184 14.3283 17.8284L10 15.5651L5.67083 17.8284C5.11583 18.1193 4.46583 17.6501 4.57166 17.0343L5.39833 12.2426L1.89666 8.85095C1.79582 8.75293 1.7245 8.62858 1.6908 8.49204C1.65711 8.3555 1.66239 8.21225 1.70606 8.07857C1.74972 7.94489 1.83001 7.82613 1.9378 7.73581C2.0456 7.64548 2.17657 7.58721 2.31583 7.56762L7.15583 6.86345Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+
+                        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20" aria-hidden="true"><path d="M7.15583 6.86345L9.32083 2.50345C9.38385 2.37727 9.48078 2.27114 9.60074 2.19696C9.7207 2.12279 9.85896 2.0835 10 2.0835C10.141 2.0835 10.2793 2.12279 10.3993 2.19696C10.5192 2.27114 10.6161 2.37727 10.6792 2.50345L12.8442 6.86345L17.6842 7.56678C17.8238 7.58614 17.9551 7.64436 18.0632 7.73479C18.1713 7.82522 18.2518 7.94423 18.2955 8.07822C18.3392 8.21221 18.3444 8.35579 18.3104 8.49257C18.2764 8.62936 18.2047 8.75383 18.1033 8.85178L14.6017 12.2434L15.4283 17.0351C15.5342 17.6501 14.8842 18.1184 14.3283 17.8284L10 15.5651L5.67083 17.8284C5.11583 18.1193 4.46583 17.6501 4.57166 17.0343L5.39833 12.2426L1.89666 8.85095C1.79582 8.75293 1.7245 8.62858 1.6908 8.49204C1.65711 8.3555 1.66239 8.21225 1.70606 8.07857C1.74972 7.94489 1.83001 7.82613 1.9378 7.73581C2.0456 7.64548 2.17657 7.58721 2.31583 7.56762L7.15583 6.86345Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        </div>
+                    <div class="slr-item-comment">"A burst of Summer in a glass! So excited these come in bigger sizes now."</div>
+                    <div class="slr-item-author">Salome Thornfield</div>
+                </div>
+            </div>
+
+        </div>
+
+         <div class="slr-descrption">
+            <img src="https://eight-nourish-demo.myshopify.com/cdn/shop/files/pinks-1.png?v=1692358460&width=550" alt="" srcset="">
+            <img src="https://eight-nourish-demo.myshopify.com/cdn/shop/files/pinks-2.png?v=1692358460&width=550" alt="" srcset="">
+                 <div class="slr-descrption-info">
+                <p class="slr-descrption-info-mark">SUPPORT YOUR WELL-BEING LIFESTYLE</p>
+                <h2 class="slr-descrption-info-title">The benefits of Super Detox smoothies</h2>
+                <p>
+                    Super Detox smoothies help detoxify and cleanse your body with antioxidants, boost energy levels, support digestive health, hydrate skin, and help weight management.
+                </p>
+            </div>
+        </div>
+
+        <img class="slr-tip" src="https://eight-nourish-demo.myshopify.com/cdn/shop/files/Screenshot_2023-05-16_at_12.09-1.png?v=1686322848&width=1680" alt="">
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const productImage = document.querySelector('#slr-image');
+                const thumbnails = document.querySelectorAll('#slr-preview img');
+                const sizeButtons = document.querySelectorAll('#slr-size-options button');
+
+                const minusButton = document.querySelector('.slr-main-right-quality-controls-minus');
+                const plusButton = document.querySelector('.slr-main-right-quality-controls-plus');
+                const quantityValue = document.querySelector('.slr-main-right-quality-controls-value');
+
+                thumbnails.forEach(thumbnail => {
+                    thumbnail.addEventListener('click', function () {
+                        productImage.src = this.src;
+                        productImage.alt = this.alt;
+                        thumbnails.forEach(img => img.classList.remove('active'));
+                        this.classList.add('active');
+                    });
+                });
+
+                sizeButtons.forEach(button => {
+                    button.addEventListener('click', function () {
+                        sizeButtons.forEach(btn => btn.classList.remove('active'));
+                        this.classList.add('active');
+                    });
+                });
+
+
+                minusButton.addEventListener('click', function () {
+                    let currentValue = parseInt(quantityValue.textContent);
+                    if (currentValue > 1) {
+                        quantityValue.textContent = currentValue - 1;
+                    }
+                });
+
+                plusButton.addEventListener('click', function () {
+                    let currentValue = parseInt(quantityValue.textContent);
+                    quantityValue.textContent = currentValue + 1;
+                });
+            });
+        </script>
+	</body>
+</html>
