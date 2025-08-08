@@ -1,9 +1,27 @@
+// 加载环境变量（如果 dotenv 已安装）
+try {
+  require('dotenv').config()
+} catch (error) {
+  // dotenv 未安装，使用系统环境变量
+}
+
 const express = require('express')
 const cors = require('cors')
 const fetch = require('node-fetch')
 
 const app = express()
 const PORT = process.env.PORT || 3001
+
+// 从环境变量获取 Shopify 配置
+const SHOPIFY_ACCESS_TOKEN = process.env.SHOPIFY_ACCESS_TOKEN
+
+// 验证必要的环境变量
+if (!SHOPIFY_ACCESS_TOKEN) {
+  console.error('❌ 错误: 缺少必要的环境变量 SHOPIFY_ACCESS_TOKEN')
+  console.log('💡 请设置环境变量: export SHOPIFY_ACCESS_TOKEN=your_access_token')
+  process.exit(1)
+}
+
 // 中间件
 app.use(cors())
 app.use(express.json())
@@ -27,7 +45,7 @@ app.post('/api/shopify/graphql', async (req, res) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-Shopify-Access-Token': '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'
+        'X-Shopify-Access-Token': SHOPIFY_ACCESS_TOKEN
       },
       body: JSON.stringify({
         query,
