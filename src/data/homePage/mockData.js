@@ -39,15 +39,21 @@ export const mockData = {
         },
         options_with_values: [
             {
-                name:"Color",
+                name: "Color",
                 position: 1,
-                values: ["https://demo-llab-design.myshopify.com/cdn/shop/files/swatch-negro-marquino.png?crop=center&height=48&v=1706612982&width=48","https://demo-llab-design.myshopify.com/cdn/shop/files/swatch-travertine.png?crop=center&height=48&v=1706612982&width=48"],
+                isImage: true,
+                values: ["https://demo-llab-design.myshopify.com/cdn/shop/files/swatch-negro-marquino.png?crop=center&height=48&v=1706612982&width=48", "https://demo-llab-design.myshopify.com/cdn/shop/files/swatch-travertine.png?crop=center&height=48&v=1706612982&width=48"],
             },
             {
                 name: "Size",
                 position: 2,
                 values: ["Small"],
             },
+            {
+                name: "Material",
+                position: 3,
+                values: ["Marble"]
+            }
         ],
     },
     shop: {
