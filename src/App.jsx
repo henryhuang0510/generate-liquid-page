@@ -39,7 +39,7 @@ function App() {
 			};
 		});
 		setTemplateList(list);
-		if (list.length > 0) setTemplateType(list[0]);
+		if (list.length > 0) setTemplateType(list[1]);
 		setIsLoad(true);
 	};
 

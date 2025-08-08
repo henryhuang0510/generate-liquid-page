@@ -45,7 +45,7 @@ const Preview = ({ html }) => {
     return () => {
       URL.revokeObjectURL(blobUrl)
     }
-  }, [html])
+  }, [html, deviceMode]) // 添加 deviceMode 作为依赖项
 
   const handleDeviceChange = (device) => {
     setDeviceMode(device)

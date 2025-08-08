@@ -8,12 +8,13 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
         }
 
         body {
             width: 100%;
             height: 100%;
-
+            background-color: #f5f5f5;
         }
 
         .slr-main {
@@ -35,7 +36,6 @@
         .slr-main-left img {
             width: 100%;
             border-radius: 5px;
-            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
         }
 
         .slr-main-left .slr-main-left-product-img {
@@ -43,7 +43,7 @@
         }
 
         .slr-main-left .slr-main-left-product-img img {
-            height: 100%;
+            width: 100%;
         }
 
         .slr-main-left .slr-main-left-preview-imgs {
@@ -54,13 +54,17 @@
             gap: 0.5rem;
             overflow-y: auto;
             scrollbar-width: none;
-            cursor: pointer;
         }
 
         .slr-main-left .slr-main-left-preview-imgs::-webkit-scrollbar {
             display: none;
         }
-
+        
+        .slr-main-left .slr-main-left-preview-imgs img {
+            object-fit: cover;
+            border-radius: 5px;
+            flex-shrink: 0;
+        }
 
         .slr-main-right {
             width: 100%;
@@ -85,41 +89,43 @@
             margin: 0.4rem 0;
         }
 
-        .slr-main-right-dimensions {
+        .slr-main-right-option {
+            margin: 1rem 0;
+        }
+
+        .slr-main-right-option p {
+            margin-bottom: 0.5rem;
             font-size: 0.8rem;
         }
 
-        .slr-main-right-size button {
-            padding: 0.8rem 1rem;
-            background-color: transparent;
-            border: 1px solid #eeeeee;
-            border-radius: 0.5rem;
-            margin-top: 0.5rem;
-        }
-
-        .slr-main-right-color .slr-main-right-color-list {
+        .slr-main-right-option-buttons {
             display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 1rem;
-            margin: 0.5rem 0;
+            gap: 0.5rem;
+            flex-wrap: wrap;
         }
 
-        .slr-main-right-color .slr-main-right-color-list img {
-            cursor: pointer;
-            padding-bottom: 0.3rem;
+        .slr-option-radio {
+            display: none;
         }
 
-        .slr-main-right-color .slr-main-right-color-list .active {
-            border-bottom: 2px solid rebeccapurple;
-        }
-
-        .slr-main-right-material button {
+        .slr-option-btn {
             padding: 0.8rem 1rem;
             background-color: transparent;
             border: 1px solid #eeeeee;
-            border-radius: 0.5rem;
-            margin-top: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-width: fit-content;
+        }
+
+        .slr-option-btn:hover {
+            border-color: #222222;
+        }
+
+        .slr-option-btn.active {
+            border-color: #222222;
         }
 
         .slr-main-right-price {
@@ -151,7 +157,6 @@
             align-items: center;
             border: 1px solid #eeeeee;
             padding: 0.3rem 0.6rem;
-            border-radius: 0.3rem;
         }
 
         .slr-main-right-quantify-controls button {
@@ -178,19 +183,41 @@
 
         .slr-main-right-buttons button {
             padding: 0.8rem 0.6rem;
-            border-radius: 0.4rem;
             border: none;
             cursor: pointer;
             font-size: 1rem;
-        }
-
-        .slr-main-right-buttons .slr-main-right-card {
-            background-color: #000000;
-            color: white;
+            background-color: transparent;
         }
 
         .slr-main-right-buttons .slr-main-right-buy {
+            font-family: Inter, sans-serif;
+            font-size: 14px;
             color: #000000;
+            position: relative;
+            overflow: hidden;
+            transition: color 0.3s ease;
+            background-color: #fff;
+            z-index: 2;
+        }
+
+        .slr-main-right-buttons .slr-main-right-buy::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background-color: #000000;
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+
+        .slr-main-right-buttons .slr-main-right-buy:hover {
+            color: #ffffff;
+        }
+
+        .slr-main-right-buttons .slr-main-right-buy:hover::before {
+            left: 0;
         }
 
         .slr-main-right-share {
@@ -209,7 +236,7 @@
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
-            padding: 5rem 1.5rem;
+            padding: 1.5rem 1.5rem;
         }
 
         .slr-description .slr-description-title {
@@ -261,11 +288,45 @@
                 display: flex;
                 flex-direction: column;
             }
-
-            .slr-main .slr-main-left-preview-imgs {
+            
+            .slr-main-left {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .slr-main-left .slr-main-left-product-img {
                 display: none;
             }
-
+            
+            .slr-main-left .slr-main-left-preview-imgs {
+                flex-direction: row;
+                height: auto;
+                max-height: none;
+                overflow-x: auto;
+                overflow-y: hidden;
+                gap: 0;
+                padding: 0;
+                -webkit-overflow-scrolling: touch;
+                scroll-behavior: smooth;
+                scrollbar-width: none;
+                scroll-snap-type: x mandatory;
+                display: flex;
+                width: 100%;
+            }
+            
+            .slr-main-left .slr-main-left-preview-imgs::-webkit-scrollbar {
+                display: none;
+            }
+            
+            .slr-main-left .slr-main-left-preview-imgs img {
+                width: 100%;
+                object-fit: cover;
+                border-radius: 5px;
+                flex-shrink: 0;
+                scroll-snap-align: start;
+                margin-right: 0;
+            }
+            
             .slr-info .slr-mask-box {
                 width: 80%;
                 margin: auto;
@@ -277,15 +338,13 @@
                 font-size: 2.5rem;
             }
         }
-
-
     </style>
 </head>
 <body>
 <div class="slr-main">
     <div class="slr-main-left">
         <div class="slr-main-left-product-img">
-            <img id="product-image" alt="product-image"
+            <img id="slr-main-image" alt="product-image"
                  src="{{ product.featured_image | img_url: "1600x" }}"
                  srcset="">
         </div>
@@ -300,36 +359,28 @@
             {{ product.title }}
         </div>
         <div class="slr-main-right-description">
-            <p> {{ product.handle }}</p>
-            {{ product.description }}
-        </div>
-        <div class="slr-main-right-dimensions">
-            <p>Dimensions:</p>
-            <div>
-                Small: W190 x D60 x H285 mm / 5 kg
-            </div>
+            <p>your description</p>
         </div>
 
-        <div class="slr-main-right-size">
-            <p>Size:</p>
-            {% for size in product.options_with_values[1].values %}
-                <button>{{ size }}</button>
-            {% endfor %}
-        </div>
-        
-        <div class="slr-main-right-color">
-            <p>Color:</p>
-            <div class="slr-main-right-color-list">
-                {% for image in product.options_with_values[0].values %}
-                    <img class="{% if forloop.first %}active{% endif %}"
-                         src="{{ image | img_url: '48x' }}" alt="{{ image.alt | escape }}"/>
+        {% comment %} 动态渲染所有产品选项 {% endcomment %}
+        {% for option in product.options_with_values %}
+        <div class="slr-main-right-option">
+            <p>{{ option.name }}:</p>
+            <div class="slr-main-right-option-buttons">
+                {% for value in option.values %}
+                    <div>
+                    <input type="radio" name="options[{{ option.name }}]"
+                                   id="slr-{{ option.name | handleize }}-{{ value | handleize }}" value="{{ value }}"
+                                   class="slr-option-radio" {% if forloop.first %}checked{% endif %}>
+                    <label for="slr-{{ option.name | handleize }}-{{ value | handleize }}"
+                                    class="slr-option-btn">
+                                 <span>{{ value }}</span>
+                             </label>
+                    </div>
                 {% endfor %}
             </div>
         </div>
-        <div class="slr-main-right-material">
-            <p>Material:</p>
-            <button type="button">Marble</button>
-        </div>
+        {% endfor %}
 
         <div class="slr-main-right-price">
             <h2>{{ product.price | money_with_currency }}</h2>
@@ -338,18 +389,16 @@
         <div class="slr-main-right-quantity">
             <p>Quantity:</p>
             <div class="slr-main-right-quantify-controls">
-                <button class="decrease" type="button">-</button>
-                <input class="quantity-input" id="input" type="text" value="1"/>
-                <button class="increase" type="button">+</button>
+                <button class="decrease" type="button" id="slr-decrease-btn">-</button>
+                <input class="quantity-input" id="slr-quantity" type="text" value="1"/>
+                <button class="increase" type="button" id="slr-increase-btn">+</button>
             </div>
         </div>
         <div class="slr-main-right-buttons">
-            <button class="slr-main-right-card" type="button">Add to Card</button>
-            <button class="slr-main-right-buy" type="button">Buy it Now</button>
+            <button class="slr-main-right-buy" type="button" id="slr-buy-now-btn">Buy it Now</button>
         </div>
 
-        <div class="slr-main-right-share"
-             style="--offset-top-desktop: 8px;--offset-bottom-desktop: 8px;--offset-top-mobile: 8px;--offset-bottom-mobile: 8px;">
+        <div class="slr-main-right-share">
             <span class="product-share-buttons__label">Share:</span>
 
             <a aria-label="Share" class="button-social js-social-share"
@@ -433,50 +482,290 @@
 </div>
 
 <script>
+    window.variants = {{ product.variants | json }};
+    window.productOptions = {{ product.options_with_values | json }};
+    window.shopMoneyFormat = {{ shop.money_format | json }};
+    
+    document.addEventListener('DOMContentLoaded', function () {
+        const quantityInput = document.getElementById('slr-quantity');
+        const decreaseBtn = document.getElementById('slr-decrease-btn');
+        const increaseBtn = document.getElementById('slr-increase-btn');
+        const mainImage = document.getElementById('slr-main-image');
+        const optionInputs = document.querySelectorAll('input[name^="options["]');
+        const variants = window.variants;
+        const productOptions = window.productOptions;
 
-    document.addEventListener("DOMContentLoaded", () => {
-        const decreaseBtn = document.querySelector(".decrease");
-        const increaseBtn = document.querySelector(".increase");
-        const input = document.querySelector("#input");
-        const mainImage = document.getElementById("product-image");
-        const previewImages = document.querySelectorAll("#preview-imgs img");
-        const colorOptions = document.querySelectorAll(".slr-main-right-color-list img")
+        // 从产品数据结构中获取选项名称
+        const optionNames = productOptions.map(option => option.name);
 
-        colorOptions.forEach(option => {
-            option.addEventListener('click', () => {
-                colorOptions.forEach(img => img.classList.remove('active'));
-                option.classList.add('active');
+        // 格式化价格的辅助函数
+        function formatPrice(cents) {
+            const moneyFormat = window.shopMoneyFormat;
+            if (typeof cents === "string") {
+                cents = cents.replace('.', '');
+            }
+
+            let value = '';
+            const placeholderRegex = /\{\{\s*(\w+)\s*\}\}/;
+
+            function formatWithDelimiters(number, decimals = 2, thousands = ',', decimal = '.') {
+                number = (number / 100.0).toFixed(decimals);
+
+                const parts = number.split('.');
+                const dollars = parts[0].replace(/(\d)(?=(\d{3})+(?!\d))/g, `$1${thousands}`);
+                const cents = parts[1] ? decimal + parts[1] : '';
+                return dollars + cents;
+            }
+
+            switch (moneyFormat.match(placeholderRegex)?.[1]) {
+                case 'amount':
+                value = formatWithDelimiters(cents, 2);
+                break;
+                case 'amount_no_decimals':
+                value = formatWithDelimiters(cents, 0);
+                break;
+                case 'amount_with_comma_separator':
+                value = formatWithDelimiters(cents, 2, '.', ',');
+                break;
+                case 'amount_no_decimals_with_comma_separator':
+                value = formatWithDelimiters(cents, 0, '.', ',');
+                break;
+                default:
+                value = formatWithDelimiters(cents, 2);
+            }
+
+            return moneyFormat.replace(placeholderRegex, value);
+        }
+
+        // 检测是否为移动设备
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+
+        // 移动端：为缩略图添加点击事件
+        if (isMobile) {
+            const previewImages = document.querySelectorAll('.slr-main-left-preview-imgs img');
+            previewImages.forEach((img, index) => {
+                img.addEventListener('click', function() {
+                    // 滚动到当前图片
+                    const previewContainer = document.querySelector('.slr-main-left-preview-imgs');
+                    if (previewContainer) {
+                        const imgWidth = img.offsetWidth;
+                        previewContainer.scrollTo({
+                            left: imgWidth * index,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // 移动端滑动检测
+            const previewContainer = document.querySelector('.slr-main-left-preview-imgs');
+            if (previewContainer) {
+                let startX = 0;
+                let currentX = 0;
+                
+                previewContainer.addEventListener('touchstart', function(e) {
+                    startX = e.touches[0].clientX;
+                });
+                
+                previewContainer.addEventListener('touchmove', function(e) {
+                    currentX = e.touches[0].clientX;
+                });
+                
+                previewContainer.addEventListener('touchend', function(e) {
+                    const diffX = startX - currentX;
+                    const threshold = 50; // 滑动阈值
+                    
+                    if (Math.abs(diffX) > threshold) {
+                        const previewImages = document.querySelectorAll('.slr-main-left-preview-imgs img');
+                        const currentIndex = Math.round(previewContainer.scrollLeft / previewImages[0].offsetWidth);
+                        
+                        if (diffX > 0 && currentIndex < previewImages.length - 1) {
+                            // 向左滑动，显示下一张
+                            previewContainer.scrollTo({
+                                left: previewImages[0].offsetWidth * (currentIndex + 1),
+                                behavior: 'smooth'
+                            });
+                        } else if (diffX < 0 && currentIndex > 0) {
+                            // 向右滑动，显示上一张
+                            previewContainer.scrollTo({
+                                left: previewImages[0].offsetWidth * (currentIndex - 1),
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                });
+            }
+        }
+
+        // 主图点击放大功能
+        mainImage.addEventListener('click', function () {
+            const previewOverlay = document.querySelector('.slr-preview-overlay') || createPreviewOverlay();
+            const previewImage = previewOverlay.querySelector('.slr-preview-image');
+            previewImage.src = this.src;
+            previewOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        function createPreviewOverlay() {
+            const previewOverlay = document.createElement('div');
+            previewOverlay.className = 'slr-preview-overlay';
+            const previewImage = document.createElement('img');
+            previewImage.className = 'slr-preview-image';
+            const closeButton = document.createElement('div');
+            closeButton.className = 'slr-close-preview';
+            closeButton.innerHTML = '<i class="ri-close-line text-2xl"></i>';
+            previewOverlay.appendChild(previewImage);
+            previewOverlay.appendChild(closeButton);
+            document.body.appendChild(previewOverlay);
+
+            previewOverlay.addEventListener('click', function (e) {
+                if (e.target === previewOverlay || e.target.closest('.slr-close-preview')) {
+                    previewOverlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+
+            return previewOverlay;
+        }
+
+        // 数量控制
+        decreaseBtn.addEventListener('click', function () {
+            let value = parseInt(quantityInput.value);
+            if (value > 1) {
+                quantityInput.value = value - 1;
+            }
+        });
+
+        increaseBtn.addEventListener('click', function () {
+            let value = parseInt(quantityInput.value);
+            quantityInput.value = value + 1;
+        });
+
+        quantityInput.addEventListener('change', function () {
+            if (this.value < 1) this.value = 1;
+        });
+
+        // 监听选项变化，切换变体图片和价格
+        optionInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                // 移除所有选项按钮的active状态
+                document.querySelectorAll('.slr-option-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // 为当前选中的选项添加active状态
+                const currentLabel = document.querySelector(`label[for="${this.id}"]`);
+                if (currentLabel) {
+                    currentLabel.classList.add('active');
+                }
+                
+                updateVariantImage();
             });
         });
 
-        previewImages.forEach(img => {
-            img.addEventListener('click', () => {
-                mainImage.src = img.src;
-                mainImage.alt = img.alt;
+        function updateVariantImage() {
+            // 获取当前所有选中的值
+            const selectedOptions = {};
+            optionInputs.forEach(input => {
+                if (input.checked) {
+                    const name = input.name.match(/options\[(.+)\]/)[1];
+                    selectedOptions[name] = input.value;
+                }
+            });
+            
+            // 找到匹配的变体
+            const matchedVariant = variants.find(variant => {
+                return variant.options.every((opt, idx) => {
+                    const optionName = optionNames[idx];
+                    return selectedOptions[optionName] === opt;
+                });
+            });
+            
+            // 更新价格和图片
+            if (matchedVariant) {
+                updatePrice(matchedVariant);
+                
+                // 如果有变体特定图片，切换主图
+                if (matchedVariant.featured_image && matchedVariant.featured_image.src) {
+                    // 正确处理URL参数
+                    const baseUrl = matchedVariant.featured_image.src;
+                    const separator = baseUrl.includes('?') ? '&' : '?';
+                    mainImage.src = baseUrl + separator + 'width=800&height=800';
+                    mainImage.alt = matchedVariant.featured_image.alt || '';
+                }
+            }
+        }
+
+        // 更新价格显示
+        function updatePrice(variant) {
+            const priceElement = document.querySelector('.slr-main-right-price h2');
+            
+            if (priceElement) {
+                // 使用原生货币格式化
+                priceElement.textContent = formatPrice(variant.price);
+            }
+        }
+        
+        // 初始化选项按钮的active状态
+        optionInputs.forEach(input => {
+            if (input.checked) {
+                const currentLabel = document.querySelector(`label[for="${input.id}"]`);
+                if (currentLabel) {
+                    currentLabel.classList.add('active');
+                }
+            }
+        });
+        
+        // 初始化变体选择
+        updateVariantImage();
+        
+        // 获取当前选中的变体ID
+        function getCurrentVariantId() {
+            const selectedOptions = {};
+            optionInputs.forEach(input => {
+                if (input.checked) {
+                    const name = input.name.match(/options\[(.+)\]/)[1];
+                    selectedOptions[name] = input.value;
+                }
+            });
+            
+            const matchedVariant = variants.find(variant => {
+                return variant.options.every((opt, idx) => {
+                    const optionName = optionNames[idx];
+                    return selectedOptions[optionName] === opt;
+                });
+            });
+            
+            return matchedVariant ? matchedVariant.id : "{{ product.selected_or_first_available_variant.id }}";
+        }
+        
+        // 获取当前数量
+        function getCurrentQuantity() {
+            return parseInt(quantityInput.value) || 1;
+        }
+        
+        // 立即购买功能
+        document.getElementById('slr-buy-now-btn').addEventListener('click', function() {
+            const variantId = getCurrentVariantId();
+            const quantity = getCurrentQuantity();
+
+            fetch('/cart/clear.js')
+            .then(function() {
+                return fetch('/cart/add.js', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: variantId, quantity: quantity })
+                })
+                .then(function() {
+                    window.location.href = '/checkout';
+                })
+            })
+            .catch(function(error) {
+                console.error('Buy now failed:', error);
             });
         });
-
-        decreaseBtn.addEventListener('click', () => {
-            let current = parseInt(input.value, 10);
-            if (!isNaN(current) && current > 1) {
-                input.value = current - 1;
-            }
-        });
-
-        increaseBtn.addEventListener('click', () => {
-            let current = parseInt(input.value, 10);
-            if (!isNaN(current)) {
-                input.value = current + 1;
-            }
-        });
-
-        input.addEventListener('input', () => {
-            input.value = input.value.replace(/[^\d]/g, '');
-            if (input.value === '' || parseInt(input.value, 10) < 1) {
-                input.value = 1;
-            }
-        });
-    })
+        
+    });
 </script>
 </body>
 </html>
