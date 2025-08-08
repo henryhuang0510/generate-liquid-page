@@ -88,7 +88,7 @@
             margin: 1rem 0;
         }
 
-        .slr-container-right-size {
+        .slr-container-right-option-group {
             display: flex;
             flex-direction: row;
             justify-content: space-between;
@@ -98,39 +98,57 @@
             border-top: 1px solid #f7ddba;
         }
 
-        .slr-container-right-size .slr-container-right-size-label {
+        .slr-container-right-option-group .slr-container-right-option-label {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
         }
 
-        .slr-container-right-size-label .slr-container-right-size-label-title {
+        .slr-container-right-option-label .slr-container-right-option-label-title {
             font-size: 1.25rem;
             font-weight: 500;
         }
 
-        .slr-container-right-size-label .slr-container-right-size-label-value {
+        .slr-container-right-option-label .slr-container-right-option-label-value {
             font-size: 0.8rem;
         }
 
-        .slr-container-right-size .slr-container-right-size-buttons {
-            flex: 1;
+        .slr-container-right-option-buttons {
             display: flex;
-            flex-direction: row;
-            gap: 0.5rem;
+            flex-wrap: wrap;
+            gap: 0.75rem;
         }
 
-        .slr-container-right-size-buttons button {
-            padding: 0.85rem;
-            border: 2px solid #333;
-            background-color: transparent;
-            color: #333;
-            font-size: 1rem;
-            font-weight: 500;
-            border-radius: 50%;
-            cursor: pointer;
+        .slr-container-right-option-buttons .slr-option-radio {
+            display: none;
         }
+
+        .slr-container-right-option-buttons .slr-option-btn {
+            background: #fff;
+            color: #000;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            min-width: fit-content;
+        }
+
+        .slr-option-btn:hover {
+            border-color: #222222;
+        }
+
+        .slr-option-radio:checked + .slr-option-btn {
+            background: #222222;
+            color: #fff;
+            border-color: #222222;
+        }
+
 
         .slr-container-right-size-buttons button:hover {
             background-color: #333;
@@ -138,42 +156,6 @@
             transition: all 0.3s ease-in-out;
         }
 
-        .slr-container-right-size-buttons .active {
-            background-color: #333;
-            color: #fff;
-        }
-
-        .slr-container-right-color {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            gap: 2rem;
-            padding: 1rem 0;
-            border-bottom: 1px solid #f7ddba;
-        }
-
-        .slr-container-right-color .slr-container-right-color-label {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .slr-container-right-color-label .slr-container-right-color-label-title {
-            font-size: 1.25rem;
-            font-weight: 500;
-        }
-
-        .slr-container-right-color-label .slr-container-right-color-label-value {
-            font-size: 0.8rem;
-        }
-
-        .slr-container-right-color .slr-container-right-color-buttons {
-            flex: 1;
-            display: flex;
-            flex-direction: row;
-            gap: 0.5rem;
-        }
 
         .slr-container-right-color .slr-container-right-color-buttons div {
             width: 42px;
@@ -236,7 +218,7 @@
             pointer-events: none;
         }
 
-        .slr-container-right-input .quantity-addCart {
+        .slr-container-right-input .quantity-buy {
             width: 100%;
             padding: 0.75rem 0;
             border: 1px solid #dc954d;
@@ -462,7 +444,7 @@
         <div class="slr-container-left-image">
             <img
                     width="100%" height="100%"
-                    id="product-image"
+                    id="slr-main-image"
                     src="{{ product.featured_image | image_url: '720x' }}"
                     alt="product_image"/>
         </div>
@@ -475,45 +457,47 @@
     </div>
     <div class="slr-container-right">
         <h1 class="slr-container-right-title">{{ product.title }}</h1>
-        <div class="slr-container-right-price">
-            ${{ product.price | money }}
+        <div class="slr-container-right-price" id="slr-price-container">
+            {% assign current_variant = product.selected_or_first_available_variant %}
+            {% if current_variant.compare_at_price > current_variant.price %}
+                <span class="slr-current-price" id="slr-current-price">{{ current_variant.price | money }}</span>
+                <span class="slr-compare-price"
+                      id="slr-compare-price">{{ current_variant.compare_at_price | money }}</span>
+            {% else %}
+                <span class="slr-current-price" id="slr-current-price">{{ current_variant.price | money }}</span>
+            {% endif %}
         </div>
-        <div class="slr-container-right-size">
-            <div class="slr-container-right-size-label">
-                <p class="slr-container-right-size-label-title">Size</p>
-                <p id="size-label-value" class="slr-container-right-size-label-value">3Y</p>
+        {% for option in product.options_with_values %}
+            <div class="slr-container-right-option-group">
+                <div class="slr-container-right-option-label">
+                    <p class="slr-container-right-option-label-title">{{ option.name }}</p>
+                </div>
+                <div class="slr-container-right-option-buttons">
+                    {% for value in option.values %}
+                        <div>
+                            <input type="radio" name="options[{{ option.name }}]"
+                                   id="slr-{{ option.name | handleize }}-{{ value | handleize }}" value="{{ value }}"
+                                   class="slr-option-radio" {% if forloop.first %}checked{% endif %}>
+                            <label for="slr-{{ option.name | handleize }}-{{ value | handleize }}"
+                                   class="slr-option-btn">
+                                <span>{{ value }}</span>
+                            </label>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
-            <div class="slr-container-right-size-buttons">
-                {% for option in product.options_with_values[1].values %}
-                    <button id="size-button" type="button" class="size-option {% if forloop.first %}active{% endif %}"
-                            data-value="{{ option }}">{{ option }}</button>
-                {% endfor %}
-            </div>
-        </div>
-        <div class="slr-container-right-color">
-            <div class="slr-container-right-color-label">
-                <p class="slr-container-right-color-label-title">Color</p>
-                <p class="slr-container-right-color-label-value">Grey</p>
-            </div>
-            <div class="slr-container-right-color-buttons">
-                {% for option in product.options_with_values[0].values %}
-                    <div style="border: 1px solid {{ option | downcase }};">
-                        <span style="background-color: {{ option | downcase }};"></span>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
+        {% endfor %}
         <div class="slr-container-right-input" data-unit-price="120.00">
             <div class="quantity-selector">
-                <button id="qty-btn-minus" type="button" class="qty-btn minus" aria-label="Decrease quantity">
+                <button id="slr-decrease-btn" type="button" class="qty-btn minus" aria-label="Decrease quantity">
                     −
                 </button>
-                <input id="qty-input" type="text" class="qty-input" value="1" readonly/>
-                <button id="qty-btn-plus" type="button" class="qty-btn plus" aria-label="Increase quantity">
+                <input id="slr-quantity" type="text" class="qty-input" value="1" readonly/>
+                <button id="slr-increase-btn" type="button" class="qty-btn plus" aria-label="Increase quantity">
                     ＋
                 </button>
             </div>
-            <button class="quantity-addCart" type="button" id="slr-buy-now-btn"> Add to cart</button>
+            <button class="quantity-buy" type="button" id="slr-buy-now-btn"> But it Now</button>
         </div>
         <div class="slr-container-right-description">
             <details class="accordion">
@@ -619,52 +603,222 @@
 <script>
     window.variants = {{ product.variants | json }};
     window.productOptions = {{ product.options_with_values | json }};
+    // 获取店铺货币信息
+    window.shopCurrency = {{ shop.currency | json }};
+    window.shopMoneyFormat = {{ shop.money_format | json }};
 </script>
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const thumbnails = document.querySelectorAll('.slr-container-left-thumbnails img');
-        const mainImage = document.getElementById('product-image');
-        const sizeButtons = document.querySelectorAll('#size-button');
-        const sizeLabel = document.getElementById('size-label-value');
-        const qtyBtnMinus = document.getElementById('qty-btn-minus');
-        const qtyBtnPlus = document.getElementById('qty-btn-plus');
-        const buyNow = document.getElementById('slr-buy-now-btn');
-        const addCard = document.getElementById('slr-add-to-cart-btn')
-        const quantityInput = document.getElementById('qty-input');
+        const quantityInput = document.getElementById('slr-quantity');
+        const decreaseBtn = document.getElementById('slr-decrease-btn');
+        const increaseBtn = document.getElementById('slr-increase-btn');
+        const mainImage = document.getElementById('slr-main-image');
+        const preViewImages = document.querySelectorAll('#product-preview-images img');
         const optionInputs = document.querySelectorAll('input[name^="options["]');
-        const optionNames = window.productOptions.map(option => option.name);
+        const variants = window.variants;
+        const productOptions = window.productOptions;
+        const shopCurrency = window.shopCurrency || 'USD';
 
-        thumbnails.forEach(thumbnail => {
-            thumbnail.addEventListener('click', function () {
-                thumbnails.forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                mainImage.src = this.src;
+        // 从产品数据结构中获取选项名称
+        const optionNames = productOptions.map(option => option.name);
+
+        // 根据货币代码获取合适的地区设置
+        function getLocaleForCurrency(currencyCode) {
+            const currencyLocaleMap = {
+                'CNY': 'zh-CN',
+                'USD': 'en-US',
+                'EUR': 'de-DE',
+                'GBP': 'en-GB',
+                'JPY': 'ja-JP',
+                'KRW': 'ko-KR',
+                'HKD': 'zh-HK',
+                'TWD': 'zh-TW',
+                'SGD': 'en-SG',
+                'AUD': 'en-AU',
+                'CAD': 'en-CA'
+            };
+            return currencyLocaleMap[currencyCode] || 'en-US';
+        }
+
+        // 创建货币格式化器
+        const currencyFormatter = new Intl.NumberFormat(getLocaleForCurrency(shopCurrency), {
+            style: 'currency',
+            currency: shopCurrency,
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+
+        // 格式化价格的辅助函数
+        function formatPrice(priceInCents) {
+            const priceInUnits = priceInCents / 100;
+            return currencyFormatter.format(priceInUnits);
+        }
+
+        let currentImageIndex = 0;
+
+        // 缩略图hover事件
+        preViewImages.forEach((img, index) => {
+            img.addEventListener('mouseenter', () => {
+                mainImage.src = img.src;
+                mainImage.alt = img.alt;
+                img.classList.add('active');
+            });
+
+            img.addEventListener('mouseleave', () => {
+                if (index !== currentImageIndex) {
+                    img.classList.remove('active');
+                }
+            });
+
+            img.addEventListener('click', () => {
+                currentImageIndex = index;
+                mainImage.src = img.src;
+                mainImage.alt = img.alt;
+                preViewImages.forEach(el => el.classList.remove('active'));
+                img.classList.add('active');
             });
         });
-        sizeButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                sizeButtons.forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                sizeLabel.textContent = this.getAttribute('data-value');
-            });
-        });
-        // 数量增加和减少
-        qtyBtnMinus.addEventListener('click', function () {
-            let currentValue = parseInt(quantityInput.value);
-            if (currentValue > 1) {
-                quantityInput.value = currentValue - 1;
+
+
+        // 数量控制
+        decreaseBtn.addEventListener('click', function () {
+            let value = parseInt(quantityInput.value);
+            if (value > 1) {
+                quantityInput.value = value - 1;
             }
         });
-        qtyBtnPlus.addEventListener('click', function () {
-            let currentValue = parseInt(quantityInput.value);
-            quantityInput.value = currentValue + 1;
+
+        increaseBtn.addEventListener('click', function () {
+            let value = parseInt(quantityInput.value);
+            quantityInput.value = value + 1;
         });
 
-        // 立即购买
-        buyNow.addEventListener('click', function () {
+        quantityInput.addEventListener('change', function () {
+            if (this.value < 1) this.value = 1;
+        });
+
+        // 监听选项变化，切换变体图片和价格
+        optionInputs.forEach(input => {
+            input.addEventListener('change', function () {
+                console.log('选项变化');
+                updateVariantImage();
+            });
+        });
+
+        function updateVariantImage() {
+            // 获取当前所有选中的值
+            const selectedOptions = {};
+            optionInputs.forEach(input => {
+                if (input.checked) {
+                    const name = input.name.match(/options\[(.+)\]/)[1];
+                    selectedOptions[name] = input.value;
+                }
+            });
+
+            // 找到匹配的变体
+            const matchedVariant = variants.find(variant => {
+                return variant.options.every((opt, idx) => {
+                    const optionName = optionNames[idx];
+                    console.log(optionName, opt, selectedOptions[optionName]);
+                    return selectedOptions[optionName] === opt;
+                });
+            });
+
+            // 更新价格和图片
+            if (matchedVariant) {
+                updatePrice(matchedVariant);
+
+                // 如果有变体特定图片，切换主图
+                if (matchedVariant.featured_image && matchedVariant.featured_image.src) {
+                    // 正确处理URL参数
+                    const baseUrl = matchedVariant.featured_image.src;
+                    const separator = baseUrl.includes('?') ? '&' : '?';
+                    mainImage.src = baseUrl + separator + 'width=800&height=800';
+                    mainImage.alt = matchedVariant.featured_image.alt || '';
+
+                    // 更新缩略图选择状态 - 找到对应的缩略图并选中
+                    const variantImageSrc = matchedVariant.featured_image.src;
+                    let foundThumbnail = false;
+
+                    thumbnailBtns.forEach((btn, index) => {
+                        const btnImageSrc = btn.dataset.image;
+                        if (btnImageSrc && btnImageSrc.includes(variantImageSrc.split('?')[0])) {
+                            currentImageIndex = index;
+                            foundThumbnail = true;
+                        }
+                    });
+
+                    // 如果没找到对应的缩略图，保持当前选择
+                    if (!foundThumbnail) {
+                        // 可以选择不更新currentImageIndex，或者设置为第一个
+                        // currentImageIndex = 0;
+                    }
+
+                    updateThumbnailSelection();
+                }
+            }
+        }
+
+        // 更新价格显示
+        function updatePrice(variant) {
+            const currentPriceEl = document.getElementById('slr-current-price');
+            const comparePriceEl = document.getElementById('slr-compare-price');
+            const priceContainer = document.getElementById('slr-price-container');
+
+            if (currentPriceEl) {
+                // 使用原生货币格式化
+                currentPriceEl.textContent = formatPrice(variant.price);
+            }
+
+            // 处理对比价格
+            if (variant.compare_at_price && variant.compare_at_price > variant.price) {
+                if (comparePriceEl) {
+                    comparePriceEl.textContent = formatPrice(variant.compare_at_price);
+                    comparePriceEl.style.display = 'block';
+                }
+            } else {
+                if (comparePriceEl) {
+                    comparePriceEl.style.display = 'none';
+                }
+            }
+        }
+
+        // 初始化锁定状态
+        updateThumbnailSelection();
+
+        // 初始化变体选择
+        updateVariantImage();
+
+        // 获取当前选中的变体ID
+        function getCurrentVariantId() {
+            const selectedOptions = {};
+            optionInputs.forEach(input => {
+                if (input.checked) {
+                    const name = input.name.match(/options\[(.+)\]/)[1];
+                    selectedOptions[name] = input.value;
+                }
+            });
+
+            const matchedVariant = variants.find(variant => {
+                return variant.options.every((opt, idx) => {
+                    const optionName = optionNames[idx];
+                    return selectedOptions[optionName] === opt;
+                });
+            });
+
+            return matchedVariant ? matchedVariant.id : {{ product.selected_or_first_available_variant.id }};
+        }
+
+        // 获取当前数量
+        function getCurrentQuantity() {
+            return parseInt(quantityInput.value) || 1;
+        }
+
+        // 立即购买功能
+        document.getElementById('slr-buy-now-btn').addEventListener('click', function () {
             const variantId = getCurrentVariantId();
             const quantity = getCurrentQuantity();
+
             fetch('/cart/add.js', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
@@ -677,8 +831,9 @@
                     console.error('立即购买失败:', error);
                 });
         });
+
         // 加入购物车功能
-        addCard.addEventListener('click', function () {
+        document.getElementById('slr-add-to-cart-btn').addEventListener('click', function () {
             const variantId = getCurrentVariantId();
             const quantity = getCurrentQuantity();
             const button = this;
@@ -710,31 +865,6 @@
                     console.error('加入购物车失败:', error);
                 });
         });
-
-        // 获取当前选中的变体ID
-        function getCurrentVariantId() {
-            const selectedOptions = {};
-            optionInputs.forEach(input => {
-                if (input.checked) {
-                    const name = input.name.match(/options\[(.+)\]/)[1];
-                    selectedOptions[name] = input.value;
-                }
-            });
-
-            const matchedVariant = window.variants.find(variant => {
-                return variant.options.every((opt, idx) => {
-                    const optionName = optionNames[idx];
-                    return selectedOptions[optionName] === opt;
-                });
-            });
-
-            return matchedVariant ? matchedVariant.id : {{ product.selected_or_first_available_variant.id }};
-        }
-
-        // 获取当前数量
-        function getCurrentQuantity() {
-            return quantityInput.value || 1
-        }
     });
 </script>
 </body>

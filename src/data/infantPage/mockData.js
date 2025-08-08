@@ -307,7 +307,7 @@ export const mockData = {
             {
                 name: "Color",
                 position: 1,
-                values: ["gray"],
+                values: ["灰色"],
             },
             {
                 name: "Size",

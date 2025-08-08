@@ -286,12 +286,12 @@
     <div class="slr-main-left">
         <div class="slr-main-left-product-img">
             <img id="product-image" alt="product-image"
-                 src="{{ product.featured_image | img_url:"1600x" }}"
+                 src="{{ product.featured_image | img_url: "1600x" }}"
                  srcset="">
         </div>
         <div class="slr-main-left-preview-imgs" id="preview-imgs">
             {% for image in product.images %}
-                <img src="{{ image | img_url: '1600x' }}" alt="{{ image.alt | escape }}" />
+                <img src="{{ image | img_url: '1600x' }}" alt="{{ image.alt | escape }}"/>
             {% endfor %}
         </div>
     </div>
@@ -301,7 +301,7 @@
         </div>
         <div class="slr-main-right-description">
             <p> {{ product.handle }}</p>
-           {{ product.description }}
+            {{ product.description }}
         </div>
         <div class="slr-main-right-dimensions">
             <p>Dimensions:</p>
@@ -316,13 +316,13 @@
                 <button>{{ size }}</button>
             {% endfor %}
         </div>
-
+        
         <div class="slr-main-right-color">
             <p>Color:</p>
             <div class="slr-main-right-color-list">
                 {% for image in product.options_with_values[0].values %}
-                    <img  class="{% if forloop.first %}active{% endif %}"
-                          src="{{ image | img_url: '48x' }}" alt="{{ image.alt | escape }}" />
+                    <img class="{% if forloop.first %}active{% endif %}"
+                         src="{{ image | img_url: '48x' }}" alt="{{ image.alt | escape }}"/>
                 {% endfor %}
             </div>
         </div>
@@ -434,13 +434,13 @@
 
 <script>
 
-    document.addEventListener("DOMContentLoaded",()=>{
+    document.addEventListener("DOMContentLoaded", () => {
         const decreaseBtn = document.querySelector(".decrease");
         const increaseBtn = document.querySelector(".increase");
         const input = document.querySelector("#input");
         const mainImage = document.getElementById("product-image");
         const previewImages = document.querySelectorAll("#preview-imgs img");
-        const colorOptions=document.querySelectorAll(".slr-main-right-color-list img")
+        const colorOptions = document.querySelectorAll(".slr-main-right-color-list img")
 
         colorOptions.forEach(option => {
             option.addEventListener('click', () => {
@@ -457,24 +457,24 @@
         });
 
         decreaseBtn.addEventListener('click', () => {
-                let current = parseInt(input.value, 10);
-                if (!isNaN(current) && current > 1) {
+            let current = parseInt(input.value, 10);
+            if (!isNaN(current) && current > 1) {
                 input.value = current - 1;
-                 }
+            }
         });
 
         increaseBtn.addEventListener('click', () => {
-                let current = parseInt(input.value, 10);
-                if (!isNaN(current)) {
+            let current = parseInt(input.value, 10);
+            if (!isNaN(current)) {
                 input.value = current + 1;
-                }
+            }
         });
 
         input.addEventListener('input', () => {
-                input.value = input.value.replace(/[^\d]/g, '');
-                if (input.value === '' || parseInt(input.value, 10) < 1) {
+            input.value = input.value.replace(/[^\d]/g, '');
+            if (input.value === '' || parseInt(input.value, 10) < 1) {
                 input.value = 1;
-                }
+            }
         });
     })
 </script>
