@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100%;
+            height: 100%;
+
+        }
+
+        .slr-main {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1rem;
+            padding: 1.5rem;
+        }
+
+        .slr-main-left {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .slr-main-left img {
+            width: 100%;
+            border-radius: 5px;
+            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+        }
+
+        .slr-main-left .slr-main-left-product-img {
+            flex: 1.5;
+        }
+
+        .slr-main-left .slr-main-left-product-img img {
+            height: 100%;
+        }
+
+        .slr-main-left .slr-main-left-preview-imgs {
+            flex: 1;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            overflow-y: auto;
+            scrollbar-width: none;
+            cursor: pointer;
+        }
+
+        .slr-main-left .slr-main-left-preview-imgs::-webkit-scrollbar {
+            display: none;
+        }
+
+
+        .slr-main-right {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            color: #757575;
+        }
+
+        .slr-main-right-title {
+            font-size: 2rem;
+            color: #000000;
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+
+        .slr-main-right-description {
+            font-size: 0.8rem;
+        }
+
+        .slr-main-right-description p {
+            margin: 0.4rem 0;
+        }
+
+        .slr-main-right-dimensions {
+            font-size: 0.8rem;
+        }
+
+        .slr-main-right-size button {
+            padding: 0.8rem 1rem;
+            background-color: transparent;
+            border: 1px solid #eeeeee;
+            border-radius: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .slr-main-right-color .slr-main-right-color-list {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 1rem;
+            margin: 0.5rem 0;
+        }
+
+        .slr-main-right-color .slr-main-right-color-list img {
+            cursor: pointer;
+            padding-bottom: 0.3rem;
+        }
+
+        .slr-main-right-color .slr-main-right-color-list .active {
+            border-bottom: 2px solid rebeccapurple;
+        }
+
+        .slr-main-right-material button {
+            padding: 0.8rem 1rem;
+            background-color: transparent;
+            border: 1px solid #eeeeee;
+            border-radius: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .slr-main-right-price {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .slr-main-right-price h2 {
+            font-size: 1.5rem;
+            color: #000000;
+        }
+
+        .slr-main-right-price p {
+            font-size: 0.8rem;
+        }
+
+        .slr-main-right-quantity {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .slr-main-right-quantify-controls {
+            width: 50%;
+            display: grid;
+            grid-template-columns: 32px 1fr 32px;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #eeeeee;
+            padding: 0.3rem 0.6rem;
+            border-radius: 0.3rem;
+        }
+
+        .slr-main-right-quantify-controls button {
+            height: 32px;
+            cursor: pointer;
+            border: none;
+            background-color: transparent;
+        }
+
+        .quantity-input {
+            width: 100%;
+            text-align: center;
+            font-size: 16px;
+            border: none;
+            background-color: transparent;
+        }
+
+        .slr-main-right-buttons {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .slr-main-right-buttons button {
+            padding: 0.8rem 0.6rem;
+            border-radius: 0.4rem;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .slr-main-right-buttons .slr-main-right-card {
+            background-color: #000000;
+            color: white;
+        }
+
+        .slr-main-right-buttons .slr-main-right-buy {
+            color: #000000;
+        }
+
+        .slr-main-right-share {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .slr-main-right-share a {
+            color: #757575;
+            text-indent: unset;
+        }
+
+        .slr-description {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            padding: 5rem 1.5rem;
+        }
+
+        .slr-description .slr-description-title {
+            font-size: 3.5rem;
+            font-weight: bold;
+        }
+
+        .slr-description p {
+            color: #757575;
+        }
+
+        .slr-info {
+            width: 100%;
+            height: 550px;
+            position: relative;
+        }
+
+        .slr-info-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .slr-info-mask {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: rgb(0, 0, 0, .3);
+        }
+
+        .slr-mask-box {
+            width: 400px;
+            position: absolute;
+            top: 4rem;
+            left: 4rem;
+            color: white;
+        }
+
+        .slr-mask-box h2 {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        @media screen and (width < 64rem) {
+            .slr-main {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .slr-main .slr-main-left-preview-imgs {
+                display: none;
+            }
+
+            .slr-info .slr-mask-box {
+                width: 80%;
+                margin: auto;
+                top: 5rem;
+                left: 1rem;
+            }
+
+            .slr-info .slr-mask-box h2 {
+                font-size: 2.5rem;
+            }
+        }
+
+
+    </style>
+</head>
+<body>
+<div class="slr-main">
+    <div class="slr-main-left">
+        <div class="slr-main-left-product-img">
+            <img id="product-image" alt="product-image"
+                 src="{{ product.featured_image | img_url: "1600x" }}"
+                 srcset="">
+        </div>
+        <div class="slr-main-left-preview-imgs" id="preview-imgs">
+            {% for image in product.images %}
+                <img src="{{ image | img_url: '1600x' }}" alt="{{ image.alt | escape }}"/>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="slr-main-right">
+        <div class="slr-main-right-title">
+            {{ product.title }}
+        </div>
+        <div class="slr-main-right-description">
+            <p> {{ product.handle }}</p>
+            {{ product.description }}
+        </div>
+        <div class="slr-main-right-dimensions">
+            <p>Dimensions:</p>
+            <div>
+                Small: W190 x D60 x H285 mm / 5 kg
+            </div>
+        </div>
+
+        <div class="slr-main-right-size">
+            <p>Size:</p>
+            {% for size in product.options_with_values[1].values %}
+                <button>{{ size }}</button>
+            {% endfor %}
+        </div>
+        
+        <div class="slr-main-right-color">
+            <p>Color:</p>
+            <div class="slr-main-right-color-list">
+                {% for image in product.options_with_values[0].values %}
+                    <img class="{% if forloop.first %}active{% endif %}"
+                         src="{{ image | img_url: '48x' }}" alt="{{ image.alt | escape }}"/>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="slr-main-right-material">
+            <p>Material:</p>
+            <button type="button">Marble</button>
+        </div>
+
+        <div class="slr-main-right-price">
+            <h2>{{ product.price | money_with_currency }}</h2>
+            <p>Tax included.</p>
+        </div>
+        <div class="slr-main-right-quantity">
+            <p>Quantity:</p>
+            <div class="slr-main-right-quantify-controls">
+                <button class="decrease" type="button">-</button>
+                <input class="quantity-input" id="input" type="text" value="1"/>
+                <button class="increase" type="button">+</button>
+            </div>
+        </div>
+        <div class="slr-main-right-buttons">
+            <button class="slr-main-right-card" type="button">Add to Card</button>
+            <button class="slr-main-right-buy" type="button">Buy it Now</button>
+        </div>
+
+        <div class="slr-main-right-share"
+             style="--offset-top-desktop: 8px;--offset-bottom-desktop: 8px;--offset-top-mobile: 8px;--offset-bottom-mobile: 8px;">
+            <span class="product-share-buttons__label">Share:</span>
+
+            <a aria-label="Share" class="button-social js-social-share"
+               data-input-fallback="share-input-template--18701885997208__product-template"
+               data-share-title="PERSPECTYVA decor"
+               data-share-url="https://demo-llab-design.myshopify.com/products/perspectyva-decor-copy" href="#">
+                <svg aria-hidden="true" class="icon icon-social" fill="none" focusable="false" height="24"
+                     viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18 22C19.6569 22 21 20.6569 21 19C21 17.3431 19.6569 16 18 16C16.3431 16 15 17.3431 15 19C15 20.6569 16.3431 22 18 22Z"
+                          stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                          stroke-width="1.5"></path>
+                    <path d="M6 15C7.65685 15 9 13.6569 9 12C9 10.3431 7.65685 9 6 9C4.34315 9 3 10.3431 3 12C3 13.6569 4.34315 15 6 15Z"
+                          stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                          stroke-width="1.5"></path>
+                    <path d="M8.58984 13.5098L15.4198 17.4898" stroke="currentColor" stroke-linecap="round"
+                          stroke-linejoin="round" stroke-width="1.5"></path>
+                    <path d="M18 8C19.6569 8 21 6.65685 21 5C21 3.34315 19.6569 2 18 2C16.3431 2 15 3.34315 15 5C15 6.65685 16.3431 8 18 8Z"
+                          stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                          stroke-width="1.5"></path>
+                    <path d="M15.4098 6.50977L8.58984 10.4898" stroke="currentColor" stroke-linecap="round"
+                          stroke-linejoin="round" stroke-width="1.5"></path>
+                </svg>
+            </a>
+            <a aria-label="Share on Facebook" class="button-social"
+               href="https://www.facebook.com/sharer/sharer.php?u=demo-llab-design.myshopify.com/products/perspectyva-decor-copy&amp;amp;src=sdkpreparse"
+               rel="nofollow"
+               target="_blank">
+                <svg aria-hidden="true" class="icon icon-social" fill="none" focusable="false" height="24"
+                     viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.1194 5.32003H16.9994V2.14003C16.0891 2.04538 15.1745 1.99865 14.2594 2.00003C11.5394 2.00003 9.67938 3.66003 9.67938 6.70003V9.32003H6.60938V12.88H9.67938V22H13.3594V12.88H16.4194L16.8794 9.32003H13.3594V7.05003C13.3594 6.00003 13.6394 5.32003 15.1194 5.32003Z"
+                          fill="currentColor"></path>
+                </svg>
+            </a>
+            <a aria-label="Share on X (Twitter)" class="button-social"
+               href="https://twitter.com/intent/tweet?text=PERSPECTYVA decor&amp;url=demo-llab-design.myshopify.com/products/perspectyva-decor-copy"
+               rel="nofollow"
+               target="_blank">
+                <svg aria-hidden="true" class="icon icon-social" fill="none" focusable="false" height="24"
+                     viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1.05364 2L9.54759 13.0312L1 22H2.92372L10.4071 14.1477L16.4535 22H23L14.0281 10.3483L21.9842 2H20.0605L13.1686 9.23185L7.60013 2H1.05364ZM3.88261 3.37634H6.89009L20.1706 20.6235H17.1631L3.88261 3.37634Z"
+                          fill="currentColor"></path>
+                </svg>
+            </a>
+            <a aria-label="Share on Pinterest" class="button-social"
+               href="http://pinterest.com/pin/create/button/?url=https://demo-llab-design.myshopify.com/products/perspectyva-decor-copy&amp;description=PERSPECTYVA decor"
+               rel="nofollow"
+               target="_blank">
+                <svg aria-hidden="true" class="icon icon-social" fill="none" focusable="false" height="24"
+                     viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1 12.0003C1 16.5047 3.70857 20.3744 7.58442 22.0757C7.55348 21.3076 7.57892 20.3854 7.77589 19.5497C7.98738 18.6567 9.19127 13.5556 9.19127 13.5556C9.19127 13.5556 8.83988 12.8533 8.83988 11.8152C8.83988 10.185 9.78467 8.96754 10.9613 8.96754C11.9619 8.96754 12.4453 9.71908 12.4453 10.619C12.4453 11.6249 11.8038 13.1294 11.4738 14.5229C11.1982 15.6898 12.0589 16.6415 13.21 16.6415C15.2942 16.6415 16.6979 13.9646 16.6979 10.793C16.6979 8.38204 15.0741 6.5775 12.1207 6.5775C8.78393 6.5775 6.7052 9.06594 6.7052 11.8455C6.7052 12.8039 6.98776 13.4798 7.43033 14.0031C7.63383 14.2435 7.66211 14.3402 7.58846 14.6162C7.53569 14.8186 7.41452 15.3059 7.36433 15.499C7.29112 15.7776 7.06536 15.8772 6.81356 15.7743C5.27666 15.1469 4.56089 13.4638 4.56089 11.5717C4.56089 8.44693 7.19624 4.7 12.4226 4.7C16.6223 4.7 19.3865 7.73914 19.3865 11.0015C19.3865 15.3167 16.9875 18.5405 13.4512 18.5405C12.2636 18.5405 11.1465 17.8985 10.7638 17.1694C10.7638 17.1694 10.1252 19.7039 9.98997 20.1933C9.75674 21.0414 9.30024 21.8891 8.88284 22.5498C9.87215 22.8418 10.9172 23.0009 12.0004 23.0009C18.0748 23.0009 23 18.0758 23 12.0003C23 5.92506 18.0748 1 12.0004 1C5.9254 1 1 5.92506 1 12.0003Z"
+                          fill="currentColor"></path>
+                </svg>
+            </a>
+        </div>
+
+    </div>
+</div>
+
+<div class="slr-description">
+    <div class="slr-description-title">
+        llab.design
+    </div>
+    <p>The DUALITY collection gives rise to new emotions through the dramatic contrast between the raw energy of the<br>material
+        and the idea of delicate shapes with intricately carved details united and reproduced in natural stone.</p>
+    <p>The pyramid-shaped details are interconnected by effortless lines, aesthetically contrasting strength and
+        fragility.</p>
+    <p>In consequence of the specially selected texture of natural marble, each item of the Duality collection will
+        become<br>an accent element of any interior, complementing the space with elegance and functionality.</p>
+</div>
+
+<div class="slr-info">
+    <img alt="info-img"
+         class="slr-info-img"
+         src="https://demo-llab-design.myshopify.com/cdn/shop/files/437962168_17959641926753198_2994085997509457625_n.jpg?v=1718784264&width=1920">
+    <div class="slr-info-mask">
+        <div class="slr-mask-box">
+            <h2>Elevate Your Space with Custom Marble Furniture</h2>
+            <p>Discover bespoke marble pieces that blend timeless elegance with modern design.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const decreaseBtn = document.querySelector(".decrease");
+        const increaseBtn = document.querySelector(".increase");
+        const input = document.querySelector("#input");
+        const mainImage = document.getElementById("product-image");
+        const previewImages = document.querySelectorAll("#preview-imgs img");
+        const colorOptions = document.querySelectorAll(".slr-main-right-color-list img")
+
+        colorOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                colorOptions.forEach(img => img.classList.remove('active'));
+                option.classList.add('active');
+            });
+        });
+
+        previewImages.forEach(img => {
+            img.addEventListener('click', () => {
+                mainImage.src = img.src;
+                mainImage.alt = img.alt;
+            });
+        });
+
+        decreaseBtn.addEventListener('click', () => {
+            let current = parseInt(input.value, 10);
+            if (!isNaN(current) && current > 1) {
+                input.value = current - 1;
+            }
+        });
+
+        increaseBtn.addEventListener('click', () => {
+            let current = parseInt(input.value, 10);
+            if (!isNaN(current)) {
+                input.value = current + 1;
+            }
+        });
+
+        input.addEventListener('input', () => {
+            input.value = input.value.replace(/[^\d]/g, '');
+            if (input.value === '' || parseInt(input.value, 10) < 1) {
+                input.value = 1;
+            }
+        });
+    })
+</script>
+</body>
+</html>

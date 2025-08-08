@@ -34,7 +34,7 @@ function App() {
 			const name = path.replace("/src/data/", "").replace("/index.liquid", "");
 			return {
 				name,
-				data: `/src/data/${name}/mockData.js`,
+				data: `/src/data/productPage/mockData.js`,
 				template: path,
 			};
 		});

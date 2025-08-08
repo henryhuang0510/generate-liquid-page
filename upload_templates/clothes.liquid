@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Document</title>
+    <style>
+        /* 初始化 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: transparent;
+        }
+
+        body {
+            background-color: #faf3e8;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .slr-container {
+            width: 90%;
+            height: 100vh;
+            margin: 0 auto;
+            display: grid;
+            padding: 1rem 0;
+            grid-template-columns: 2fr 3fr;
+            gap: 2rem;
+        }
+
+        .slr-container-left {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+        }
+
+        .slr-container-left .slr-container-left-image img {
+            width: 100%;
+            height: auto;
+            max-width: 500px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .slr-container-left .slr-container-left-thumbnails {
+            display: flex;
+            flex-direction: row;
+            overflow-x: auto;
+            gap: 1.5rem;
+            margin-top: 1rem;
+            padding: 1rem;
+        }
+
+        .slr-container-left .slr-container-left-thumbnails img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .slr-container-left .slr-container-left-thumbnails .active {
+            border: 2px solid #dc954d;
+            transform: scale(1.1);
+        }
+
+        .slr-container-right {
+            width: 100%;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding: 1rem;
+        }
+
+        .slr-container-right .slr-container-right-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .slr-container-right .slr-container-right-price {
+            font-size: 1.25rem;
+            color: #666;
+            margin: 1rem 0;
+        }
+
+        .slr-container-right-option-group {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 2rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f7ddba;
+            border-top: 1px solid #f7ddba;
+        }
+
+        .slr-container-right-option-group .slr-container-right-option-label {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slr-container-right-option-label .slr-container-right-option-label-title {
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+
+        .slr-container-right-option-label .slr-container-right-option-label-value {
+            font-size: 0.8rem;
+        }
+
+        .slr-container-right-option-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .slr-container-right-option-buttons .slr-option-radio {
+            display: none;
+        }
+
+        .slr-container-right-option-buttons .slr-option-btn {
+            background: #fff;
+            color: #000;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            min-width: fit-content;
+        }
+
+        .slr-option-btn:hover {
+            border-color: #222222;
+        }
+
+        .slr-option-radio:checked + .slr-option-btn {
+            background: #222222;
+            color: #fff;
+            border-color: #222222;
+        }
+
+
+        .slr-container-right-size-buttons button:hover {
+            background-color: #333;
+            color: #fff;
+            transition: all 0.3s ease-in-out;
+        }
+
+
+        .slr-container-right-color .slr-container-right-color-buttons div {
+            width: 42px;
+            height: 42px;
+            border: 1px solid gray;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slr-container-right-color .slr-container-right-color-buttons div span {
+            display: block;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: gray;
+        }
+
+        .slr-container-right-input {
+            width: 100%;
+            display: grid;
+            grid-template-columns: minmax(120px, 1fr) 4fr;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .slr-container-right-input .quantity-selector {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.35rem 0.75rem;
+            border: 1px solid #dc954d;
+            border-radius: 2rem;
+            overflow: hidden;
+        }
+
+        .slr-container-right-input .qty-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slr-container-right-input .qty-input {
+            width: 56px;
+            border: none;
+            text-align: center;
+            font-size: 16px;
+            pointer-events: none;
+        }
+
+        .slr-container-right-input .quantity-buy {
+            width: 100%;
+            padding: 0.75rem 0;
+            border: 1px solid #dc954d;
+            border-radius: 2rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            color: #dc954d;
+        }
+
+        .slr-container-right-description {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #555;
+            margin-top: 1rem;
+            border-bottom: 1px solid #f7ddba;
+        }
+
+        .slr-container-right-description .accordion {
+            width: 100%;
+        }
+
+        .slr-container-right-description .accordion-summary {
+            width: 100%;
+            list-style: none;
+            cursor: pointer;
+            padding: 1rem 0;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .slr-container-right-description .accordion-summary::marker {
+            content: "";
+        }
+
+        .slr-container-right-description .accordion-summary::after {
+            content: ">";
+            position: absolute;
+            right: 16px;
+            transition: transform 0.2s ease;
+        }
+
+        .slr-container-right-description .accordion[open] .accordion-summary::after {
+            transform: rotate(90deg);
+        }
+
+        .slr-container-right-description .accordion-content {
+            padding: 0 16px 16px;
+            line-height: 1.5;
+            color: #444;
+        }
+
+        .slr-container-right-fit {
+            padding: 1rem 0;
+            border-bottom: 1px dashed #f7ddba;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #555;
+            font-weight: bold;
+        }
+
+        .slr-container-right-dimension {
+            padding: 1rem 0;
+            border-bottom: 1px solid #f7ddba;
+            font-size: 0.75rem;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .slr-container-right-more {
+            padding: 1rem 0;
+            border-bottom: 1px solid #f7ddba;
+            font-size: 0.75rem;
+        }
+
+        .slr-container-right-more .slr-container-right-more-info {
+            display: grid;
+            grid-template-columns: 20px 1fr;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .slr-container-right-more .slr-container-right-more-info .icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+            fill: none;
+            stroke-width: 1.5px;
+        }
+
+        .slr-container-reasons {
+            width: 100%;
+            margin: 1rem 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 4rem;
+        }
+
+        .slr-container-reasons h2 {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        .slr-container-reasons .slr-container-reasons-list {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+            align-items: center;
+            width: 100%;
+            gap: 1rem;
+        }
+
+        .slr-container-reasons .slr-container-reasons-list .slr-container-reasons-item {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            gap: 0.5rem;
+        }
+
+        .slr-container-reasons-list .slr-container-reasons-item .icon {
+            display: inline-block;
+            vertical-align: middle;
+            fill: none;
+            stroke: #000;
+            stroke-width: 1.5px;
+        }
+
+        .slr-container-reasons-list .slr-container-reasons-item .icon-peace {
+            width: 40px;
+            height: 40px;
+        }
+
+        .slr-container-reasons-list .slr-container-reasons-item .icon-cloud {
+            width: 40px;
+            height: 40px;
+        }
+
+        .slr-container-reasons-list .slr-container-reasons-item .icon-flower {
+            width: 40px;
+            height: 40px;
+        }
+
+        .slr-container-reasons-list .slr-container-reasons-item .title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .slr-container-example {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 4fr 6fr;
+            margin-top: 5rem;
+        }
+
+        .slr-container-example .slr-example-left {
+            background-color: #dc954d;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: start;
+            gap: 1rem;
+            padding: 0 4rem;
+            color: #fff;
+        }
+
+        .slr-example-left h2 {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        .slr-container-example .slr-example-left button {
+            padding: 0.75rem 1.5rem;
+            background-color: #ecb935;
+            color: #333;
+            border: none;
+            border-radius: 2rem;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        @media screen and (max-width: 768px) {
+            .slr-container {
+                width: 100%;
+                padding: 0.5rem;
+                grid-template-columns: 1fr;
+                gap: 0;
+                height: auto;
+            }
+
+            .slr-container-reasons h2 {
+                font-size: 2rem;
+            }
+
+            .slr-container-reasons .slr-container-reasons-list {
+                flex-direction: column;
+                gap: 3rem;
+            }
+
+            .slr-container-example {
+                grid-template-columns: 1fr;
+            }
+
+            .slr-container-example .slr-example-left {
+                padding: 2rem;
+            }
+
+            .slr-container-right {
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<article class="slr-container">
+    <div class="slr-container-left">
+        <div class="slr-container-left-image">
+            <img
+                    width="100%" height="100%"
+                    id="slr-main-image"
+                    src="{{ product.featured_image | image_url: '720x' }}"
+                    alt="product_image"/>
+        </div>
+
+        <div class="slr-container-left-thumbnails" id="product-preview-images">
+            {% for image in product.images %}
+                <img width="100%" height="100%" src="{{ image | image_url: '720x' }}" alt="{{ image.alt | escape }}"/>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="slr-container-right">
+        <h1 class="slr-container-right-title">{{ product.title }}</h1>
+        <div class="slr-container-right-price" id="slr-price-container">
+            {% assign current_variant = product.selected_or_first_available_variant %}
+            {% if current_variant.compare_at_price > current_variant.price %}
+                <span class="slr-current-price" id="slr-current-price">{{ current_variant.price | money }}</span>
+                <span class="slr-compare-price"
+                      id="slr-compare-price">{{ current_variant.compare_at_price | money }}</span>
+            {% else %}
+                <span class="slr-current-price" id="slr-current-price">{{ current_variant.price | money }}</span>
+            {% endif %}
+        </div>
+        {% for option in product.options_with_values %}
+            <div class="slr-container-right-option-group">
+                <div class="slr-container-right-option-label">
+                    <p class="slr-container-right-option-label-title">{{ option.name }}</p>
+                </div>
+                <div class="slr-container-right-option-buttons">
+                    {% for value in option.values %}
+                        <div>
+                            <input type="radio" name="options[{{ option.name }}]"
+                                   id="slr-{{ option.name | handleize }}-{{ value | handleize }}" value="{{ value }}"
+                                   class="slr-option-radio" {% if forloop.first %}checked{% endif %}>
+                            <label for="slr-{{ option.name | handleize }}-{{ value | handleize }}"
+                                   class="slr-option-btn">
+                                <span>{{ value }}</span>
+                            </label>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+        <div class="slr-container-right-input" data-unit-price="120.00">
+            <div class="quantity-selector">
+                <button id="slr-decrease-btn" type="button" class="qty-btn minus" aria-label="Decrease quantity">
+                    −
+                </button>
+                <input id="slr-quantity" type="text" class="qty-input" value="1" readonly/>
+                <button id="slr-increase-btn" type="button" class="qty-btn plus" aria-label="Increase quantity">
+                    ＋
+                </button>
+            </div>
+            <button class="quantity-buy" type="button" id="slr-buy-now-btn"> But it Now</button>
+        </div>
+        <div class="slr-container-right-description">
+            <details class="accordion">
+                <summary class="accordion-summary">Description</summary>
+                <div class="accordion-content">
+                    <p>
+                        {{ product.description | strip_html | truncatewords: 50 }}
+                    </p>
+                </div>
+            </details>
+        </div>
+
+        <div class="slr-container-right-fit">
+            Fit
+        </div>
+        <div class="slr-container-right-dimension">
+            <span>Small</span>
+            <span>Medium</span>
+            <span>Large</span>
+        </div>
+        <div class="slr-container-right-more">
+            <div class="slr-container-right-more-info">
+                <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-smile"
+                     viewBox="0 0 24 24">
+                    <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z" stroke="#862c46"
+                          stroke-linecap="round" stroke-linejoin="round"></path>
+                    <path d="M16.5 14.5s-1.5 2-4.5 2-4.5-2-4.5-2" stroke="#862c46" stroke-linecap="round"
+                          stroke-linejoin="round"></path>
+                    <path d="M15.5 9a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm-7 0a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1z" fill="#862c46"
+                          stroke="#862c46" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+                <p>High quality organic cotton</p>
+            </div>
+
+            <div class="slr-container-right-more-info">
+                <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-flower"
+                     viewBox="0 0 24 24">
+                    <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm1-6s1-2 1-4-2-4-2-4-2 2-2 4 1 4 1 4" stroke="#862c46"
+                          stroke-miterlimit="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <path d="M9 11s-2-1-4-1-4 2-4 2 2 2 4 2 4-1 4-1m4 2s1 2 1 4-2 4-2 4-2-2-2-4 1-4 1-4m4-4s2-1 4-1 4 2 4 2-2 2-4 2-4-1-4-1m-4.414-3.828S9.879 7.05 8.464 5.636C7.05 4.222 4.222 4.222 4.222 4.222s0 2.828 1.414 4.243c1.414 1.414 3.536 2.121 3.536 2.121m0 2.828s-2.122.707-3.536 2.122c-1.414 1.414-1.414 4.242-1.414 4.242s2.828 0 4.242-1.414c1.415-1.414 2.122-3.536 2.122-3.536m4.243-1.414s2.12.707 3.535 2.122c1.414 1.414 1.414 4.242 1.414 4.242s-2.828 0-4.242-1.414c-1.415-1.414-2.122-3.536-2.122-3.536m0-5.656s.707-2.122 2.122-3.536c1.414-1.414 4.242-1.414 4.242-1.414s0 2.828-1.414 4.243c-1.414 1.414-3.536 2.121-3.536 2.121"
+                          stroke="#862c46" stroke-miterlimit="1.5" stroke-linecap="round"
+                          stroke-linejoin="round"></path>
+                </svg>
+                <p>Comfy - perfect for spring/fall</p>
+            </div>
+
+        </div>
+    </div>
+</article>
+
+<article class="slr-container-reasons">
+    <h2>Reasons to love Kiddo</h2>
+    <div class="slr-container-reasons-list">
+        <div class="slr-container-reasons-item">
+            <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-peace" viewBox="0 0 24 24">
+                <path d="M14.149 9.472v-5.86c0-.89-.722-1.612-1.612-1.612v0c-.89 0-1.611.722-1.611 1.612v4.834"
+                      stroke="#000" stroke-linecap="round"></path>
+                <path d="m16.346 12.841 2.176-7.252a1.584 1.584 0 0 0-1.083-1.98v0a1.585 1.585 0 0 0-1.961 1.098l-1.33 4.764M7.62 9.25l1.055 2.341a1.612 1.612 0 0 1-2.938 1.325L4.68 10.575A1.612 1.612 0 0 1 7.62 9.25z"
+                      stroke="#000" stroke-linecap="round"></path>
+                <path d="M11.72 12.261v0a2.322 2.322 0 0 0-.068-1.742l-1.073-2.38a1.584 1.584 0 0 0-2.101-.79v0a1.584 1.584 0 0 0-.764 2.14l.135.276"
+                      stroke="#000" stroke-linecap="round"></path>
+                <path d="m13.857 17.677.492-.984a.176.176 0 0 0-.108-.248l-3.55-1.044a1.537 1.537 0 0 1-1.095-1.635v0a1.537 1.537 0 0 1 1.67-1.37l4.788.446s3.81.586 2.49 4.395c-1.318 3.81-1.757 5.128-4.687 5.128H8.876a4.249 4.249 0 0 1-4.249-4.249v0L4.48 9.912"
+                      stroke="#000" stroke-linecap="round"></path>
+            </svg>
+            <div class="title">Made for Play</div>
+            <p>Comfy clothes that are durable</p>
+        </div>
+        <div class="slr-container-reasons-item">
+            <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-cloud" viewBox="0 0 24 24">
+                <path d="M12 4c-6 0-6 4-6 6-1.667 0-5 1-5 5s3.333 5 5 5h12c1.667 0 5-1 5-5s-3.333-5-5-5c0-2 0-6-6-6z"
+                      stroke="#000" stroke-linejoin="round"></path>
+            </svg>
+            <div class="title">Soft & Stretchy</div>
+            <p>Easy and fun styles to wear</p>
+        </div>
+        <div class="slr-container-reasons-item">
+            <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-flower" viewBox="0 0 24 24">
+                <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm1-6s1-2 1-4-2-4-2-4-2 2-2 4 1 4 1 4" stroke="#000"
+                      stroke-miterlimit="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M9 11s-2-1-4-1-4 2-4 2 2 2 4 2 4-1 4-1m4 2s1 2 1 4-2 4-2 4-2-2-2-4 1-4 1-4m4-4s2-1 4-1 4 2 4 2-2 2-4 2-4-1-4-1m-4.414-3.828S9.879 7.05 8.464 5.636C7.05 4.222 4.222 4.222 4.222 4.222s0 2.828 1.414 4.243c1.414 1.414 3.536 2.121 3.536 2.121m0 2.828s-2.122.707-3.536 2.122c-1.414 1.414-1.414 4.242-1.414 4.242s2.828 0 4.242-1.414c1.415-1.414 2.122-3.536 2.122-3.536m4.243-1.414s2.12.707 3.535 2.122c1.414 1.414 1.414 4.242 1.414 4.242s-2.828 0-4.242-1.414c-1.415-1.414-2.122-3.536-2.122-3.536m0-5.656s.707-2.122 2.122-3.536c1.414-1.414 4.242-1.414 4.242-1.414s0 2.828-1.414 4.243c-1.414 1.414-3.536 2.121-3.536 2.121"
+                      stroke="#000" stroke-miterlimit="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+            <div class="title">Sustainable Materials</div>
+            <p>Natural and breathable fabrics</p>
+        </div>
+    </div>
+</article>
+
+<article class="slr-container-example">
+    <div class="slr-example-left">
+        <h2>Behind the brand</h2>
+        <p>All of our styles are intentionally designed to wear everyday and be passed down from one kiddo to the
+            next.</p>
+        <button>LEARN MORE</button>
+    </div>
+    <div class="slr-example-right">
+        <img width="100%" height="100%"
+             src="https://broadcast-theme-relay.myshopify.com/cdn/shop/files/TSC117_SET_A_RESTING_SITTING_GROUP_W__BIKE_N_A_02_2160x_73762916-b20f-4672-b5c2-f26788b892f8.jpg?v=1749506118&width=1296"
+             alt="Example Image" style="width: 100%;height: 100%;"/>
+    </div>
+</article>
+
+<script>
+    window.variants = {{ product.variants | json }};
+    window.productOptions = {{ product.options_with_values | json }};
+    // 获取店铺货币信息
+    window.shopCurrency = {{ shop.currency | json }};
+    window.shopMoneyFormat = {{ shop.money_format | json }};
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const quantityInput = document.getElementById('slr-quantity');
+        const decreaseBtn = document.getElementById('slr-decrease-btn');
+        const increaseBtn = document.getElementById('slr-increase-btn');
+        const mainImage = document.getElementById('slr-main-image');
+        const preViewImages = document.querySelectorAll('#product-preview-images img');
+        const optionInputs = document.querySelectorAll('input[name^="options["]');
+        const variants = window.variants;
+        const productOptions = window.productOptions;
+        const shopCurrency = window.shopCurrency || 'USD';
+
+        // 从产品数据结构中获取选项名称
+        const optionNames = productOptions.map(option => option.name);
+
+        // 根据货币代码获取合适的地区设置
+        function getLocaleForCurrency(currencyCode) {
+            const currencyLocaleMap = {
+                'CNY': 'zh-CN',
+                'USD': 'en-US',
+                'EUR': 'de-DE',
+                'GBP': 'en-GB',
+                'JPY': 'ja-JP',
+                'KRW': 'ko-KR',
+                'HKD': 'zh-HK',
+                'TWD': 'zh-TW',
+                'SGD': 'en-SG',
+                'AUD': 'en-AU',
+                'CAD': 'en-CA'
+            };
+            return currencyLocaleMap[currencyCode] || 'en-US';
+        }
+
+        // 创建货币格式化器
+        const currencyFormatter = new Intl.NumberFormat(getLocaleForCurrency(shopCurrency), {
+            style: 'currency',
+            currency: shopCurrency,
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+
+        // 格式化价格的辅助函数
+        function formatPrice(priceInCents) {
+            const priceInUnits = priceInCents / 100;
+            return currencyFormatter.format(priceInUnits);
+        }
+
+        let currentImageIndex = 0;
+
+        // 缩略图hover事件
+        preViewImages.forEach((img, index) => {
+            img.addEventListener('mouseenter', () => {
+                mainImage.src = img.src;
+                mainImage.alt = img.alt;
+                img.classList.add('active');
+            });
+
+            img.addEventListener('mouseleave', () => {
+                if (index !== currentImageIndex) {
+                    img.classList.remove('active');
+                }
+            });
+
+            img.addEventListener('click', () => {
+                currentImageIndex = index;
+                mainImage.src = img.src;
+                mainImage.alt = img.alt;
+                preViewImages.forEach(el => el.classList.remove('active'));
+                img.classList.add('active');
+            });
+        });
+
+
+        // 数量控制
+        decreaseBtn.addEventListener('click', function () {
+            let value = parseInt(quantityInput.value);
+            if (value > 1) {
+                quantityInput.value = value - 1;
+            }
+        });
+
+        increaseBtn.addEventListener('click', function () {
+            let value = parseInt(quantityInput.value);
+            quantityInput.value = value + 1;
+        });
+
+        quantityInput.addEventListener('change', function () {
+            if (this.value < 1) this.value = 1;
+        });
+
+        // 监听选项变化，切换变体图片和价格
+        optionInputs.forEach(input => {
+            input.addEventListener('change', function () {
+                console.log('选项变化');
+                updateVariantImage();
+            });
+        });
+
+        function updateVariantImage() {
+            // 获取当前所有选中的值
+            const selectedOptions = {};
+            optionInputs.forEach(input => {
+                if (input.checked) {
+                    const name = input.name.match(/options\[(.+)\]/)[1];
+                    selectedOptions[name] = input.value;
+                }
+            });
+
+            // 找到匹配的变体
+            const matchedVariant = variants.find(variant => {
+                return variant.options.every((opt, idx) => {
+                    const optionName = optionNames[idx];
+                    console.log(optionName, opt, selectedOptions[optionName]);
+                    return selectedOptions[optionName] === opt;
+                });
+            });
+
+            // 更新价格和图片
+            if (matchedVariant) {
+                updatePrice(matchedVariant);
+
+                // 如果有变体特定图片，切换主图
+                if (matchedVariant.featured_image && matchedVariant.featured_image.src) {
+                    // 正确处理URL参数
+                    const baseUrl = matchedVariant.featured_image.src;
+                    const separator = baseUrl.includes('?') ? '&' : '?';
+                    mainImage.src = baseUrl + separator + 'width=800&height=800';
+                    mainImage.alt = matchedVariant.featured_image.alt || '';
+
+                    // 更新缩略图选择状态 - 找到对应的缩略图并选中
+                    const variantImageSrc = matchedVariant.featured_image.src;
+                    let foundThumbnail = false;
+
+                    thumbnailBtns.forEach((btn, index) => {
+                        const btnImageSrc = btn.dataset.image;
+                        if (btnImageSrc && btnImageSrc.includes(variantImageSrc.split('?')[0])) {
+                            currentImageIndex = index;
+                            foundThumbnail = true;
+                        }
+                    });
+
+                    // 如果没找到对应的缩略图，保持当前选择
+                    if (!foundThumbnail) {
+                        // 可以选择不更新currentImageIndex，或者设置为第一个
+                        // currentImageIndex = 0;
+                    }
+
+                    updateThumbnailSelection();
+                }
+            }
+        }
+
+        // 更新价格显示
+        function updatePrice(variant) {
+            const currentPriceEl = document.getElementById('slr-current-price');
+            const comparePriceEl = document.getElementById('slr-compare-price');
+            const priceContainer = document.getElementById('slr-price-container');
+
+            if (currentPriceEl) {
+                // 使用原生货币格式化
+                currentPriceEl.textContent = formatPrice(variant.price);
+            }
+
+            // 处理对比价格
+            if (variant.compare_at_price && variant.compare_at_price > variant.price) {
+                if (comparePriceEl) {
+                    comparePriceEl.textContent = formatPrice(variant.compare_at_price);
+                    comparePriceEl.style.display = 'block';
+                }
+            } else {
+                if (comparePriceEl) {
+                    comparePriceEl.style.display = 'none';
+                }
+            }
+        }
+
+        // 初始化锁定状态
+        updateThumbnailSelection();
+
+        // 初始化变体选择
+        updateVariantImage();
+
+        // 获取当前选中的变体ID
+        function getCurrentVariantId() {
+            const selectedOptions = {};
+            optionInputs.forEach(input => {
+                if (input.checked) {
+                    const name = input.name.match(/options\[(.+)\]/)[1];
+                    selectedOptions[name] = input.value;
+                }
+            });
+
+            const matchedVariant = variants.find(variant => {
+                return variant.options.every((opt, idx) => {
+                    const optionName = optionNames[idx];
+                    return selectedOptions[optionName] === opt;
+                });
+            });
+
+            return matchedVariant ? matchedVariant.id : {{ product.selected_or_first_available_variant.id }};
+        }
+
+        // 获取当前数量
+        function getCurrentQuantity() {
+            return parseInt(quantityInput.value) || 1;
+        }
+
+        // 立即购买功能
+        document.getElementById('slr-buy-now-btn').addEventListener('click', function () {
+            const variantId = getCurrentVariantId();
+            const quantity = getCurrentQuantity();
+
+            fetch('/cart/add.js', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({id: variantId, quantity: quantity})
+            })
+                .then(function () {
+                    window.location.href = '/checkout';
+                })
+                .catch(function (error) {
+                    console.error('立即购买失败:', error);
+                });
+        });
+
+        // 加入购物车功能
+        document.getElementById('slr-add-to-cart-btn').addEventListener('click', function () {
+            const variantId = getCurrentVariantId();
+            const quantity = getCurrentQuantity();
+            const button = this;
+            const originalText = button.textContent;
+
+            fetch('/cart/add.js', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({id: variantId, quantity: quantity})
+            })
+                .then(function (response) {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('添加失败');
+                    }
+                })
+                .then(function (data) {
+                    console.log('商品已加入购物车:', data);
+                    // 只改变文字
+                    button.textContent = '{{ settings.added_to_cart_text | default: "✔️Added" }}';
+
+                    // 3秒后还原
+                    setTimeout(function () {
+                        button.textContent = originalText;
+                    }, 3000);
+                })
+                .catch(function (error) {
+                    console.error('加入购物车失败:', error);
+                });
+        });
+    });
+</script>
+</body>
+</html>

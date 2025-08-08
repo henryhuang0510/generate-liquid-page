@@ -14,7 +14,6 @@
         html body {
             width: 100%;
             color: #242424;
-            background-color: #fff;
         }
 
         .slr-main {
@@ -38,6 +37,7 @@
 
         .slr-main-left-preview {
             width: 100%;
+            max-width: 500px;
             display: flex;
             flex-direction: row;
             overflow-x: auto;
@@ -441,22 +441,6 @@
             margin-bottom: 2rem;
         }
 
-        .slr-item-rating {
-            width: 100%;
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
-        }
-        .slr-main-right-quality-controls-value{
-            width: 20px;
-            height: 100%;
-            text-align: center;
-            border: none;
-            outline: none;
-            font-size: 16px;
-        }
-
         @media screen and (max-width: 768px) {
             .slr-main {
                 display: flex;
@@ -484,14 +468,6 @@
             }
         }
 
-        /* 数字输入框样式 - 隐藏上下箭头 */
-        input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-
-        /* 响应式设计 */
     </style>
 </head>
 <body>
@@ -499,19 +475,13 @@
     <div class="slr-main-left">
         <div class="slr-main-left-image">
             <img
-                    id="slr-main-image"
+                    id="slr-image"
                     src="{{ product.featured_image | img_url: '720x' }}"
             />
         </div>
         <div class="slr-main-left-preview" id="slr-preview">
             {% for image in product.images %}
-                <img 
-                    class="slr-thumbnail-btn {% if forloop.first %}locked{% endif %}"
-                    src="{{ image | img_url: '1420x' }}" 
-                    alt="{{ image.alt | escape }}"
-                    data-image="{{ image | img_url: '800x' }}"
-                    data-alt="{{ image.alt | escape }}"
-                />
+                <img src="{{ image | img_url: '1420x' }}" alt="{{ image.alt | escape }}"/>
             {% endfor %}
         </div>
     </div>
@@ -756,10 +726,9 @@
         <div class="slr-main-right-quality">
             <div class="slr-main-right-quality-title">Quantity</div>
             <div class="slr-main-right-quality-controls">
-                <button class="slr-main-right-quality-controls-minus" id="slr-decrease-btn">-</button>
-                <input type="number" name="quantity" class="slr-main-right-quality-controls-value"
-                            value="1" min="1" id="slr-quantity">
-                <button class="slr-main-right-quality-controls-plus" id="slr-increase-btn">+</button>
+                <button class="slr-main-right-quality-controls-minus">-</button>
+                <span class="slr-main-right-quality-controls-value">1</span>
+                <button class="slr-main-right-quality-controls-plus">+</button>
             </div>
         </div>
 
@@ -777,6 +746,9 @@
         </div>
 
         <div class="slr-main-right-buttons">
+            <button class="slr-main-right-buttons-add-to-cart" id="slr-add-to-cart-btn">
+                Add to cart
+            </button>
             <button class="slr-main-right-buttons-buy-now" id="slr-buy-now-btn">
                 Buy now
             </button>
@@ -955,27 +927,6 @@
                           fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
                           stroke-linejoin="round"></path>
                 </svg>
-
-                <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                     aria-hidden="true">
-                    <path d="M7.15583 6.86345L9.32083 2.50345C9.38385 2.37727 9.48078 2.27114 9.60074 2.19696C9.7207 2.12279 9.85896 2.0835 10 2.0835C10.141 2.0835 10.2793 2.12279 10.3993 2.19696C10.5192 2.27114 10.6161 2.37727 10.6792 2.50345L12.8442 6.86345L17.6842 7.56678C17.8238 7.58614 17.9551 7.64436 18.0632 7.73479C18.1713 7.82522 18.2518 7.94423 18.2955 8.07822C18.3392 8.21221 18.3444 8.35579 18.3104 8.49257C18.2764 8.62936 18.2047 8.75383 18.1033 8.85178L14.6017 12.2434L15.4283 17.0351C15.5342 17.6501 14.8842 18.1184 14.3283 17.8284L10 15.5651L5.67083 17.8284C5.11583 18.1193 4.46583 17.6501 4.57166 17.0343L5.39833 12.2426L1.89666 8.85095C1.79582 8.75293 1.7245 8.62858 1.6908 8.49204C1.65711 8.3555 1.66239 8.21225 1.70606 8.07857C1.74972 7.94489 1.83001 7.82613 1.9378 7.73581C2.0456 7.64548 2.17657 7.58721 2.31583 7.56762L7.15583 6.86345Z"
-                          fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                          stroke-linejoin="round"></path>
-                </svg>
-
-                <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                     aria-hidden="true">
-                    <path d="M7.15583 6.86345L9.32083 2.50345C9.38385 2.37727 9.48078 2.27114 9.60074 2.19696C9.7207 2.12279 9.85896 2.0835 10 2.0835C10.141 2.0835 10.2793 2.12279 10.3993 2.19696C10.5192 2.27114 10.6161 2.37727 10.6792 2.50345L12.8442 6.86345L17.6842 7.56678C17.8238 7.58614 17.9551 7.64436 18.0632 7.73479C18.1713 7.82522 18.2518 7.94423 18.2955 8.07822C18.3392 8.21221 18.3444 8.35579 18.3104 8.49257C18.2764 8.62936 18.2047 8.75383 18.1033 8.85178L14.6017 12.2434L15.4283 17.0351C15.5342 17.6501 14.8842 18.1184 14.3283 17.8284L10 15.5651L5.67083 17.8284C5.11583 18.1193 4.46583 17.6501 4.57166 17.0343L5.39833 12.2426L1.89666 8.85095C1.79582 8.75293 1.7245 8.62858 1.6908 8.49204C1.65711 8.3555 1.66239 8.21225 1.70606 8.07857C1.74972 7.94489 1.83001 7.82613 1.9378 7.73581C2.0456 7.64548 2.17657 7.58721 2.31583 7.56762L7.15583 6.86345Z"
-                          fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                          stroke-linejoin="round"></path>
-                </svg>
-
-                <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                     aria-hidden="true">
-                    <path d="M7.15583 6.86345L9.32083 2.50345C9.38385 2.37727 9.48078 2.27114 9.60074 2.19696C9.7207 2.12279 9.85896 2.0835 10 2.0835C10.141 2.0835 10.2793 2.12279 10.3993 2.19696C10.5192 2.27114 10.6161 2.37727 10.6792 2.50345L12.8442 6.86345L17.6842 7.56678C17.8238 7.58614 17.9551 7.64436 18.0632 7.73479C18.1713 7.82522 18.2518 7.94423 18.2955 8.07822C18.3392 8.21221 18.3444 8.35579 18.3104 8.49257C18.2764 8.62936 18.2047 8.75383 18.1033 8.85178L14.6017 12.2434L15.4283 17.0351C15.5342 17.6501 14.8842 18.1184 14.3283 17.8284L10 15.5651L5.67083 17.8284C5.11583 18.1193 4.46583 17.6501 4.57166 17.0343L5.39833 12.2426L1.89666 8.85095C1.79582 8.75293 1.7245 8.62858 1.6908 8.49204C1.65711 8.3555 1.66239 8.21225 1.70606 8.07857C1.74972 7.94489 1.83001 7.82613 1.9378 7.73581C2.0456 7.64548 2.17657 7.58721 2.31583 7.56762L7.15583 6.86345Z"
-                          fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                          stroke-linejoin="round"></path>
-                </svg>
             </div>
             <div class="slr-item-comment">"I absolutely love these smoothies! They are the perfect way to start my day
                 with a burst of energy."
@@ -988,34 +939,6 @@
                  src="https://eight-nourish-demo.myshopify.com/cdn/shop/files/Review-1.png?v=1753106532&width=397">
             </img>
             <div class="slr-item-rating">
-                <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                     aria-hidden="true">
-                    <path d="M7.15583 6.86345L9.32083 2.50345C9.38385 2.37727 9.48078 2.27114 9.60074 2.19696C9.7207 2.12279 9.85896 2.0835 10 2.0835C10.141 2.0835 10.2793 2.12279 10.3993 2.19696C10.5192 2.27114 10.6161 2.37727 10.6792 2.50345L12.8442 6.86345L17.6842 7.56678C17.8238 7.58614 17.9551 7.64436 18.0632 7.73479C18.1713 7.82522 18.2518 7.94423 18.2955 8.07822C18.3392 8.21221 18.3444 8.35579 18.3104 8.49257C18.2764 8.62936 18.2047 8.75383 18.1033 8.85178L14.6017 12.2434L15.4283 17.0351C15.5342 17.6501 14.8842 18.1184 14.3283 17.8284L10 15.5651L5.67083 17.8284C5.11583 18.1193 4.46583 17.6501 4.57166 17.0343L5.39833 12.2426L1.89666 8.85095C1.79582 8.75293 1.7245 8.62858 1.6908 8.49204C1.65711 8.3555 1.66239 8.21225 1.70606 8.07857C1.74972 7.94489 1.83001 7.82613 1.9378 7.73581C2.0456 7.64548 2.17657 7.58721 2.31583 7.56762L7.15583 6.86345Z"
-                          fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                          stroke-linejoin="round"></path>
-                </svg>
-
-                <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                     aria-hidden="true">
-                    <path d="M7.15583 6.86345L9.32083 2.50345C9.38385 2.37727 9.48078 2.27114 9.60074 2.19696C9.7207 2.12279 9.85896 2.0835 10 2.0835C10.141 2.0835 10.2793 2.12279 10.3993 2.19696C10.5192 2.27114 10.6161 2.37727 10.6792 2.50345L12.8442 6.86345L17.6842 7.56678C17.8238 7.58614 17.9551 7.64436 18.0632 7.73479C18.1713 7.82522 18.2518 7.94423 18.2955 8.07822C18.3392 8.21221 18.3444 8.35579 18.3104 8.49257C18.2764 8.62936 18.2047 8.75383 18.1033 8.85178L14.6017 12.2434L15.4283 17.0351C15.5342 17.6501 14.8842 18.1184 14.3283 17.8284L10 15.5651L5.67083 17.8284C5.11583 18.1193 4.46583 17.6501 4.57166 17.0343L5.39833 12.2426L1.89666 8.85095C1.79582 8.75293 1.7245 8.62858 1.6908 8.49204C1.65711 8.3555 1.66239 8.21225 1.70606 8.07857C1.74972 7.94489 1.83001 7.82613 1.9378 7.73581C2.0456 7.64548 2.17657 7.58721 2.31583 7.56762L7.15583 6.86345Z"
-                          fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                          stroke-linejoin="round"></path>
-                </svg>
-
-                <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                     aria-hidden="true">
-                    <path d="M7.15583 6.86345L9.32083 2.50345C9.38385 2.37727 9.48078 2.27114 9.60074 2.19696C9.7207 2.12279 9.85896 2.0835 10 2.0835C10.141 2.0835 10.2793 2.12279 10.3993 2.19696C10.5192 2.27114 10.6161 2.37727 10.6792 2.50345L12.8442 6.86345L17.6842 7.56678C17.8238 7.58614 17.9551 7.64436 18.0632 7.73479C18.1713 7.82522 18.2518 7.94423 18.2955 8.07822C18.3392 8.21221 18.3444 8.35579 18.3104 8.49257C18.2764 8.62936 18.2047 8.75383 18.1033 8.85178L14.6017 12.2434L15.4283 17.0351C15.5342 17.6501 14.8842 18.1184 14.3283 17.8284L10 15.5651L5.67083 17.8284C5.11583 18.1193 4.46583 17.6501 4.57166 17.0343L5.39833 12.2426L1.89666 8.85095C1.79582 8.75293 1.7245 8.62858 1.6908 8.49204C1.65711 8.3555 1.66239 8.21225 1.70606 8.07857C1.74972 7.94489 1.83001 7.82613 1.9378 7.73581C2.0456 7.64548 2.17657 7.58721 2.31583 7.56762L7.15583 6.86345Z"
-                          fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                          stroke-linejoin="round"></path>
-                </svg>
-
-                <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                     aria-hidden="true">
-                    <path d="M7.15583 6.86345L9.32083 2.50345C9.38385 2.37727 9.48078 2.27114 9.60074 2.19696C9.7207 2.12279 9.85896 2.0835 10 2.0835C10.141 2.0835 10.2793 2.12279 10.3993 2.19696C10.5192 2.27114 10.6161 2.37727 10.6792 2.50345L12.8442 6.86345L17.6842 7.56678C17.8238 7.58614 17.9551 7.64436 18.0632 7.73479C18.1713 7.82522 18.2518 7.94423 18.2955 8.07822C18.3392 8.21221 18.3444 8.35579 18.3104 8.49257C18.2764 8.62936 18.2047 8.75383 18.1033 8.85178L14.6017 12.2434L15.4283 17.0351C15.5342 17.6501 14.8842 18.1184 14.3283 17.8284L10 15.5651L5.67083 17.8284C5.11583 18.1193 4.46583 17.6501 4.57166 17.0343L5.39833 12.2426L1.89666 8.85095C1.79582 8.75293 1.7245 8.62858 1.6908 8.49204C1.65711 8.3555 1.66239 8.21225 1.70606 8.07857C1.74972 7.94489 1.83001 7.82613 1.9378 7.73581C2.0456 7.64548 2.17657 7.58721 2.31583 7.56762L7.15583 6.86345Z"
-                          fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                          stroke-linejoin="round"></path>
-                </svg>
-
                 <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                      aria-hidden="true">
                     <path d="M7.15583 6.86345L9.32083 2.50345C9.38385 2.37727 9.48078 2.27114 9.60074 2.19696C9.7207 2.12279 9.85896 2.0835 10 2.0835C10.141 2.0835 10.2793 2.12279 10.3993 2.19696C10.5192 2.27114 10.6161 2.37727 10.6792 2.50345L12.8442 6.86345L17.6842 7.56678C17.8238 7.58614 17.9551 7.64436 18.0632 7.73479C18.1713 7.82522 18.2518 7.94423 18.2955 8.07822C18.3392 8.21221 18.3444 8.35579 18.3104 8.49257C18.2764 8.62936 18.2047 8.75383 18.1033 8.85178L14.6017 12.2434L15.4283 17.0351C15.5342 17.6501 14.8842 18.1184 14.3283 17.8284L10 15.5651L5.67083 17.8284C5.11583 18.1193 4.46583 17.6501 4.57166 17.0343L5.39833 12.2426L1.89666 8.85095C1.79582 8.75293 1.7245 8.62858 1.6908 8.49204C1.65711 8.3555 1.66239 8.21225 1.70606 8.07857C1.74972 7.94489 1.83001 7.82613 1.9378 7.73581C2.0456 7.64548 2.17657 7.58721 2.31583 7.56762L7.15583 6.86345Z"
@@ -1093,27 +1016,6 @@
                           fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
                           stroke-linejoin="round"></path>
                 </svg>
-
-                <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                     aria-hidden="true">
-                    <path d="M7.15583 6.86345L9.32083 2.50345C9.38385 2.37727 9.48078 2.27114 9.60074 2.19696C9.7207 2.12279 9.85896 2.0835 10 2.0835C10.141 2.0835 10.2793 2.12279 10.3993 2.19696C10.5192 2.27114 10.6161 2.37727 10.6792 2.50345L12.8442 6.86345L17.6842 7.56678C17.8238 7.58614 17.9551 7.64436 18.0632 7.73479C18.1713 7.82522 18.2518 7.94423 18.2955 8.07822C18.3392 8.21221 18.3444 8.35579 18.3104 8.49257C18.2764 8.62936 18.2047 8.75383 18.1033 8.85178L14.6017 12.2434L15.4283 17.0351C15.5342 17.6501 14.8842 18.1184 14.3283 17.8284L10 15.5651L5.67083 17.8284C5.11583 18.1193 4.46583 17.6501 4.57166 17.0343L5.39833 12.2426L1.89666 8.85095C1.79582 8.75293 1.7245 8.62858 1.6908 8.49204C1.65711 8.3555 1.66239 8.21225 1.70606 8.07857C1.74972 7.94489 1.83001 7.82613 1.9378 7.73581C2.0456 7.64548 2.17657 7.58721 2.31583 7.56762L7.15583 6.86345Z"
-                          fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                          stroke-linejoin="round"></path>
-                </svg>
-
-                <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                     aria-hidden="true">
-                    <path d="M7.15583 6.86345L9.32083 2.50345C9.38385 2.37727 9.48078 2.27114 9.60074 2.19696C9.7207 2.12279 9.85896 2.0835 10 2.0835C10.141 2.0835 10.2793 2.12279 10.3993 2.19696C10.5192 2.27114 10.6161 2.37727 10.6792 2.50345L12.8442 6.86345L17.6842 7.56678C17.8238 7.58614 17.9551 7.64436 18.0632 7.73479C18.1713 7.82522 18.2518 7.94423 18.2955 8.07822C18.3392 8.21221 18.3444 8.35579 18.3104 8.49257C18.2764 8.62936 18.2047 8.75383 18.1033 8.85178L14.6017 12.2434L15.4283 17.0351C15.5342 17.6501 14.8842 18.1184 14.3283 17.8284L10 15.5651L5.67083 17.8284C5.11583 18.1193 4.46583 17.6501 4.57166 17.0343L5.39833 12.2426L1.89666 8.85095C1.79582 8.75293 1.7245 8.62858 1.6908 8.49204C1.65711 8.3555 1.66239 8.21225 1.70606 8.07857C1.74972 7.94489 1.83001 7.82613 1.9378 7.73581C2.0456 7.64548 2.17657 7.58721 2.31583 7.56762L7.15583 6.86345Z"
-                          fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                          stroke-linejoin="round"></path>
-                </svg>
-
-                <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                     aria-hidden="true">
-                    <path d="M7.15583 6.86345L9.32083 2.50345C9.38385 2.37727 9.48078 2.27114 9.60074 2.19696C9.7207 2.12279 9.85896 2.0835 10 2.0835C10.141 2.0835 10.2793 2.12279 10.3993 2.19696C10.5192 2.27114 10.6161 2.37727 10.6792 2.50345L12.8442 6.86345L17.6842 7.56678C17.8238 7.58614 17.9551 7.64436 18.0632 7.73479C18.1713 7.82522 18.2518 7.94423 18.2955 8.07822C18.3392 8.21221 18.3444 8.35579 18.3104 8.49257C18.2764 8.62936 18.2047 8.75383 18.1033 8.85178L14.6017 12.2434L15.4283 17.0351C15.5342 17.6501 14.8842 18.1184 14.3283 17.8284L10 15.5651L5.67083 17.8284C5.11583 18.1193 4.46583 17.6501 4.57166 17.0343L5.39833 12.2426L1.89666 8.85095C1.79582 8.75293 1.7245 8.62858 1.6908 8.49204C1.65711 8.3555 1.66239 8.21225 1.70606 8.07857C1.74972 7.94489 1.83001 7.82613 1.9378 7.73581C2.0456 7.64548 2.17657 7.58721 2.31583 7.56762L7.15583 6.86345Z"
-                          fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                          stroke-linejoin="round"></path>
-                </svg>
             </div>
             <div class="slr-item-comment">"A burst of Summer in a glass! So excited these come in bigger sizes now."
             </div>
@@ -1124,6 +1026,10 @@
 </div>
 
 <div class="slr-descrption">
+    <img src="https://eight-nourish-demo.myshopify.com/cdn/shop/files/pinks-1.png?v=1692358460&width=550" alt=""
+         srcset=""/>
+    <img src="https://eight-nourish-demo.myshopify.com/cdn/shop/files/pinks-2.png?v=1692358460&width=550" alt=""
+         srcset=""/>
     <div class="slr-descrption-info">
         <p class="slr-descrption-info-mark">SUPPORT YOUR WELL-BEING LIFESTYLE</p>
         <h2 class="slr-descrption-info-title">The benefits of Super Detox smoothies</h2>
@@ -1132,13 +1038,9 @@
             digestive health, hydrate skin, and help weight management.
         </p>
     </div>
-    <img src="https://eight-nourish-demo.myshopify.com/cdn/shop/files/pinks-1.png?v=1692358460&width=550" alt=""
-         srcset=""/>
-    <img src="https://eight-nourish-demo.myshopify.com/cdn/shop/files/pinks-2.png?v=1692358460&width=550" alt=""
-         srcset=""/>
 </div>
 
-<div class="slr-tip"
+<img class="slr-tip"
      src="https://eight-nourish-demo.myshopify.com/cdn/shop/files/Screenshot_2023-05-16_at_12.09-1.png?v=1686322848&width=1680"
      alt=""/>
 
@@ -1146,172 +1048,50 @@
 <script>
     window.variants = {{ product.variants | json }};
     window.productOptions = {{ product.options_with_values | json }};
+    // 获取店铺货币信息
+    window.shopCurrency = {{ shop.currency | json }};
     window.shopMoneyFormat = {{ shop.money_format | json }};
-    
+</script>
+
+<script>
     document.addEventListener('DOMContentLoaded', function () {
-        const quantityInput = document.getElementById('slr-quantity');
-        const decreaseBtn = document.getElementById('slr-decrease-btn');
-        const increaseBtn = document.getElementById('slr-increase-btn');
-        const mainImage = document.getElementById('slr-main-image');
-        const thumbnailBtns = document.querySelectorAll('.slr-thumbnail-btn');
+        const mainImage = document.querySelector('#slr-image');
+        const thumbnails = document.querySelectorAll('#slr-preview img');
+        const sizeButtons = document.querySelectorAll('#slr-size-options button');
+        const minusButton = document.querySelector('.slr-main-right-quality-controls-minus');
+        const plusButton = document.querySelector('.slr-main-right-quality-controls-plus');
+        const quantityValue = document.querySelector('.slr-main-right-quality-controls-value');
         const optionInputs = document.querySelectorAll('input[name^="options["]');
-        const variants = window.variants;
-        const productOptions = window.productOptions;
+        const optionNames = window.productOptions.map(option => option.name);
+        const shopCurrency = window.shopCurrency || 'USD';
 
-        // 从产品数据结构中获取选项名称
-        const optionNames = productOptions.map(option => option.name);
-
-        // 格式化价格的辅助函数
-        function formatPrice(cents) {
-            const moneyFormat = window.shopMoneyFormat;
-            if (typeof cents === "string") {
-                cents = cents.replace('.', '');
-            }
-
-            let value = '';
-            const placeholderRegex = /\{\{\s*(\w+)\s*\}\}/;
-
-            function formatWithDelimiters(number, decimals = 2, thousands = ',', decimal = '.') {
-                number = (number / 100.0).toFixed(decimals);
-
-                const parts = number.split('.');
-                const dollars = parts[0].replace(/(\d)(?=(\d{3})+(?!\d))/g, `$1${thousands}`);
-                const cents = parts[1] ? decimal + parts[1] : '';
-                return dollars + cents;
-            }
-
-            switch (moneyFormat.match(placeholderRegex)?.[1]) {
-                case 'amount':
-                value = formatWithDelimiters(cents, 2);
-                break;
-                case 'amount_no_decimals':
-                value = formatWithDelimiters(cents, 0);
-                break;
-                case 'amount_with_comma_separator':
-                value = formatWithDelimiters(cents, 2, '.', ',');
-                break;
-                case 'amount_no_decimals_with_comma_separator':
-                value = formatWithDelimiters(cents, 0, '.', ',');
-                break;
-                default:
-                value = formatWithDelimiters(cents, 2);
-            }
-
-            return moneyFormat.replace(placeholderRegex, value);
-
-        }
-
-        let currentImageIndex = 0;
-        const images = Array.from(thumbnailBtns).map(btn => ({
-            src: btn.dataset.image,
-            alt: btn.dataset.alt
-        }));
-
-        // 缩略图hover事件
-        thumbnailBtns.forEach((btn, index) => {
-            // 添加hover事件
-            btn.addEventListener('mouseenter', function () {
-                currentImageIndex = index;
-                mainImage.src = images[index].src;
-                mainImage.alt = images[index].alt;
-                updateThumbnailSelection();
+        const currencyFormatter = new Intl.NumberFormat(getLocaleForCurrency(shopCurrency), {
+            style: 'currency',
+            currency: shopCurrency,
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+        thumbnails.forEach(thumbnail => {
+            thumbnail.addEventListener('click', function () {
+                mainImage.src = this.src;
+                mainImage.alt = this.alt;
+                thumbnails.forEach(img => img.classList.remove('active'));
+                this.classList.add('active');
             });
         });
 
-        function updateThumbnailSelection() {
-            thumbnailBtns.forEach((btn, index) => {
-                if (index === currentImageIndex) {
-                    btn.classList.add('locked');
-                } else {
-                    btn.classList.remove('locked');
-                }
+        sizeButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                sizeButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
             });
-        }
-
-        // 主图点击放大功能
-        mainImage.addEventListener('click', function () {
-            const previewOverlay = document.querySelector('.slr-preview-overlay') || createPreviewOverlay();
-            const previewImage = previewOverlay.querySelector('.slr-preview-image');
-            previewImage.src = this.src;
-            previewOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
         });
-
-        function createPreviewOverlay() {
-            const previewOverlay = document.createElement('div');
-            previewOverlay.className = 'slr-preview-overlay';
-            const previewImage = document.createElement('img');
-            previewImage.className = 'slr-preview-image';
-            const closeButton = document.createElement('div');
-            closeButton.className = 'slr-close-preview';
-            closeButton.innerHTML = '<i class="ri-close-line text-2xl"></i>';
-            previewOverlay.appendChild(previewImage);
-            previewOverlay.appendChild(closeButton);
-            document.body.appendChild(previewOverlay);
-
-            previewOverlay.addEventListener('click', function (e) {
-                if (e.target === previewOverlay || e.target.closest('.slr-close-preview')) {
-                    previewOverlay.classList.remove('active');
-                    document.body.style.overflow = '';
-                }
-            });
-
-            return previewOverlay;
-        }
-
-        // 数量控制
-        decreaseBtn.addEventListener('click', function () {
-            let value = parseInt(quantityInput.value);
-            if (value > 1) {
-                quantityInput.value = value - 1;
-            }
-        });
-
-        increaseBtn.addEventListener('click', function () {
-            let value = parseInt(quantityInput.value);
-            quantityInput.value = value + 1;
-        });
-
-        quantityInput.addEventListener('change', function () {
-            if (this.value < 1) this.value = 1;
-        });
-
-        // 图片预览功能
-        const detailImages = document.querySelectorAll('.detail-image');
-        const body = document.body;
-
-        if (!document.querySelector('.slr-preview-overlay')) {
-            const previewOverlay = document.createElement('div');
-            previewOverlay.className = 'slr-preview-overlay';
-            const previewImage = document.createElement('img');
-            previewImage.className = 'slr-preview-image';
-            const closeButton = document.createElement('div');
-            closeButton.className = 'slr-close-preview';
-            closeButton.innerHTML = '<i class="ri-close-line text-2xl"></i>';
-            previewOverlay.appendChild(previewImage);
-            previewOverlay.appendChild(closeButton);
-            body.appendChild(previewOverlay);
-
-            detailImages.forEach(img => {
-                img.addEventListener('click', function () {
-                    previewImage.src = this.src;
-                    previewOverlay.classList.add('active');
-                    body.style.overflow = 'hidden';
-                });
-            });
-
-            previewOverlay.addEventListener('click', function (e) {
-                if (e.target === previewOverlay || e.target.closest('.slr-close-preview')) {
-                    previewOverlay.classList.remove('active');
-                    body.style.overflow = '';
-                }
-            });
-        }
 
         // 监听选项变化，切换变体图片和价格
         optionInputs.forEach(input => {
-            input.addEventListener('change', function() {
-                updateVariantImage();
+            input.addEventListener('change', function () {
+                console.log('选项变化');
+                updateVariantImage()
             });
         });
 
@@ -1324,19 +1104,43 @@
                     selectedOptions[name] = input.value;
                 }
             });
-            
+
             // 找到匹配的变体
-            const matchedVariant = variants.find(variant => {
+            const matchedVariant = window.variants.find(variant => {
                 return variant.options.every((opt, idx) => {
                     const optionName = optionNames[idx];
+                    console.log(optionName, opt, selectedOptions[optionName]);
                     return selectedOptions[optionName] === opt;
                 });
             });
-            
+
+            function updatePrice(variant) {
+                const currentPriceEl = document.getElementById('slr-current-price');
+                const comparePriceEl = document.getElementById('slr-compare-price');
+                const priceContainer = document.getElementById('slr-price-container');
+
+                if (currentPriceEl) {
+                    // 使用原生货币格式化
+                    currentPriceEl.textContent = formatPrice(variant.price);
+                }
+
+                // 处理对比价格
+                if (variant.compare_at_price && variant.compare_at_price > variant.price) {
+                    if (comparePriceEl) {
+                        comparePriceEl.textContent = formatPrice(variant.compare_at_price);
+                        comparePriceEl.style.display = 'block';
+                    }
+                } else {
+                    if (comparePriceEl) {
+                        comparePriceEl.style.display = 'none';
+                    }
+                }
+            }
+
             // 更新价格和图片
             if (matchedVariant) {
                 updatePrice(matchedVariant);
-                
+
                 // 如果有变体特定图片，切换主图
                 if (matchedVariant.featured_image && matchedVariant.featured_image.src) {
                     // 正确处理URL参数
@@ -1344,90 +1148,47 @@
                     const separator = baseUrl.includes('?') ? '&' : '?';
                     mainImage.src = baseUrl + separator + 'width=800&height=800';
                     mainImage.alt = matchedVariant.featured_image.alt || '';
-                    
-                    // 更新缩略图选择状态 - 找到对应的缩略图并选中
-                    const variantImageSrc = matchedVariant.featured_image.src;
-                    let foundThumbnail = false;
-                    
-                    thumbnailBtns.forEach((btn, index) => {
-                        const btnImageSrc = btn.dataset.image;
-                        if (btnImageSrc && btnImageSrc.includes(variantImageSrc.split('?')[0])) {
-                            currentImageIndex = index;
-                            foundThumbnail = true;
-                        }
-                    });
-                    
-                    // 如果没找到对应的缩略图，保持当前选择
-                    if (!foundThumbnail) {
-                        // 可以选择不更新currentImageIndex，或者设置为第一个
-                        // currentImageIndex = 0;
-                    }
-                    
-                    updateThumbnailSelection();
                 }
             }
         }
 
-        // 更新价格显示
-        function updatePrice(variant) {
-            const currentPriceEl = document.getElementById('slr-current-price');
-            const comparePriceEl = document.getElementById('slr-compare-price');
-            const priceContainer = document.getElementById('slr-price-container');
-            
-            if (currentPriceEl) {
-                // 使用原生货币格式化
-                currentPriceEl.textContent = formatPrice(variant.price);
-            }
-            
-            // 处理对比价格
-            if (variant.compare_at_price && variant.compare_at_price > variant.price) {
-                if (comparePriceEl) {
-                    comparePriceEl.textContent = formatPrice(variant.compare_at_price);
-                    comparePriceEl.style.display = 'block';
-                }
-            } else {
-                if (comparePriceEl) {
-                    comparePriceEl.style.display = 'none';
-                }
-            }
+        // 根据货币代码获取合适的地区设置
+        function getLocaleForCurrency(currencyCode) {
+            const currencyLocaleMap = {
+                'CNY': 'zh-CN',
+                'USD': 'en-US',
+                'EUR': 'de-DE',
+                'GBP': 'en-GB',
+                'JPY': 'ja-JP',
+                'KRW': 'ko-KR',
+                'HKD': 'zh-HK',
+                'TWD': 'zh-TW',
+                'SGD': 'en-SG',
+                'AUD': 'en-AU',
+                'CAD': 'en-CA'
+            };
+            return currencyLocaleMap[currencyCode] || 'en-US';
         }
 
-        // 初始化锁定状态
-        updateThumbnailSelection();
-        
-        // 初始化变体选择
-        updateVariantImage();
-
-        // Tab 切换功能
-        const tabRadios = document.querySelectorAll('input[name="tab"]');
-        const tabContents = document.querySelectorAll('.slr-tab-content');
-
-        tabRadios.forEach(radio => {
-            radio.addEventListener('change', function() {
-                // 隐藏所有 tab 内容
-                tabContents.forEach(content => {
-                    content.classList.remove('active');
-                });
-                
-                // 显示对应的 tab 内容
-                const targetId = this.id + '-content';
-                const targetContent = document.getElementById(targetId);
-                if (targetContent) {
-                    targetContent.classList.add('active');
-                }
-            });
+        minusButton.addEventListener('click', function () {
+            let currentValue = parseInt(quantityValue.textContent);
+            if (currentValue > 1) {
+                quantityValue.textContent = currentValue - 1;
+            }
         });
 
-        // 初始化第一个 tab 为激活状态
-        const firstTab = document.getElementById('slr-tab1');
-        if (firstTab) {
-            firstTab.checked = true;
-            const firstContent = document.getElementById('slr-tab1-content');
-            if (firstContent) {
-                firstContent.classList.add('active');
-            }
+        plusButton.addEventListener('click', function () {
+            let currentValue = parseInt(quantityValue.textContent);
+            quantityValue.textContent = currentValue + 1;
+        });
+
+        // 格式化价格的辅助函数
+        function formatPrice(priceInCents) {
+            const priceInUnits = priceInCents / 100;
+            return currencyFormatter.format(priceInUnits);
         }
-        
+
+
         // 获取当前选中的变体ID
         function getCurrentVariantId() {
             const selectedOptions = {};
@@ -1437,43 +1198,73 @@
                     selectedOptions[name] = input.value;
                 }
             });
-            
-            const matchedVariant = variants.find(variant => {
+
+            const matchedVariant = window.variants.find(variant => {
                 return variant.options.every((opt, idx) => {
                     const optionName = optionNames[idx];
                     return selectedOptions[optionName] === opt;
                 });
             });
-            
-            return matchedVariant ? matchedVariant.id : "{{ product.selected_or_first_available_variant.id }}";
+
+            return matchedVariant ? matchedVariant.id : {{ product.selected_or_first_available_variant.id }};
         }
-        
+
         // 获取当前数量
         function getCurrentQuantity() {
-            return parseInt(quantityInput.value) || 1;
+            return parseInt(quantityValue.textContent) || 1;
         }
-        
+
         // 立即购买功能
-        document.getElementById('slr-buy-now-btn').addEventListener('click', function() {
+        document.getElementById('slr-buy-now-btn').addEventListener('click', function () {
             const variantId = getCurrentVariantId();
             const quantity = getCurrentQuantity();
 
-            fetch('/cart/clear.js')
-            .then(function() {
-                return fetch('/cart/add.js', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id: variantId, quantity: quantity })
-                })
-                .then(function() {
+            fetch('/cart/add.js', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({id: variantId, quantity: quantity})
+            })
+                .then(function () {
                     window.location.href = '/checkout';
                 })
-            })
-            .catch(function(error) {
-                console.error('立即购买失败:', error);
-            });
+                .catch(function (error) {
+                    console.error('立即购买失败:', error);
+                });
         });
-        
+
+        // 加入购物车功能
+        document.getElementById('slr-add-to-cart-btn').addEventListener('click', function () {
+            const variantId = getCurrentVariantId();
+            const quantity = getCurrentQuantity();
+            const button = this;
+            const originalText = button.textContent;
+
+            fetch('/cart/add.js', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({id: variantId, quantity: quantity})
+            })
+                .then(function (response) {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('添加失败');
+                    }
+                })
+                .then(function (data) {
+                    console.log('商品已加入购物车:', data);
+                    // 只改变文字
+                    button.textContent = '{{ settings.added_to_cart_text | default: "✔️Added" }}';
+
+                    // 3秒后还原
+                    setTimeout(function () {
+                        button.textContent = originalText;
+                    }, 3000);
+                })
+                .catch(function (error) {
+                    console.error('加入购物车失败:', error);
+                });
+        });
     });
 </script>
 </body>
