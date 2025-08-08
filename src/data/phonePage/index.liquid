@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .slr-main {
+            padding: 2rem 6rem;
+        }
+
+        .slr-main-product-name {
+            margin: 1rem 0;
+        }
+
+        .slr-main-product-name h2 {
+            font-weight: bold;
+            font-size: 3rem;
+        }
+
+        .slr-main-container {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 3fr 2fr;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .slr-main-container-left {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            gap: 2rem;
+            align-items: center;
+            background-color: #fff;
+            border-radius: 15px;
+            padding: 2rem;
+        }
+
+        .slr-main-container-left img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .slr-thumbnail-grid {
+            display: flex;
+            max-width: 50vw;
+            gap: 1rem;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+        }
+
+        .slr-thumbnail-btn {
+            width: 6rem;
+            height: 6rem;
+            overflow: hidden;
+            border: 2px solid transparent;
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .slr-thumbnail-btn.locked {
+            border-color: #222222 !important;
+        }
+
+        .slr-thumbnail-btn:hover {
+            border-color: #222222;
+        }
+
+        .slr-thumbnail-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 悬停预览样式 */
+        .slr-thumbnail-container:hover .slr-hover-preview {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .slr-hover-preview {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 0.5rem;
+            width: 12rem;
+            height: 12rem;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+
+        .slr-main-container-right {
+            padding: 1rem 2rem;
+            background-color: #ffffff;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .slr-option-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .slr-option-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .slr-option-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .slr-option-radio {
+            display: none;
+        }
+
+        .slr-option-btn {
+            background: #fff;
+            color: #000;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            min-width: fit-content;
+        }
+
+        .slr-option-btn:hover {
+            border-color: #222222;
+        }
+
+        .slr-option-radio:checked + .slr-option-btn {
+            background: #222222;
+            color: #fff;
+            border-color: #222222;
+        }
+
+        /* 数量选择器 */
+        .slr-quantity-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .slr-quantity-container {
+            display: flex;
+            align-items: center;
+            width: 8rem;
+            height: 2.5rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+        }
+
+        .slr-quantity-btn {
+            width: 2.5rem;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        .slr-quantity-btn:first-child {
+            border-right: 2px solid #e5e7eb;
+        }
+
+        .slr-quantity-btn:last-child {
+            border-left: 2px solid #e5e7eb;
+        }
+
+        .slr-quantity-input {
+            width: 3rem;
+            height: 100%;
+            text-align: center;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+        }
+
+
+        .slr-price-container {
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .slr-current-price {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #222222;
+        }
+
+        .slr-compare-price {
+            font-size: 1.125rem;
+            color: #9ca3af;
+            text-decoration: line-through;
+        }
+
+
+        /* 数量选择器 */
+        .slr-quantity-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .slr-quantity-container {
+            display: flex;
+            align-items: center;
+            width: 8rem;
+            height: 2.5rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+        }
+
+        .slr-quantity-btn {
+            width: 2.5rem;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        .slr-quantity-btn:first-child {
+            border-right: 2px solid #e5e7eb;
+        }
+
+        .slr-quantity-btn:last-child {
+            border-left: 2px solid #e5e7eb;
+        }
+
+        .slr-quantity-input {
+            width: 3rem;
+            height: 100%;
+            text-align: center;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+        }
+
+        .slr-button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .slr-button-group button {
+            padding: 0.8rem 0.6rem;
+            border-radius: 0.4rem;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .slr-btn {
+            flex: 1;
+            height: 3rem;
+            font-weight: 500;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-size: 1rem;
+        }
+
+        .slr-btn-primary {
+            background: #222222;
+            color: #eee;
+        }
+
+        .slr-btn-primary:hover {
+            background: #000;
+        }
+
+        .slr-btn-outline {
+            background: #eee;
+            color: #222222;
+            border: 2px solid #222222;
+        }
+
+        .slr-btn-outline:hover {
+            background: #222222;
+            color: #eee;
+        }
+
+        .slr-btn-disabled {
+            background: #9ca3af;
+            color: #fff;
+            cursor: not-allowed;
+        }
+
+        .slr-delivery-group {
+            display: grid;
+            grid-template-columns: 30px 1fr;
+            gap: 1rem;
+        }
+
+        .slr-delivery-group svg {
+            width: 30px;
+            height: 30px;
+        }
+
+        .slr-delivery-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .slr-delivery-info h2 {
+            font-size: 24px;
+        }
+
+        .slr-delivery-info p {
+            color: #121212;
+            font-size: 14px;
+        }
+
+        .slr-delivery-info a {
+            color: #121212;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .slr-product-detail {
+            background-color: #ffffff;
+            padding: 1rem;
+            border-radius: 15px;
+            margin: 1.5rem 0;
+        }
+
+        .slr-detail-recommend {
+            color: #191919;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .slr-detail-grid {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+
+        }
+
+        .slr-detail-grid-item {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .slr-detail-grid-icon {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .slr-stroke-width-standard {
+            stroke-width: 24px;
+        }
+
+        .slr-stroke-width-32 {
+            stroke-width: 32px;
+        }
+
+        .slr-fill-none {
+            fill: none;
+        }
+
+        .slr-icon {
+            flex-shrink: 0;
+        }
+
+        .slr-standard-icon, .slr-custom-icon {
+            stroke: rgb(50 126 191);
+            fill: rgb(50 126 191);
+        }
+
+
+        .slr-summary-accordion {
+            width: 100%;
+            padding: 0.3rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .slr-detail-summary {
+            margin: 1rem 0;
+        }
+
+        .slr-summary-accordion-summary {
+            width: 100%;
+            list-style: none;
+            cursor: pointer;
+            padding: 1rem 0;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .slr-summary-icon {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .slr-summary-icon svg {
+            margin-top: 4px;
+        }
+
+        .slr-summary-accordion-summary::marker {
+            content: "";
+        }
+
+        .slr-summary-icon::after {
+            content: ">";
+            position: absolute;
+            right: 16px;
+            transition: transform 0.2s ease;
+        }
+
+        .slr-summary-accordion-summary[open] .slr-summary-accordion-summary::after {
+            transform: rotate(90deg);
+        }
+
+        .slr-summary-accordion-content {
+            padding: 0 16px 16px;
+            line-height: 1.5;
+            color: #444;
+        }
+
+        .slr-info {
+            background-color: #ffffff;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .slr-info-title {
+            width: 80%;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .slr-info-title h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .slr-info-poster {
+            width: 80%;
+            margin: auto;
+        }
+
+        .slr-features-container {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+        }
+
+        .slr-feature-item {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .slr-tag {
+            font-size: 14px;
+            color: gray;
+        }
+
+        .slr-number {
+            font-size: 6rem;
+            font-weight: bold;
+            display: block;
+            color: #FF8C00; /* Orange color for number */
+        }
+
+        .slr-feature-item p {
+            color: #333;
+            font-size: 16px;
+            margin-top: 8px;
+        }
+
+        /* Styling for different colors on numbers */
+        .slr-feature-item:nth-child(2) .slr-number {
+            color: #9b4dff; /* Purple color */
+        }
+
+        .slr-feature-item:nth-child(3) .slr-number {
+            color: #00f9ff; /* Light blue color */
+        }
+
+        .slr-poster {
+            background-color: #ffffff;
+        }
+
+        .slr-poster-container {
+            width: 80%;
+            margin: auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            border-top: 1px solid #eee;
+            padding: 2rem;
+        }
+
+        .slr-poster-container-box {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .slr-poster-container-box .slr-box-tag {
+            text-transform: uppercase;
+            color: gray;
+        }
+
+        .slr-poster-container-box .slr-box-title {
+            font-size: 2rem;
+        }
+
+        .slr-box {
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            gap: 4rem;
+        }
+
+        .slr-box-question {
+            width: 80%;
+            margin: auto;
+            font-size: 2rem;
+            text-align: center;
+        }
+
+        .slr-box-thing {
+            width: 80%;
+            margin: auto;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+
+        .slr-box-thing-item {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+        }
+
+
+        .slr-thing-icon {
+            width: 85px;
+            height: 85px;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            background-color: #3c3940;
+            border-radius: 1rem;
+        }
+
+        .slr-thing-icon svg {
+            width: 40px;
+            height: 40px;
+        }
+
+        .slr-thing-icon .slr-standard-icon {
+            stroke: #ffffff;
+            fill: #ffffff;
+        }
+
+        .slr-thing-icon .slr-custom-icon {
+            stroke: #ffffff;
+            fill: #ffffff;
+        }
+
+        .slr-box-banner {
+            width: 80%;
+            margin: auto;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+            align-items: center;
+            background-image: linear-gradient(270deg, rgba(17, 48, 66, 1) 9%, rgba(73, 73, 73, 1) 88%);
+            padding: 2rem;
+            color: white;
+            border-radius: 1rem;
+        }
+
+        .slr-box-banner-item {
+            max-width: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .slr-box-banner-item h2 {
+            font-size: 1.2rem;
+        }
+
+        .slr-banner-item-li {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        @media screen and (width <= 64rem) {
+
+            .slr-main {
+                padding: 1rem;
+            }
+
+            .slr-main-container, .slr-features-container {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .slr-main-container-left {
+                padding: 0;
+            }
+
+            .slr-poster-container {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .slr-poster-container-box {
+                gap: 5px;
+            }
+
+            .slr-box-thing, .slr-box-banner {
+                display: flex;
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .slr-thumbnail-grid {
+                max-width: 80vw;
+            }
+
+            .slr-box-thing-item {
+                gap: 2px;
+            }
+
+            .slr-box-title {
+                font-size: 1rem;
+            }
+        }
+
+
+    </style>
+</head>
+<body>
+<div class="slr-main">
+    <div class="slr-main-product-name">
+        <h2>{{ product.title }}</h2>
+    </div>
+    <div class="slr-main-container">
+        <div class="slr-main-container-left">
+            <div class="slr-main-image-container">
+                {% if product.featured_image %}
+                    <img src="{{ product.featured_image | img_url: '800x800' }}"
+                         class="slr-main-image" id="slr-main-image"
+                         alt="{{ product.featured_image.alt | escape }}">
+                {% else %}
+                    <img src="https://via.placeholder.com/800x800?text=No+Image"
+                         class="slr-main-image" id="slr-main-image" alt="No image available">
+                {% endif %}
+            </div>
+            {% if product.images.size > 1 %}
+                <div class="slr-thumbnail-grid">
+                    {% for image in product.images %}
+                        <div class="slr-thumbnail-container">
+                            <button
+                                    class="slr-thumbnail-btn {% if forloop.first %}locked{% endif %}"
+                                    data-image="{{ image | img_url: '800x800' }}" data-alt="{{ image.alt | escape }}">
+                                <img src="{{ image | img_url: '200x200' }}" class="slr-thumbnail-img"
+                                     alt="{{ image.alt | escape }}">
+                            </button>
+                            <!-- 悬停预览 -->
+                            <div class="slr-hover-preview">
+                                <img src="{{ image | img_url: '400x400' }}" class="slr-thumbnail-img"
+                                     alt="{{ image.alt | escape }}">
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+        </div>
+        <div class="slr-main-container-right">
+            {% for option in product.options_with_values %}
+                <div class="slr-option-group">
+                    <label class="slr-option-label">Choose your {{ option.name }} :</label>
+                    <div class="slr-option-buttons">
+                        {% for value in option.values %}
+                            <div>
+                                <input type="radio" name="options[{{ option.name }}]"
+                                       id="slr-{{ option.name | handleize }}-{{ value | handleize }}"
+                                       value="{{ value }}"
+                                       class="slr-option-radio" {% if forloop.first %}checked{% endif %}>
+                                <label for="slr-{{ option.name | handleize }}-{{ value | handleize }}"
+                                       class="slr-option-btn">
+                                    <span>{{ value }}</span>
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+
+            <div class="slr-price-container" id="slr-price-container">
+                {% assign current_variant = product.selected_or_first_available_variant %}
+                {% if current_variant.compare_at_price > current_variant.price %}
+                    <span class="slr-current-price" id="slr-current-price">{{ current_variant.price | money }}</span>
+                    <span class="slr-compare-price"
+                          id="slr-compare-price">{{ current_variant.compare_at_price | money }}</span>
+                {% else %}
+                    <span class="slr-current-price" id="slr-current-price">{{ current_variant.price | money }}</span>
+                {% endif %}
+            </div>
+
+            <div class="slr-quantity-group">
+                <label class="slr-option-label">{{ settings.quantity_label | default: 'Quantity' }}</label>
+                <div class="slr-quantity-container">
+                    <button type="button" class="slr-quantity-btn" id="slr-decrease-btn">
+                        <i class="ri-subtract-line">-</i>
+                    </button>
+                    <input type="text" name="quantity" class="slr-quantity-input"
+                           value="1" min="1" id="slr-quantity">
+                    <button type="button" class="slr-quantity-btn" id="slr-increase-btn">
+                        <i class="ri-add-line">+</i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="slr-button-group">
+                {% if product.available %}
+                    <button type="button" id="slr-buy-now-btn" class="slr-btn slr-btn-primary">
+                        {{ settings.buy_now_text | default: 'Buy Now' }}
+                    </button>
+                    <button type="button" id="slr-add-to-cart-btn" class="slr-btn slr-btn-outline">
+                        {{ settings.add_to_cart_text | default: 'Add to Cart' }}
+                    </button>
+                {% else %}
+                    <button class="slr-btn slr-btn-disabled" disabled>
+                        {{ settings.sold_out_text | default: 'Sold Out' }}
+                    </button>
+                {% endif %}
+            </div>
+
+            <div class="slr-delivery-group">
+                <svg class="slr-icon  slr-standard-icon" aria-hidden="true" focusable="false"
+                     xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20">
+                    <path d="M0 3.75156C0 3.47454 0.224196 3.24997 0.500755 3.24997H10.647C10.9235 3.24997 11.1477 3.47454 11.1477 3.75156V5.07505V5.63362V6.10938V13.6616C10.9427 14.0067 10.8813 14.1101 10.5516 14.6648L7.22339 14.6646V13.6614H10.1462V4.25316H1.00151V13.6614H2.6842V14.6646H0.500755C0.224196 14.6646 0 14.44 0 14.163V3.75156Z"></path>
+                    <path d="M18.9985 8.08376L11.1477 6.10938V5.07505L19.6212 7.20603C19.8439 7.26203 20 7.46255 20 7.69253V14.1631C20 14.4401 19.7758 14.6647 19.4992 14.6647H17.3071V13.6615H18.9985V8.08376ZM11.1477 13.6616L13.3442 13.6615L13.3443 14.6647L10.5516 14.6648L11.1477 13.6616Z"></path>
+                    <path d="M7.71269 14.1854C7.71269 15.6018 6.56643 16.75 5.15245 16.75C3.73847 16.75 2.59221 15.6018 2.59221 14.1854C2.59221 12.7691 3.73847 11.6209 5.15245 11.6209C6.56643 11.6209 7.71269 12.7691 7.71269 14.1854ZM5.15245 15.7468C6.01331 15.7468 6.71118 15.0478 6.71118 14.1854C6.71118 13.3231 6.01331 12.6241 5.15245 12.6241C4.29159 12.6241 3.59372 13.3231 3.59372 14.1854C3.59372 15.0478 4.29159 15.7468 5.15245 15.7468Z"></path>
+                    <path d="M17.5196 14.1854C17.5196 15.6018 16.3733 16.75 14.9593 16.75C13.5454 16.75 12.3991 15.6018 12.3991 14.1854C12.3991 12.7691 13.5454 11.6209 14.9593 11.6209C16.3733 11.6209 17.5196 12.7691 17.5196 14.1854ZM14.9593 15.7468C15.8202 15.7468 16.5181 15.0478 16.5181 14.1854C16.5181 13.3231 15.8202 12.6241 14.9593 12.6241C14.0985 12.6241 13.4006 13.3231 13.4006 14.1854C13.4006 15.0478 14.0985 15.7468 14.9593 15.7468Z"></path>
+                </svg>
+                <div class="slr-delivery-info">
+                    <h2>
+                        Pickup available at Ignite HQ
+                    </h2>
+                    <p>Usually ready in 2-4 days</p>
+                    <a>View store information</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slr-product-detail">
+        <div class="slr-detail-recommend">
+            <p class="slr-detail-recommend-title">Discover the innovation and performance of the Edge Pixa 9. Packed
+                with the latest technology,
+                this smartphone ensures ultra-fast speeds, stunning visuals, and smooth multitasking. Stay
+                ahead, capture moments in exceptional detail, and stay connected effortlessly with the Edge Pixa
+                9.</p>
+            <div>
+                <p style="margin: 1rem 0">Source: Google</p>
+                <div class="slr-detail-grid">
+                    <div class="slr-detail-grid-item">
+                        <p>Battery life</p>
+                        <div class="slr-detail-grid-icon">
+                            <svg class="slr-icon slr-custom-icon" aria-hidden="true" focusable="false"
+                                 xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 512 512">
+                                <rect x="32" y="144" width="400" height="224" rx="45.7" ry="45.7"
+                                      stroke-linecap="square" stroke-miterlimit="10"
+                                      class="slr-fill-none slr-stroke-width-standard">
+                                </rect>
+                                <rect x="85.69" y="198.93" width="292.63" height="114.14" rx="4" ry="4"
+                                      stroke-linecap="square" stroke-miterlimit="10"
+                                      class="slr-stroke-width-standard">
+                                </rect>
+                                <path stroke-linecap="round" stroke-miterlimit="10" d="M480 218.67v74.66"
+                                      class="slr-fill-none slr-stroke-width-standard">
+                                </path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="slr-detail-grid-item">
+                        <p>Camera quality</p>
+                        <div class="slr-detail-grid-icon">
+                            <svg class="slr-icon  slr-custom-icon" aria-hidden="true" focusable="false"
+                                 xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 512 512">
+                                <path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192z"
+                                      stroke-miterlimit="10" class="slr-fill-none slr-stroke-width-standard"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M360 94.59V296M443.13 212.87L296 360M417.41 360H216M299.13 443.13l-144-144M152 416V216M68.87 299.13l144-144M94.59 152H288M212.87 68.87L360 216"
+                                      class="slr-fill-none slr-stroke-width-standard"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="slr-detail-grid-item">
+                        <p>Durability</p>
+                        <div class="slr-detail-grid-icon">
+                            <svg class="slr-icon  slr-custom-icon" aria-hidden="true" focusable="false"
+                                 xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 512 512">
+                                <path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192z"
+                                      class="fill-none stroke-width-32" stroke-miterlimit="10"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      class="slr-fill-none slr-stroke-width-32"
+                                      d="M352 176L217.6 336 160 272"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="slr-detail-grid-item">
+                        <p>Display quality</p>
+                        <div class="slr-detail-grid-icon">
+                            <svg class="slr-icon slr-custom-icon" aria-hidden="true" focusable="false"
+                                 xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 512 512">
+                                <rect x="128" y="16" width="256" height="480" rx="48" ry="48" stroke-linecap="round"
+                                      stroke-linejoin="round" class="fill-none stroke-width-standard"></rect>
+                                <path d="M176 16h24a8 8 0 018 8h0a16 16 0 0016 16h64a16 16 0 0016-16h0a8 8 0 018-8h24"
+                                      stroke-linecap="round" stroke-linejoin="round"
+                                      class="slr-fill-none slr-stroke-width-standard"></path>
+                            </svg>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slr-detail-summary">
+            <details class="slr-summary-accordion">
+                <summary class="slr-summary-accordion-summary">
+                            <span class="slr-summary-icon">
+                                <svg class="slr-icon  icon-accordion slr-custom-icon" aria-hidden="true"
+                                     focusable="false" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                     viewBox="0 0 512 512">
+                                     <path class="slr-fill-none slr-stroke-width-standard" stroke-linecap="round"
+                                           stroke-linejoin="round"
+                                           d="M368 128h80M64 128h240M368 384h80M64 384h240M208 256h240M64 256h80"></path>
+                                    <circle cx="336" cy="128" r="32" class="slr-fill-none slr-stroke-width-standard"
+                                            stroke-linecap="round" stroke-linejoin="round"></circle>
+                                    <circle cx="176" cy="256" r="32" class="slr-fill-none slr-stroke-width-standard"
+                                            stroke-linecap="round" stroke-linejoin="round"></circle>
+                                    <circle cx="336" cy="384" r="32" class="slr-fill-none slr-stroke-width-standard"
+                                            stroke-linecap="round" stroke-linejoin="round"></circle>
+                                </svg>
+                                Description
+                            </span>
+                </summary>
+                <div class="slr-summary-accordion-content">
+                    <p>slr-
+                        Discover the innovation and performance of the Edge Pixa 9. Packed with the latest
+                        technology, this smartphone ensures ultra-fast speeds, stunning visuals, and smooth
+                        multitasking. Stay ahead, capture moments in exceptional detail, and stay connected
+                        effortlessly with the Edge Pixa 9.
+                    </p>
+                </div>
+            </details>
+            <details class="slr-summary-accordion">
+                <summary class="slr-summary-accordion-summary">
+                            <span class="slr-summary-icon">
+                            <svg class="slr-icon  slr-custom-icon" aria-hidden="true" focusable="false"
+                                 xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 512 512">
+                                    <path d="M393.87 190a32.1 32.1 0 01-45.25 0l-26.57-26.57a32.09 32.09 0 010-45.26L382.19 58a1 1 0 00-.3-1.64c-38.82-16.64-89.15-8.16-121.11 23.57-30.58 30.35-32.32 76-21.12 115.84a31.93 31.93 0 01-9.06 32.08L64 380a48.17 48.17 0 1068 68l153.86-167a31.93 31.93 0 0131.6-9.13c39.54 10.59 84.54 8.6 114.72-21.19 32.49-32 39.5-88.56 23.75-120.93a1 1 0 00-1.6-.26z"
+                                          stroke-linecap="round" stroke-miterlimit="10"
+                                          class="slr-fill-none slr-stroke-width-standard"></path><circle cx="96"
+                                                                                                         cy="416"
+                                                                                                         r="16"></circle>
+                                </svg>
+                                  Materials
+                            </span>
+                </summary>
+                <div class="slr-summary-accordion-content">
+                    <p>slr-
+                        Discover the innovation and performance of the Edge Pixa 9. Packed with the latest
+                        technology, this smartphone ensures ultra-fast speeds, stunning visuals, and smooth
+                        multitasking. Stay ahead, capture moments in exceptional detail, and stay connected
+                        effortlessly with the Edge Pixa 9.
+                    </p>
+                </div>
+            </details>
+            <details class="slr-summary-accordion">
+                <summary class="slr-summary-accordion-summary">
+                            <span class="slr-summary-icon">
+                                <svg class="slr-icon slr-standard-icon" aria-hidden="true" focusable="false"
+                                     xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path
+                                            d="M18.9836 5.32852L14.6715 1.01638L1.01638 14.6715L5.32852 18.9836L18.9836 5.32852ZM15.3902 0.297691C14.9933 -0.0992303 14.3497 -0.0992303 13.9528 0.297691L0.297691 13.9528C-0.0992301 14.3497 -0.0992305 14.9932 0.297691 15.3902L4.60983 19.7023C5.00675 20.0992 5.65029 20.0992 6.04721 19.7023L19.7023 6.04721C20.0992 5.65029 20.0992 5.00675 19.7023 4.60983L15.3902 0.297691Z"
+                                            fill-rule="evenodd"></path>
+                                  <path d="M11.7863 2.67056C11.9848 2.4721 12.3065 2.4721 12.505 2.67056L14.4237 4.58927C14.6222 4.78774 14.6222 5.1095 14.4237 5.30796C14.2252 5.50642 13.9035 5.50642 13.705 5.30796L11.7863 3.38925C11.5878 3.19079 11.5878 2.86902 11.7863 2.67056Z"></path>
+                                  <path d="M8.93891 5.36331C9.13737 5.16485 9.45914 5.16485 9.6576 5.36331L11.5763 7.28202C11.7748 7.48048 11.7748 7.80225 11.5763 8.00071C11.3779 8.19917 11.0561 8.19917 10.8576 8.00071L8.93891 6.082C8.74045 5.88354 8.74045 5.56177 8.93891 5.36331Z"></path>
+                                  <path d="M6.24307 8.20742C6.44153 8.00896 6.76329 8.00896 6.96175 8.20742L8.88047 10.1261C9.07893 10.3246 9.07893 10.6464 8.88047 10.8448C8.68201 11.0433 8.36024 11.0433 8.16178 10.8448L6.24307 8.92611C6.0446 8.72765 6.0446 8.40588 6.24307 8.20742Z"></path>
+                                  <path d="M3.37296 10.8776C3.57142 10.6791 3.89319 10.6791 4.09165 10.8776L6.01036 12.7963C6.20882 12.9948 6.20882 13.3165 6.01036 13.515C5.8119 13.7134 5.49013 13.7134 5.29167 13.515L3.37296 11.5963C3.1745 11.3978 3.1745 11.076 3.37296 10.8776Z"></path>
+                                </svg>
+                                Dimensions
+                            </span>
+                </summary>
+                <div class="slr-summary-accordion-content">
+                    <p>slr-
+                        Discover the innovation and performance of the Edge Pixa 9. Packed with the latest
+                        technology, this smartphone ensures ultra-fast speeds, stunning visuals, and smooth
+                        multitasking. Stay ahead, capture moments in exceptional detail, and stay connected
+                        effortlessly with the Edge Pixa 9.
+                    </p>
+                </div>
+            </details>
+            <details class="slr-summary-accordion">
+                <summary class="slr-summary-accordion-summary">
+                            <span class="slr-summary-icon">
+                                <svg class="slr-icon slr-standard-icon" aria-hidden="true" focusable="false"
+                                     xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path
+                                            d="M10 5.2393L8.5149 3.77392C6.79996 2.08174 4.01945 2.08174 2.30451 3.77392C0.589562 5.4661 0.589563 8.2097 2.30451 9.90188L10 17.4952L17.6955 9.90188C19.4104 8.2097 19.4104 5.4661 17.6955 3.77392C15.9805 2.08174 13.2 2.08174 11.4851 3.77392L10 5.2393ZM10.765 3.06343C12.8777 0.978857 16.3029 0.978856 18.4155 3.06343C20.5282 5.148 20.5282 8.52779 18.4155 10.6124L10.72 18.2057C10.3224 18.5981 9.67763 18.5981 9.27996 18.2057L1.58446 10.6124C-0.528154 8.52779 -0.528154 5.14801 1.58446 3.06343C3.69708 0.978859 7.12233 0.978858 9.23495 3.06343L10 3.81832L10.765 3.06343Z"
+                                            fill-rule="evenodd"></path></svg>
+                               Care Instructions
+                            </span>
+                </summary>
+                <div class="slr-summary-accordion-content">
+                    <p>slr-
+                        Discover the innovation and performance of the Edge Pixa 9. Packed with the latest
+                        technology, this smartphone ensures ultra-fast speeds, stunning visuals, and smooth
+                        multitasking. Stay ahead, capture moments in exceptional detail, and stay connected
+                        effortlessly with the Edge Pixa 9.
+                    </p>
+                </div>
+            </details>
+        </div>
+    </div>
+</div>
+<div class="slr-info">
+    <div class="slr-info-title">
+        <h2>Quality throughout</h2>
+        <p>Built to the highest possible standard, with ethically sourced materials.</p>
+    </div>
+    <div class="slr-info-poster">
+        <img src="https://benchmark-electronics-demo.myshopify.com/cdn/shop/files/Pixel_8__Obsidian_2.original.jpg?v=1728460949&width=1780"
+             alt="phone">
+    </div>
+    <div class="slr-features-container">
+        <div class="slr-feature-item">
+            <span class="slr-tag">OVER</span>
+            <span class="slr-number">26</span>
+            <p>hours battery life</p>
+        </div>
+        <div class="slr-feature-item">
+            <span class="slr-tag">WAIT</span>
+            <span class="slr-number">95%</span>
+            <p>positive reviews</p>
+        </div>
+        <div class="slr-feature-item">
+            <span class="slr-tag">EXPAND</span>
+            <span class="slr-number">64GB</span>
+            <p>upgradable storage</p>
+        </div>
+    </div>
+</div>
+<div class="slr-poster">
+    <div class="slr-poster-container">
+        <div class="slr-poster-container-box">
+            <p class="slr-box-tag">
+                Why settle?
+            </p>
+            <h2 class="slr-box-title">Designed to perfection</h2>
+            <p>Sleek, intuitive, and built to enhance your everyday experience, it’s the embodiment of modern
+                simplicity</p>
+        </div>
+        <img src="https://benchmark-electronics-demo.myshopify.com/cdn/shop/files/Pixel_8__Obsidian_2.original.jpg?v=1728460949&width=750"
+             alt="poster-right">
+    </div>
+    <div class="slr-poster-container">
+        <img src="https://benchmark-electronics-demo.myshopify.com/cdn/shop/files/Pixel_8a_Obsidian_2.jpg?v=1728460969&width=750"
+             alt="poster-right">
+        <div class="slr-poster-container-box">
+            <p class="slr-box-tag">Only the best</p>
+            <h2 class="slr-box-title">Cutting edge tech</h2>
+            <p>Innovative, powerful, and designed to keep you ahead of the curve, this device showcases the pinnacle of
+                cutting-edge technology.</p>
+        </div>
+    </div>
+
+</div>
+<div class="slr-box">
+    <div class="slr-box-question">
+        What's in the box?
+    </div>
+    <div class="slr-box-thing">
+        <div class="slr-box-thing-item">
+            <div class="slr-thing-icon">
+                <svg class="slr-icon slr-custom-icon" aria-hidden="true" focusable="false"
+                     xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 512 512">
+                    <rect x="32" y="144" width="400" height="224" rx="45.7" ry="45.7" stroke-linecap="square"
+                          stroke-miterlimit="10" class="fill-none stroke-width-standard"></rect>
+                    <rect x="85.69" y="198.93" width="154.31" height="114.13" rx="4" ry="4" stroke-linecap="square"
+                          stroke-miterlimit="10" class="stroke-width-standard"></rect>
+                    <path stroke-linecap="round" stroke-miterlimit="10" d="M480 218.67v74.66"
+                          class="slr-fill-none slr-stroke-width-standard"></path>
+                </svg>
+            </div>
+            <p>Charging Cable</p>
+        </div>
+        <div class="slr-box-thing-item">
+            <div class="slr-thing-icon">
+                <svg class="slr-icon slr-custom-icon" aria-hidden="true" focusable="false"
+                     xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 512 512">
+                    <path d="M256 160c16-63.16 76.43-95.41 208-96a15.94 15.94 0 0116 16v288a16 16 0 01-16 16c-128 0-177.45 25.81-208 64-30.37-38-80-64-208-64-9.88 0-16-8.05-16-17.93V80a15.94 15.94 0 0116-16c131.57.59 192 32.84 208 96zM256 160v288"
+                          stroke-linecap="round" stroke-linejoin="round"
+                          class="slr-fill-none slr-stroke-width-standard"></path>
+                </svg>
+            </div>
+            <p>Instruction Manual</p>
+        </div>
+        <div class="slr-box-thing-item">
+            <div class="slr-thing-icon">
+                <svg class="slr-icon  slr-custom-icon" aria-hidden="true" focusable="false"
+                     xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 512 512">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M336 176L225.2 304 176 255.8"
+                          class="fill-none stroke-width-standard"></path>
+                    <path d="M463.1 112.37C373.68 96.33 336.71 84.45 256 48c-80.71 36.45-117.68 48.33-207.1 64.37C32.7 369.13 240.58 457.79 256 464c15.42-6.21 223.3-94.87 207.1-351.63z"
+                          stroke-linecap="round" stroke-linejoin="round"
+                          class="slr-fill-none slr-stroke-width-standard"></path>
+                </svg>
+            </div>
+            <p>Warranty Card</p>
+        </div>
+        <div class="slr-box-thing-item">
+            <div class="slr-thing-icon">
+                <svg class="slr-icon  slr-standard-icon" aria-hidden="true" focusable="false"
+                     xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                    <path d="M15.9633 5.16568C16.1818 5.33464 16.2219 5.64867 16.0529 5.86709L11.2315 12.1C10.7573 12.7132 10.5 13.4664 10.5 14.2415L10.5 17.728C10.5 18.0041 10.2761 18.228 9.99998 18.228C9.72384 18.228 9.49998 18.0041 9.49998 17.728L9.49997 14.2415C9.49997 13.2449 9.8308 12.2765 10.4406 11.4882L15.2619 5.25525C15.4309 5.03683 15.7449 4.99673 15.9633 5.16568Z"></path>
+                    <path d="M4.13656 9.11047C3.94637 9.31067 3.95448 9.62715 4.15469 9.81735L8.41061 13.8605C9.10616 14.5213 9.49997 15.4386 9.49997 16.398V19.5C9.49997 19.7761 9.72383 20 9.99997 20C10.2761 20 10.5 19.7761 10.5 19.5V16.398C10.5 15.1645 9.99364 13.9851 9.09936 13.1355L4.84344 9.09235C4.64324 8.90216 4.32676 8.91027 4.13656 9.11047Z"></path>
+                    <path d="M18.3779 1.53927C18.4327 2.29021 18.4725 3.32703 18.4047 4.40738C18.3125 5.87411 18.0299 7.25745 17.4545 8.14562C16.7167 9.28439 15.6883 9.90008 14.7112 10.1459C13.6919 10.4023 12.8474 10.2333 12.4595 9.98203C11.6151 9.43502 10.6657 7.26257 12.1639 4.95007C12.7171 4.09609 13.9498 3.29603 15.4075 2.63437C16.4929 2.1417 17.5917 1.77412 18.3779 1.53927ZM18.7295 0.399095C19.0125 0.322287 19.2884 0.513872 19.3179 0.805582C19.4683 2.2906 19.735 6.46465 18.2937 8.68934C16.5205 11.4265 13.2903 11.7118 11.9158 10.8213C10.5413 9.93084 9.57124 7.11282 11.3246 4.40636C12.7665 2.18066 17.2 0.814295 18.7295 0.399095Z"
+                          fill-rule="evenodd"></path>
+                    <path d="M1.16197 6.23639C1.24915 6.80305 1.38541 7.51404 1.5922 8.22877C1.89834 9.28691 2.31835 10.2055 2.84189 10.729C3.54804 11.4352 4.37904 11.7175 5.11404 11.7439C5.89258 11.7719 6.44282 11.5154 6.64245 11.3158C7.09947 10.8588 7.49486 9.18578 6.0474 7.73833C5.55144 7.24237 4.58274 6.85006 3.40831 6.58298C2.60103 6.3994 1.79173 6.29511 1.16197 6.23639ZM0.569611 5.18777C0.276949 5.16998 0.0467941 5.41364 0.080866 5.70486C0.226586 6.95034 0.719124 10.0205 2.13478 11.4362C3.93434 13.2357 6.44588 12.9266 7.34955 12.0229C8.25323 11.1193 8.53389 8.8106 6.75451 7.03122C5.33581 5.61253 1.90298 5.26882 0.569611 5.18777Z"
+                          fill-rule="evenodd"></path>
+                </svg>
+            </div>
+            <p>Eco Packaging</p>
+        </div>
+    </div>
+    <div class="slr-box-banner">
+        <div class="slr-box-banner-item">
+            <h2>Materials</h2>
+            <p class="slr-banner-item-li">
+                The device is designed to withstand everyday use, with each material selected for its resilience and
+                aesthetic contribution.
+            </p>
+        </div>
+        <div class="slr-box-banner-item">
+            <h2>Dimensions</h2>
+            <p class="slr-banner-item-li">
+                Boasting a form factor that is both compact and sleek, this device is engineered to fit comfortably in
+                the palm of your hand.
+            </p>
+        </div>
+        <div class="slr-box-banner-item">
+            <h2>Returns</h2>
+            <p class="slr-banner-item-li">
+                We offer a hassle-free returns to ensure your satisfaction. If you're not happy, simply return it within
+                30 days for a full refund.
+            </p>
+        </div>
+    </div>
+</div>
+<script>
+    window.variants = {{ product.variants | json }};
+    window.productOptions = {{ product.options_with_values | json }};
+    // 获取店铺货币信息
+    window.shopCurrency = {{ shop.currency | json }};
+    window.shopMoneyFormat = {{ shop.money_format | json }};
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const quantityInput = document.getElementById('slr-quantity');
+        const decreaseBtn = document.getElementById('slr-decrease-btn');
+        const increaseBtn = document.getElementById('slr-increase-btn');
+        const mainImage = document.getElementById('slr-main-image');
+        const thumbnailBtns = document.querySelectorAll('.slr-thumbnail-btn');
+        const optionInputs = document.querySelectorAll('input[name^="options["]');
+        const variants = window.variants;
+        const productOptions = window.productOptions;
+        const shopCurrency = window.shopCurrency || 'USD';
+
+        // 从产品数据结构中获取选项名称
+        const optionNames = productOptions.map(option => option.name);
+
+        // 根据货币代码获取合适的地区设置
+        function getLocaleForCurrency(currencyCode) {
+            const currencyLocaleMap = {
+                'CNY': 'zh-CN',
+                'USD': 'en-US',
+                'EUR': 'de-DE',
+                'GBP': 'en-GB',
+                'JPY': 'ja-JP',
+                'KRW': 'ko-KR',
+                'HKD': 'zh-HK',
+                'TWD': 'zh-TW',
+                'SGD': 'en-SG',
+                'AUD': 'en-AU',
+                'CAD': 'en-CA'
+            };
+            return currencyLocaleMap[currencyCode] || 'en-US';
+        }
+
+        // 创建货币格式化器
+        const currencyFormatter = new Intl.NumberFormat(getLocaleForCurrency(shopCurrency), {
+            style: 'currency',
+            currency: shopCurrency,
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+
+        // 格式化价格的辅助函数
+        function formatPrice(priceInCents) {
+            const priceInUnits = priceInCents / 100;
+            return currencyFormatter.format(priceInUnits);
+        }
+
+        let currentImageIndex = 0;
+        const images = Array.from(thumbnailBtns).map(btn => ({
+            src: btn.dataset.image,
+            alt: btn.dataset.alt
+        }));
+
+        // 缩略图hover事件
+        thumbnailBtns.forEach((btn, index) => {
+            // 添加hover事件
+            btn.addEventListener('mouseenter', function () {
+                currentImageIndex = index;
+                mainImage.src = images[index].src;
+                mainImage.alt = images[index].alt;
+                updateThumbnailSelection();
+            });
+
+            btn.addEventListener('mouseleave', function () {
+                // 鼠标离开时保持当前选中的图片状态
+                // 不需要做任何改变，保持当前状态
+            });
+        });
+
+        function updateThumbnailSelection() {
+            thumbnailBtns.forEach((btn, index) => {
+                if (index === currentImageIndex) {
+                    btn.classList.add('locked');
+                } else {
+                    btn.classList.remove('locked');
+                }
+            });
+        }
+
+        // 主图点击放大功能
+        mainImage.addEventListener('click', function () {
+            const previewOverlay = document.querySelector('.slr-preview-overlay') || createPreviewOverlay();
+            const previewImage = previewOverlay.querySelector('.slr-preview-image');
+            previewImage.src = this.src;
+            previewOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        function createPreviewOverlay() {
+            const previewOverlay = document.createElement('div');
+            previewOverlay.className = 'slr-preview-overlay';
+            const previewImage = document.createElement('img');
+            previewImage.className = 'slr-preview-image';
+            const closeButton = document.createElement('div');
+            closeButton.className = 'slr-close-preview';
+            closeButton.innerHTML = '<i class="ri-close-line text-2xl"></i>';
+            previewOverlay.appendChild(previewImage);
+            previewOverlay.appendChild(closeButton);
+            document.body.appendChild(previewOverlay);
+
+            previewOverlay.addEventListener('click', function (e) {
+                if (e.target === previewOverlay || e.target.closest('.slr-close-preview')) {
+                    previewOverlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+
+            return previewOverlay;
+        }
+
+        // 数量控制
+        decreaseBtn.addEventListener('click', function () {
+            let value = parseInt(quantityInput.value);
+            if (value > 1) {
+                quantityInput.value = value - 1;
+            }
+        });
+
+        increaseBtn.addEventListener('click', function () {
+            let value = parseInt(quantityInput.value);
+            quantityInput.value = value + 1;
+        });
+
+        quantityInput.addEventListener('change', function () {
+            if (this.value < 1) this.value = 1;
+        });
+
+
+        // 监听选项变化，切换变体图片和价格
+        optionInputs.forEach(input => {
+            input.addEventListener('change', function () {
+                console.log('选项变化');
+                updateVariantImage();
+            });
+        });
+
+        function updateVariantImage() {
+            // 获取当前所有选中的值
+            const selectedOptions = {};
+            optionInputs.forEach(input => {
+                if (input.checked) {
+                    const name = input.name.match(/options\[(.+)\]/)[1];
+                    selectedOptions[name] = input.value;
+                }
+            });
+
+            // 找到匹配的变体
+            const matchedVariant = variants.find(variant => {
+                return variant.options.every((opt, idx) => {
+                    const optionName = optionNames[idx];
+                    console.log(optionName, opt, selectedOptions[optionName]);
+                    return selectedOptions[optionName] === opt;
+                });
+            });
+
+            // 更新价格和图片
+            if (matchedVariant) {
+                updatePrice(matchedVariant);
+
+                // 如果有变体特定图片，切换主图
+                if (matchedVariant.featured_image && matchedVariant.featured_image.src) {
+                    // 正确处理URL参数
+                    const baseUrl = matchedVariant.featured_image.src;
+                    const separator = baseUrl.includes('?') ? '&' : '?';
+                    mainImage.src = baseUrl + separator + 'width=800&height=800';
+                    mainImage.alt = matchedVariant.featured_image.alt || '';
+
+                    // 更新缩略图选择状态 - 找到对应的缩略图并选中
+                    const variantImageSrc = matchedVariant.featured_image.src;
+                    let foundThumbnail = false;
+
+                    thumbnailBtns.forEach((btn, index) => {
+                        const btnImageSrc = btn.dataset.image;
+                        if (btnImageSrc && btnImageSrc.includes(variantImageSrc.split('?')[0])) {
+                            currentImageIndex = index;
+                            foundThumbnail = true;
+                        }
+                    });
+
+                    // 如果没找到对应的缩略图，保持当前选择
+                    if (!foundThumbnail) {
+                        // 可以选择不更新currentImageIndex，或者设置为第一个
+                        // currentImageIndex = 0;
+                    }
+
+                    updateThumbnailSelection();
+                }
+            }
+        }
+
+        // 更新价格显示
+        function updatePrice(variant) {
+            const currentPriceEl = document.getElementById('slr-current-price');
+            const comparePriceEl = document.getElementById('slr-compare-price');
+            const priceContainer = document.getElementById('slr-price-container');
+
+            if (currentPriceEl) {
+                // 使用原生货币格式化
+                currentPriceEl.textContent = formatPrice(variant.price);
+            }
+
+            // 处理对比价格
+            if (variant.compare_at_price && variant.compare_at_price > variant.price) {
+                if (comparePriceEl) {
+                    comparePriceEl.textContent = formatPrice(variant.compare_at_price);
+                    comparePriceEl.style.display = 'block';
+                }
+            } else {
+                if (comparePriceEl) {
+                    comparePriceEl.style.display = 'none';
+                }
+            }
+        }
+
+        // 初始化锁定状态
+        updateThumbnailSelection();
+
+        // 初始化变体选择
+        updateVariantImage();
+
+
+        // 获取当前选中的变体ID
+        function getCurrentVariantId() {
+            const selectedOptions = {};
+            optionInputs.forEach(input => {
+                if (input.checked) {
+                    const name = input.name.match(/options\[(.+)\]/)[1];
+                    selectedOptions[name] = input.value;
+                }
+            });
+
+            const matchedVariant = variants.find(variant => {
+                return variant.options.every((opt, idx) => {
+                    const optionName = optionNames[idx];
+                    return selectedOptions[optionName] === opt;
+                });
+            });
+
+            return matchedVariant ? matchedVariant.id : {{ product.selected_or_first_available_variant.id }};
+        }
+
+        // 获取当前数量
+        function getCurrentQuantity() {
+            return parseInt(quantityInput.value) || 1;
+        }
+
+        // 立即购买功能
+        document.getElementById('slr-buy-now-btn').addEventListener('click', function () {
+            const variantId = getCurrentVariantId();
+            const quantity = getCurrentQuantity();
+
+            fetch('/cart/add.js', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({id: variantId, quantity: quantity})
+            })
+                .then(function () {
+                    window.location.href = '/checkout';
+                })
+                .catch(function (error) {
+                    console.error('立即购买失败:', error);
+                });
+        });
+
+        // 加入购物车功能
+        document.getElementById('slr-add-to-cart-btn').addEventListener('click', function () {
+            const variantId = getCurrentVariantId();
+            const quantity = getCurrentQuantity();
+            const button = this;
+            const originalText = button.textContent;
+
+            fetch('/cart/add.js', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({id: variantId, quantity: quantity})
+            })
+                .then(function (response) {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('添加失败');
+                    }
+                })
+                .then(function (data) {
+                    console.log('商品已加入购物车:', data);
+                    // 只改变文字
+                    button.textContent = '{{ settings.added_to_cart_text | default: "✔️Added" }}';
+
+                    // 3秒后还原
+                    setTimeout(function () {
+                        button.textContent = originalText;
+                    }, 3000);
+                })
+                .catch(function (error) {
+                    console.error('加入购物车失败:', error);
+                });
+        });
+    });
+</script>
+</body>
+</html>

@@ -61,6 +61,51 @@
             display: none;
         }
 
+        .slr-thumbnail-btn {
+            width: 100%;
+            height: 12rem;
+            overflow: hidden;
+            border: 2px solid transparent;
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .slr-thumbnail-btn.locked {
+            border-color: #222222 !important;
+        }
+
+        .slr-thumbnail-btn:hover {
+            border-color: #222222;
+        }
+
+        .slr-thumbnail-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 悬停预览样式 */
+        .slr-thumbnail-container:hover .slr-hover-preview {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .slr-hover-preview {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 0.5rem;
+            width: 12rem;
+            height: 12rem;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
 
         .slr-main-right {
             width: 100%;
@@ -89,38 +134,52 @@
             font-size: 0.8rem;
         }
 
-        .slr-main-right-size button {
-            padding: 0.8rem 1rem;
-            background-color: transparent;
-            border: 1px solid #eeeeee;
-            border-radius: 0.5rem;
-            margin-top: 0.5rem;
+        .slr-option-group {
+            margin-bottom: 1.5rem;
         }
 
-        .slr-main-right-color .slr-main-right-color-list {
+        .slr-option-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .slr-option-buttons {
             display: flex;
-            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .slr-option-radio {
+            display: none;
+        }
+
+        .slr-option-btn {
+            background: #fff;
+            color: #000;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            transition: all 0.15s ease;
+            display: inline-flex;
             align-items: center;
-            gap: 1rem;
-            margin: 0.5rem 0;
-        }
-
-        .slr-main-right-color .slr-main-right-color-list img {
+            gap: 0.5rem;
             cursor: pointer;
-            padding-bottom: 0.3rem;
+            min-width: fit-content;
         }
 
-        .slr-main-right-color .slr-main-right-color-list .active {
-            border-bottom: 2px solid rebeccapurple;
+        .slr-option-btn:hover {
+            border-color: #222222;
         }
 
-        .slr-main-right-material button {
-            padding: 0.8rem 1rem;
-            background-color: transparent;
-            border: 1px solid #eeeeee;
-            border-radius: 0.5rem;
-            margin-top: 0.5rem;
+        .slr-option-radio:checked + .slr-option-btn {
+            background: #222222;
+            color: #fff;
+            border-color: #222222;
         }
+
 
         .slr-main-right-price {
             display: flex;
@@ -137,37 +196,48 @@
             font-size: 0.8rem;
         }
 
-        .slr-main-right-quantity {
+        .slr-quantity-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .slr-quantity-container {
             display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .slr-main-right-quantify-controls {
-            width: 50%;
-            display: grid;
-            grid-template-columns: 32px 1fr 32px;
-            justify-content: center;
             align-items: center;
-            border: 1px solid #eeeeee;
-            padding: 0.3rem 0.6rem;
-            border-radius: 0.3rem;
+            width: 8rem;
+            height: 2.5rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
         }
 
-        .slr-main-right-quantify-controls button {
-            height: 32px;
+        .slr-quantity-btn {
+            width: 2.5rem;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: none;
             cursor: pointer;
-            border: none;
-            background-color: transparent;
+            font-size: 1.25rem;
         }
 
-        .quantity-input {
-            width: 100%;
-            text-align: center;
-            font-size: 16px;
-            border: none;
-            background-color: transparent;
+        .slr-quantity-btn:first-child {
+            border-right: 2px solid #e5e7eb;
         }
+
+        .slr-quantity-btn:last-child {
+            border-left: 2px solid #e5e7eb;
+        }
+
+        .slr-quantity-input {
+            width: 3rem;
+            height: 100%;
+            text-align: center;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+        }
+
 
         .slr-main-right-buttons {
             width: 100%;
@@ -262,8 +332,16 @@
                 flex-direction: column;
             }
 
-            .slr-main .slr-main-left-preview-imgs {
-                display: none;
+            .slr-main-left {
+                flex-direction: column;
+            }
+
+            .slr-main-left .slr-main-left-preview-imgs {
+                flex-direction: row;
+            }
+
+            .slr-thumbnail-btn {
+                width: 8rem;
             }
 
             .slr-info .slr-mask-box {
@@ -285,14 +363,32 @@
 <div class="slr-main">
     <div class="slr-main-left">
         <div class="slr-main-left-product-img">
-            <img id="product-image" alt="product-image"
-                 src="{{ product.featured_image | img_url: "1600x" }}"
-                 srcset="">
+            {% if product.featured_image %}
+                <img src="{{ product.featured_image | img_url: '800x800' }}"
+                     class="slr-main-image" id="slr-main-image"
+                     alt="{{ product.featured_image.alt | escape }}">
+            {% else %}
+                <img src="https://via.placeholder.com/800x800?text=No+Image"
+                     class="slr-main-image" id="slr-main-image" alt="No image available">
+            {% endif %}
         </div>
         <div class="slr-main-left-preview-imgs" id="preview-imgs">
-            {% for image in product.images %}
-                <img src="{{ image | img_url: '1600x' }}" alt="{{ image.alt | escape }}"/>
-            {% endfor %}
+            {% if product.images.size > 1 %}
+                {% for image in product.images %}
+                    <div class="slr-thumbnail-container">
+                        <button
+                                class="slr-thumbnail-btn {% if forloop.first %}locked{% endif %}"
+                                data-image="{{ image | img_url: '800x800' }}" data-alt="{{ image.alt | escape }}">
+                            <img src="{{ image | img_url: '200x200' }}" class="slr-thumbnail-img"
+                                 alt="{{ image.alt | escape }}">
+                        </button>
+                        <div class="slr-hover-preview">
+                            <img src="{{ image | img_url: '400x400' }}" class="slr-thumbnail-img"
+                                 alt="{{ image.alt | escape }}">
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
         </div>
     </div>
     <div class="slr-main-right">
@@ -310,42 +406,56 @@
             </div>
         </div>
 
-        <div class="slr-main-right-size">
-            <p>Size:</p>
-            {% for size in product.options_with_values[1].values %}
-                <button>{{ size }}</button>
-            {% endfor %}
-        </div>
-        
-        <div class="slr-main-right-color">
-            <p>Color:</p>
-            <div class="slr-main-right-color-list">
-                {% for image in product.options_with_values[0].values %}
-                    <img class="{% if forloop.first %}active{% endif %}"
-                         src="{{ image | img_url: '48x' }}" alt="{{ image.alt | escape }}"/>
-                {% endfor %}
+        {% for option in product.options_with_values %}
+            <div class="slr-option-group">
+                <label class="slr-option-label">{{ option.name }}</label>
+                <div class="slr-option-buttons">
+                    <div class="slr-option-buttons">
+                        {% for value in option.values %}
+                            <div>
+                                <input type="radio" name="options[{{ option.name }}]"
+                                       id="slr-{{ option.name | handleize }}-{{ value | handleize }}"
+                                       value="{{ value }}"
+                                       class="slr-option-radio" {% if forloop.first %}checked{% endif %}>
+                                <label for="slr-{{ option.name | handleize }}-{{ value | handleize }}"
+                                       class="slr-option-btn">
+                                    <span>{{ value }}</span>
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="slr-main-right-material">
-            <p>Material:</p>
-            <button type="button">Marble</button>
-        </div>
+        {% endfor %}
 
-        <div class="slr-main-right-price">
-            <h2>{{ product.price | money_with_currency }}</h2>
+        <div class="slr-main-right-price" id="slr-price-container">
+            {% assign current_variant = product.selected_or_first_available_variant %}
+            {% if current_variant.compare_at_price > current_variant.price %}
+                <span class="slr-current-price" id="slr-current-price">{{ current_variant.price | money }}</span>
+                <span class="slr-compare-price"
+                      id="slr-compare-price">{{ current_variant.compare_at_price | money }}</span>
+            {% else %}
+                <span class="slr-current-price" id="slr-current-price">{{ current_variant.price | money }}</span>
+            {% endif %}
             <p>Tax included.</p>
         </div>
-        <div class="slr-main-right-quantity">
-            <p>Quantity:</p>
-            <div class="slr-main-right-quantify-controls">
-                <button class="decrease" type="button">-</button>
-                <input class="quantity-input" id="input" type="text" value="1"/>
-                <button class="increase" type="button">+</button>
+
+        <div class="slr-quantity-group">
+            <label class="slr-option-label">Quantity</label>
+            <div class="slr-quantity-container">
+                <button type="button" class="slr-quantity-btn" id="slr-decrease-btn">
+                    <i class="ri-subtract-line">-</i>
+                </button>
+                <input type="text" name="quantity" class="slr-quantity-input"
+                       value="1" min="1" id="slr-quantity">
+                <button type="button" class="slr-quantity-btn" id="slr-increase-btn">
+                    <i class="ri-add-line">+</i>
+                </button>
             </div>
         </div>
         <div class="slr-main-right-buttons">
-            <button class="slr-main-right-card" type="button">Add to Card</button>
-            <button class="slr-main-right-buy" type="button">Buy it Now</button>
+            <button class="slr-main-right-card" id="slr-add-to-cart-btn" type="button">Add to Card</button>
+            <button class="slr-main-right-buy" id="slr-buy-now-btn" type="button">Buy it Now</button>
         </div>
 
         <div class="slr-main-right-share"
@@ -408,6 +518,7 @@
     </div>
 </div>
 
+
 <div class="slr-description">
     <div class="slr-description-title">
         llab.design
@@ -433,50 +544,258 @@
 </div>
 
 <script>
-
-    document.addEventListener("DOMContentLoaded", () => {
-        const decreaseBtn = document.querySelector(".decrease");
-        const increaseBtn = document.querySelector(".increase");
-        const input = document.querySelector("#input");
-        const mainImage = document.getElementById("product-image");
-        const previewImages = document.querySelectorAll("#preview-imgs img");
-        const colorOptions = document.querySelectorAll(".slr-main-right-color-list img")
-
-        colorOptions.forEach(option => {
-            option.addEventListener('click', () => {
-                colorOptions.forEach(img => img.classList.remove('active'));
-                option.classList.add('active');
-            });
-        });
-
-        previewImages.forEach(img => {
-            img.addEventListener('click', () => {
-                mainImage.src = img.src;
-                mainImage.alt = img.alt;
-            });
-        });
-
-        decreaseBtn.addEventListener('click', () => {
-            let current = parseInt(input.value, 10);
-            if (!isNaN(current) && current > 1) {
-                input.value = current - 1;
-            }
-        });
-
-        increaseBtn.addEventListener('click', () => {
-            let current = parseInt(input.value, 10);
-            if (!isNaN(current)) {
-                input.value = current + 1;
-            }
-        });
-
-        input.addEventListener('input', () => {
-            input.value = input.value.replace(/[^\d]/g, '');
-            if (input.value === '' || parseInt(input.value, 10) < 1) {
-                input.value = 1;
-            }
-        });
-    })
+    window.variants = {{ product.variants | json }};
+    window.productOptions = {{ product.options_with_values | json }};
+    // 获取店铺货币信息
+    window.shopCurrency = {{ shop.currency | json }};
+    window.shopMoneyFormat = {{ shop.money_format | json }};
 </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const quantityInput = document.getElementById('slr-quantity');
+        const decreaseBtn = document.getElementById('slr-decrease-btn');
+        const increaseBtn = document.getElementById('slr-increase-btn');
+        const mainImage = document.getElementById('slr-main-image');
+        const thumbnailBtns = document.querySelectorAll('.slr-thumbnail-btn');
+        const optionInputs = document.querySelectorAll('input[name^="options["]');
+        const variants = window.variants;
+        const productOptions = window.productOptions || [];
+        const shopCurrency = window.shopCurrency || 'USD';
+
+        // 从产品数据结构中获取选项名称
+        const optionNames = productOptions.map(option => option.name);
+
+        // 根据货币代码获取合适的地区设置
+        function getLocaleForCurrency(currencyCode) {
+            const currencyLocaleMap = {
+                'CNY': 'zh-CN',
+                'USD': 'en-US',
+                'EUR': 'de-DE',
+                'GBP': 'en-GB',
+                'JPY': 'ja-JP',
+                'KRW': 'ko-KR',
+                'HKD': 'zh-HK',
+                'TWD': 'zh-TW',
+                'SGD': 'en-SG',
+                'AUD': 'en-AU',
+                'CAD': 'en-CA'
+            };
+            return currencyLocaleMap[currencyCode] || 'en-US';
+        }
+
+        // 创建货币格式化器
+        const currencyFormatter = new Intl.NumberFormat(getLocaleForCurrency(shopCurrency), {
+            style: 'currency',
+            currency: shopCurrency,
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+
+        // 格式化价格的辅助函数
+        function formatPrice(priceInCents) {
+            const priceInUnits = priceInCents / 100;
+            return currencyFormatter.format(priceInUnits);
+        }
+
+        let currentImageIndex = 0;
+        const images = Array.from(thumbnailBtns).map(btn => ({
+            src: btn.dataset.image,
+            alt: btn.dataset.alt
+        }));
+
+        // 缩略图hover事件
+        thumbnailBtns.forEach((btn, index) => {
+            // 添加hover事件
+            btn.addEventListener('mouseenter', function () {
+                currentImageIndex = index;
+                mainImage.src = images[index].src;
+                mainImage.alt = images[index].alt;
+                updateThumbnailSelection();
+            });
+
+            btn.addEventListener('mouseleave', function () {
+                // 鼠标离开时保持当前选中的图片状态
+                // 不需要做任何改变，保持当前状态
+            });
+        });
+
+        function updateThumbnailSelection() {
+            thumbnailBtns.forEach((btn, index) => {
+                if (index === currentImageIndex) {
+                    btn.classList.add('locked');
+                } else {
+                    btn.classList.remove('locked');
+                }
+            });
+        }
+
+        // 数量控制
+        decreaseBtn.addEventListener('click', function () {
+            let value = parseInt(quantityInput.value);
+            if (value > 1) {
+                quantityInput.value = value - 1;
+            }
+        });
+
+        increaseBtn.addEventListener('click', function () {
+            let value = parseInt(quantityInput.value);
+            quantityInput.value = value + 1;
+        });
+
+        quantityInput.addEventListener('change', function () {
+            if (this.value < 1) this.value = 1;
+        });
+
+
+        // 监听选项变化，切换变体图片和价格
+        optionInputs.forEach(input => {
+            input.addEventListener('change', function () {
+                updateVariantImage();
+            });
+        });
+
+        function updateVariantImage() {
+            // 获取当前所有选中的值
+            const selectedOptions = {};
+            optionInputs.forEach(input => {
+                if (input.checked) {
+                    const name = input.name.match(/options\[(.+)\]/)[1];
+                    selectedOptions[name] = input.value;
+                }
+            });
+
+            // 找到匹配的变体
+            const matchedVariant = variants.find(variant => {
+                return variant.options.every((opt, idx) => {
+                    const optionName = optionNames[idx];
+                    console.log(optionName, opt, selectedOptions[optionName]);
+                    return selectedOptions[optionName] === opt;
+                });
+            });
+
+            // 更新价格和图片
+            if (matchedVariant) {
+                updatePrice(matchedVariant);
+
+                if (matchedVariant.featured_image && matchedVariant.featured_image.src) {
+                    const baseUrl = matchedVariant.featured_image.src;
+                    const separator = baseUrl.includes('?') ? '&' : '?';
+                    mainImage.src = baseUrl + separator + 'width=800&height=800';
+                    mainImage.alt = matchedVariant.featured_image.alt || '';
+                    const variantImageSrc = matchedVariant.featured_image.src;
+                    let foundThumbnail = false;
+
+                    thumbnailBtns.forEach((btn, index) => {
+                        const btnImageSrc = btn.dataset.image;
+                        if (btnImageSrc && btnImageSrc.includes(variantImageSrc.split('?')[0])) {
+                            currentImageIndex = index;
+                            foundThumbnail = true;
+                        }
+                    });
+                }
+            }
+        }
+
+        // 更新价格显示
+        function updatePrice(variant) {
+            const currentPriceEl = document.getElementById('slr-current-price');
+            const comparePriceEl = document.getElementById('slr-compare-price');
+            const priceContainer = document.getElementById('slr-price-container');
+
+            if (currentPriceEl) {
+                // 使用原生货币格式化
+                currentPriceEl.textContent = formatPrice(variant.price);
+            }
+
+            // 处理对比价格
+            if (variant.compare_at_price && variant.compare_at_price > variant.price) {
+                if (comparePriceEl) {
+                    comparePriceEl.textContent = formatPrice(variant.compare_at_price);
+                    comparePriceEl.style.display = 'block';
+                }
+            } else {
+                if (comparePriceEl) {
+                    comparePriceEl.style.display = 'none';
+                }
+            }
+        }
+
+
+        // 获取当前选中的变体ID
+        function getCurrentVariantId() {
+            const selectedOptions = {};
+            optionInputs.forEach(input => {
+                if (input.checked) {
+                    const name = input.name.match(/options\[(.+)\]/)[1];
+                    selectedOptions[name] = input.value;
+                }
+            });
+
+            const matchedVariant = variants.find(variant => {
+                return variant.options.every((opt, idx) => {
+                    const optionName = optionNames[idx];
+                    return selectedOptions[optionName] === opt;
+                });
+            });
+
+            return matchedVariant ? matchedVariant.id : {{ product.selected_or_first_available_variant.id }};
+        }
+
+        // 获取当前数量
+        function getCurrentQuantity() {
+            return parseInt(quantityInput.value) || 1;
+        }
+
+        // 立即购买功能
+        document.getElementById('slr-buy-now-btn').addEventListener('click', function () {
+            const variantId = getCurrentVariantId();
+            const quantity = getCurrentQuantity();
+
+            fetch('/cart/add.js', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({id: variantId, quantity: quantity})
+            })
+                .then(function () {
+                    window.location.href = '/checkout';
+                })
+                .catch(function (error) {
+                    console.error('立即购买失败:', error);
+                });
+        });
+
+        // 加入购物车功能
+        document.getElementById('slr-add-to-cart-btn').addEventListener('click', function () {
+            const variantId = getCurrentVariantId();
+            const quantity = getCurrentQuantity();
+            const button = this;
+            const originalText = button.textContent;
+
+            fetch('/cart/add.js', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({id: variantId, quantity: quantity})
+            })
+                .then(function (response) {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('添加失败');
+                    }
+                })
+                .then(function (data) {
+                    button.textContent = '{{ settings.added_to_cart_text | default: "✔️Added" }}';
+                    setTimeout(function () {
+                        button.textContent = originalText;
+                    }, 3000);
+                })
+                .catch(function (error) {
+                    console.error('加入购物车失败:', error);
+                });
+        });
+    });
+</script>
+
 </body>
 </html>
